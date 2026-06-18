@@ -23,7 +23,7 @@ const schema = z.object({
   city: z.string().trim().min(2).max(60),
   state: z.string().trim().max(60).optional(),
   postal_code: z.string().trim().min(3).max(15),
-  country: z.string().trim().min(2).max(60).default("Bangladesh"),
+  country: z.string().trim().min(2).max(60),
 });
 
 function AddressesPage() {
