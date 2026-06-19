@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Heart, ShoppingBag, Sparkles, ShieldCheck, Truck, Star, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
@@ -67,14 +67,14 @@ function ProductPage() {
   const [selectedId, setSelectedId] = useState(variants[2]?.id ?? variants[0]?.id);
   const [qty, setQty] = useState(1);
 
-  const gallery = useMemo(() => {
-    if (!product) return [] as string[];
-    const list = (product.images ?? [])
+  const gallery = useMemo<string[]>(() => {
+    if (!product) return [];
+    const list: string[] = ((product.images ?? []) as Array<{ image_url: string; sort_order: number }>)
       .slice()
       .sort((a, b) => a.sort_order - b.sort_order)
       .map((i) => i.image_url);
     const primary = product.image_url ?? null;
-    const merged = primary ? [primary, ...list.filter((u) => u !== primary)] : list;
+    const merged = primary ? [primary, ...list.filter((u: string) => u !== primary)] : list;
     return merged.length > 0 ? merged : [product.image_url ?? ""];
   }, [product]);
 
