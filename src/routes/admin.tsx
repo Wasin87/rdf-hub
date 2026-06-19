@@ -5,12 +5,18 @@ import { Logo } from "@/components/Logo";
 
 export const Route = createFileRoute("/admin")({
   ssr: false,
-  beforeLoad: async () => {
+  beforeLoad: async ({ location }) => {
     const { data: u, error } = await supabase.auth.getUser();
     if (error || !u.user) throw redirect({ to: "/auth", search: { mode: "login", redirect: "/admin" } as never });
-    const { data: roles } = await supabase.from("user_roles").select("role").eq("user_id", u.user.id);
-    const isAdmin = (roles ?? []).some((r) => r.role === "admin");
+    const [rolesRes, profileRes] = await Promise.all([
+      supabase.from("user_roles").select("role").eq("user_id", u.user.id),
+      supabase.from("profiles").select("must_change_password").eq("id", u.user.id).maybeSingle(),
+    ]);
+    const isAdmin = (rolesRes.data ?? []).some((r) => r.role === "admin");
     if (!isAdmin) throw redirect({ to: "/dashboard" });
+    if (profileRes.data?.must_change_password && location.pathname !== "/reset-password") {
+      throw redirect({ to: "/reset-password" });
+    }
     return { user: u.user };
   },
   head: () => ({ meta: [{ title: "Admin — RDF" }] }),
