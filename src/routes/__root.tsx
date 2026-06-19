@@ -81,8 +81,8 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <div className="flex min-h-dvh flex-col bg-background text-foreground">
-          <AnnouncementBar />
           <Navbar />
+          <AnnouncementBar />
           <main className="flex-1">
             <Outlet />
           </main>
