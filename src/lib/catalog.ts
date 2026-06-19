@@ -30,11 +30,12 @@ export type Product = {
   variants: Variant[];
 };
 
+export type ProductImage = { id: string; image_url: string; alt_text: string | null; sort_order: number };
 export type Brand = { id: string; name: string; slug: string; description: string | null };
 export type Category = { id: string; name: string; slug: string };
 export type Collection = { id: string; name: string; slug: string; description: string | null };
 export type Banner = { id: string; title: string; subtitle: string | null; image_url: string; cta_text: string | null; cta_link: string | null };
-export type Review = { id: string; author_name: string; rating: number; title: string | null; body: string };
+export type Review = { id: string; author_name: string; rating: number; title: string | null; body: string; created_at?: string };
 
 const PRODUCT_SELECT = `
   id, name, slug, description, notes_top, notes_heart, notes_base, image_url,
@@ -42,7 +43,8 @@ const PRODUCT_SELECT = `
   brand:brands(id, name, slug),
   category:categories(id, name, slug),
   collection:collections(id, name, slug),
-  variants:product_variants(id, product_id, size_ml, price, stock)
+  variants:product_variants(id, product_id, size_ml, price, stock),
+  images:product_images(id, image_url, alt_text, sort_order)
 `;
 
 export async function fetchProducts(opts?: {
