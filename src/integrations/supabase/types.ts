@@ -221,6 +221,45 @@ export type Database = {
         }
         Relationships: []
       }
+      notice_banners: {
+        Row: {
+          created_at: string
+          ends_at: string | null
+          icon: string | null
+          id: string
+          is_active: boolean
+          link_url: string | null
+          message: string
+          order_index: number
+          starts_at: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          ends_at?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          link_url?: string | null
+          message: string
+          order_index?: number
+          starts_at?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          ends_at?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          link_url?: string | null
+          message?: string
+          order_index?: number
+          starts_at?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           body: string | null
@@ -315,43 +354,52 @@ export type Database = {
       orders: {
         Row: {
           address_snapshot: Json
+          admin_notes: string | null
           created_at: string
           id: string
           notes: string | null
           order_number: string
           payment_method: string
+          payment_phone: string | null
           shipping: number
           status: Database["public"]["Enums"]["order_status"]
           subtotal: number
           total: number
+          txn_id: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
           address_snapshot: Json
+          admin_notes?: string | null
           created_at?: string
           id?: string
           notes?: string | null
           order_number?: string
           payment_method?: string
+          payment_phone?: string | null
           shipping?: number
           status?: Database["public"]["Enums"]["order_status"]
           subtotal: number
           total: number
+          txn_id?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
           address_snapshot?: Json
+          admin_notes?: string | null
           created_at?: string
           id?: string
           notes?: string | null
           order_number?: string
           payment_method?: string
+          payment_phone?: string | null
           shipping?: number
           status?: Database["public"]["Enums"]["order_status"]
           subtotal?: number
           total?: number
+          txn_id?: string | null
           updated_at?: string
           user_id?: string
         }
@@ -492,6 +540,7 @@ export type Database = {
           created_at: string
           full_name: string | null
           id: string
+          must_change_password: boolean
           phone: string | null
           updated_at: string
         }
@@ -500,6 +549,7 @@ export type Database = {
           created_at?: string
           full_name?: string | null
           id: string
+          must_change_password?: boolean
           phone?: string | null
           updated_at?: string
         }
@@ -508,6 +558,7 @@ export type Database = {
           created_at?: string
           full_name?: string | null
           id?: string
+          must_change_password?: boolean
           phone?: string | null
           updated_at?: string
         }
@@ -629,8 +680,10 @@ export type Database = {
         | "pending"
         | "confirmed"
         | "processing"
+        | "in_progress"
         | "shipped"
         | "delivered"
+        | "resolved"
         | "cancelled"
       product_gender: "men" | "women" | "unisex"
     }
@@ -765,8 +818,10 @@ export const Constants = {
         "pending",
         "confirmed",
         "processing",
+        "in_progress",
         "shipped",
         "delivered",
+        "resolved",
         "cancelled",
       ],
       product_gender: ["men", "women", "unisex"],
