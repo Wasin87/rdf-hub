@@ -8,8 +8,10 @@ import { SearchBar } from "./SearchBar";
 import { CartSheet } from "./CartSheet";
 import { WishlistSheet } from "./WishlistSheet";
 import { useAuth } from "@/hooks/useAuth";
+import { useRole } from "@/hooks/useRole";
 import { supabase } from "@/integrations/supabase/client";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Shield } from "lucide-react";
 
 const navItems: { label: string; to: string; dropdown?: { label: string; to: string; search?: Record<string, string> }[] }[] = [
   { label: "Home", to: "/" },
@@ -38,6 +40,7 @@ export function Navbar() {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { user } = useAuth();
+  const { isAdmin } = useRole();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -105,6 +108,11 @@ export function Navbar() {
                 </div>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild><Link to="/dashboard">Dashboard</Link></DropdownMenuItem>
+                {isAdmin && (
+                  <DropdownMenuItem asChild>
+                    <Link to="/admin" className="text-[color:var(--gold)]"><Shield className="mr-2 h-3.5 w-3.5" /> Admin Panel</Link>
+                  </DropdownMenuItem>
+                )}
                 <DropdownMenuItem asChild><Link to="/dashboard/orders">My Orders</Link></DropdownMenuItem>
                 <DropdownMenuItem asChild><Link to="/dashboard/wishlist">Wishlist</Link></DropdownMenuItem>
                 <DropdownMenuItem asChild><Link to="/dashboard/settings">Settings</Link></DropdownMenuItem>

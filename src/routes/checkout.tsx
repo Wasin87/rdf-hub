@@ -4,8 +4,8 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { motion } from "framer-motion";
-import { ShoppingBag, ShieldCheck } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ShoppingBag, ShieldCheck, Truck, Smartphone, Copy } from "lucide-react";
 import { useCart } from "@/stores/cart";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -16,7 +16,17 @@ export const Route = createFileRoute("/checkout")({
   component: CheckoutPage,
 });
 
-const schema = z.object({
+const PAYMENT_NUMBER = "01774178772";
+
+const PAYMENT_METHODS = [
+  { id: "cod", label: "Cash on Delivery", icon: Truck, description: "Pay when your fragrance arrives." },
+  { id: "bkash", label: "bKash", icon: Smartphone, description: `Send Money to ${PAYMENT_NUMBER}` },
+  { id: "nagad", label: "Nagad", icon: Smartphone, description: `Send Money to ${PAYMENT_NUMBER}` },
+  { id: "rocket", label: "Rocket", icon: Smartphone, description: `Send Money to ${PAYMENT_NUMBER}` },
+] as const;
+type PaymentMethod = typeof PAYMENT_METHODS[number]["id"];
+
+const baseSchema = z.object({
   full_name: z.string().trim().min(2).max(80),
   phone: z.string().trim().min(8).max(20),
   line1: z.string().trim().min(3).max(140),
@@ -34,12 +44,17 @@ function CheckoutPage() {
   const clear = useCart((s) => s.clear);
   const { user, loading } = useAuth();
   const [submitting, setSubmitting] = useState(false);
+  const [method, setMethod] = useState<PaymentMethod>("cod");
+  const [txnId, setTxnId] = useState("");
+  const [paymentPhone, setPaymentPhone] = useState("");
+  const [methodErr, setMethodErr] = useState<string | null>(null);
 
   const shipping = subtotal >= 5000 ? 0 : 120;
   const total = subtotal + shipping;
+  const isMobilePayment = method !== "cod";
 
-  const form = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema),
+  const form = useForm<z.infer<typeof baseSchema>>({
+    resolver: zodResolver(baseSchema),
     defaultValues: { country: "Bangladesh" },
   });
 
@@ -61,13 +76,20 @@ function CheckoutPage() {
   );
 
   const onSubmit = form.handleSubmit(async (data) => {
+    setMethodErr(null);
+    if (isMobilePayment) {
+      if (!txnId.trim() || txnId.trim().length < 6) { setMethodErr("Enter the transaction ID from your payment confirmation"); return; }
+      if (!paymentPhone.trim() || paymentPhone.trim().length < 8) { setMethodErr("Enter the phone number you paid from"); return; }
+    }
     setSubmitting(true);
     try {
       const { data: order, error } = await supabase.from("orders").insert({
         user_id: user.id,
         address_snapshot: data,
         subtotal, shipping, total,
-        payment_method: "cod",
+        payment_method: method,
+        txn_id: isMobilePayment ? txnId.trim() : null,
+        payment_phone: isMobilePayment ? paymentPhone.trim() : null,
         notes: data.notes ?? null,
       }).select("id, order_number").single();
       if (error) throw error;
@@ -96,23 +118,77 @@ function CheckoutPage() {
   return (
     <div className="container-luxury py-12 lg:py-16">
       <h1 className="mb-2 font-display text-4xl"><span className="gold-text">Checkout</span></h1>
-      <p className="text-sm text-muted-foreground">Cash on Delivery • Authenticity guaranteed</p>
+      <p className="text-sm text-muted-foreground">Authenticity guaranteed · Secure payment</p>
 
       <div className="mt-10 grid gap-12 lg:grid-cols-[1fr_400px]">
-        <motion.form onSubmit={onSubmit} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-5">
-          <h2 className="font-display text-xl">Shipping Details</h2>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="Full Name" {...form.register("full_name")} error={form.formState.errors.full_name?.message} />
-            <Field label="Phone" {...form.register("phone")} error={form.formState.errors.phone?.message} />
-          </div>
-          <Field label="Address Line 1" {...form.register("line1")} error={form.formState.errors.line1?.message} />
-          <Field label="Address Line 2 (optional)" {...form.register("line2")} />
-          <div className="grid gap-4 sm:grid-cols-3">
-            <Field label="City" {...form.register("city")} error={form.formState.errors.city?.message} />
-            <Field label="State / Division" {...form.register("state")} />
-            <Field label="Postal Code" {...form.register("postal_code")} error={form.formState.errors.postal_code?.message} />
-          </div>
-          <Field label="Country" {...form.register("country")} />
+        <motion.form onSubmit={onSubmit} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-7">
+          <section className="space-y-5">
+            <h2 className="font-display text-xl">Shipping Details</h2>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field label="Full Name" {...form.register("full_name")} error={form.formState.errors.full_name?.message} />
+              <Field label="Phone" {...form.register("phone")} error={form.formState.errors.phone?.message} />
+            </div>
+            <Field label="Address Line 1" {...form.register("line1")} error={form.formState.errors.line1?.message} />
+            <Field label="Address Line 2 (optional)" {...form.register("line2")} />
+            <div className="grid gap-4 sm:grid-cols-3">
+              <Field label="City" {...form.register("city")} error={form.formState.errors.city?.message} />
+              <Field label="State / Division" {...form.register("state")} />
+              <Field label="Postal Code" {...form.register("postal_code")} error={form.formState.errors.postal_code?.message} />
+            </div>
+            <Field label="Country" {...form.register("country")} />
+          </section>
+
+          <section className="space-y-4">
+            <h2 className="font-display text-xl">Payment Method</h2>
+            <div className="grid gap-2 sm:grid-cols-2">
+              {PAYMENT_METHODS.map((m) => {
+                const Icon = m.icon;
+                const active = method === m.id;
+                return (
+                  <button type="button" key={m.id} onClick={() => setMethod(m.id)}
+                    className={`flex items-start gap-3 rounded-sm border p-3 text-left transition-all ${active ? "border-[color:var(--gold)] bg-[color:var(--gold)]/5" : "border-border hover:border-[color:var(--gold)]/40"}`}>
+                    <Icon className={`mt-0.5 h-4 w-4 ${active ? "text-[color:var(--gold)]" : "text-muted-foreground"}`} />
+                    <div>
+                      <div className={`text-sm font-medium ${active ? "text-[color:var(--gold)]" : ""}`}>{m.label}</div>
+                      <div className="text-[11px] text-muted-foreground">{m.description}</div>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+
+            <AnimatePresence>
+              {isMobilePayment && (
+                <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}
+                  className="overflow-hidden">
+                  <div className="rounded-sm border border-[color:var(--gold)]/30 bg-section p-4">
+                    <p className="text-xs text-muted-foreground">Send the total to the merchant number below, then enter the Transaction ID and the phone you paid from.</p>
+                    <div className="mt-3 flex items-center gap-2 rounded-sm border border-[color:var(--gold)]/30 bg-card px-3 py-2">
+                      <Smartphone className="h-4 w-4 text-[color:var(--gold)]" />
+                      <span className="font-display text-lg tracking-wider">{PAYMENT_NUMBER}</span>
+                      <button type="button" onClick={() => { navigator.clipboard.writeText(PAYMENT_NUMBER); toast.success("Number copied"); }} className="ml-auto text-muted-foreground hover:text-[color:var(--gold)]">
+                        <Copy className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                    <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                      <div>
+                        <label className="mb-1.5 block text-[10px] track-luxury text-muted-foreground">Transaction ID</label>
+                        <input value={txnId} onChange={(e) => setTxnId(e.target.value)} placeholder="e.g. 9F8H2K1L"
+                          className="h-11 w-full rounded-sm border border-border bg-background px-3 text-sm uppercase tracking-wider focus:border-[color:var(--gold)] focus:outline-none" />
+                      </div>
+                      <div>
+                        <label className="mb-1.5 block text-[10px] track-luxury text-muted-foreground">Sender Phone</label>
+                        <input value={paymentPhone} onChange={(e) => setPaymentPhone(e.target.value)} placeholder="01XXXXXXXXX"
+                          className="h-11 w-full rounded-sm border border-border bg-background px-3 text-sm focus:border-[color:var(--gold)] focus:outline-none" />
+                      </div>
+                    </div>
+                    {methodErr && <p className="mt-2 text-[11px] text-destructive">{methodErr}</p>}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </section>
+
           <div>
             <label className="mb-1.5 block text-[10px] track-luxury text-muted-foreground">Order Notes (optional)</label>
             <textarea {...form.register("notes")} rows={3} className="w-full rounded-sm border border-border bg-background p-3 text-sm focus:border-[color:var(--gold)] focus:outline-none" />
@@ -120,10 +196,10 @@ function CheckoutPage() {
           <button type="submit" disabled={submitting} className="btn-liquid w-full">
             {submitting ? "Placing order…" : `Place Order — ${formatBDT(total)}`}
           </button>
-          <p className="flex items-center gap-2 text-[11px] text-muted-foreground"><ShieldCheck className="h-3.5 w-3.5 text-[color:var(--gold)]" /> Secure & encrypted. Pay on delivery.</p>
+          <p className="flex items-center gap-2 text-[11px] text-muted-foreground"><ShieldCheck className="h-3.5 w-3.5 text-[color:var(--gold)]" /> Secure & encrypted. Order tracking available in your dashboard.</p>
         </motion.form>
 
-        <aside className="rounded-sm border border-[color:var(--gold)]/20 bg-section p-6">
+        <aside className="h-fit rounded-sm border border-[color:var(--gold)]/20 bg-section p-6">
           <h2 className="mb-4 font-display text-xl">Order Summary</h2>
           <div className="space-y-3">
             {items.map((i) => (
