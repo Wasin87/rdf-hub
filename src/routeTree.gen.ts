@@ -26,8 +26,10 @@ import { Route as AdminOrdersRouteImport } from './routes/admin.orders'
 import { Route as AdminNoticesRouteImport } from './routes/admin.notices'
 import { Route as AdminBrandsRouteImport } from './routes/admin.brands'
 import { Route as AdminBannersRouteImport } from './routes/admin.banners'
+import { Route as AdminAddProductRouteImport } from './routes/admin.add-product'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard.index'
+import { Route as AdminEditProductIdRouteImport } from './routes/admin.edit-product.$id'
 import { Route as AuthenticatedDashboardWishlistRouteImport } from './routes/_authenticated/dashboard.wishlist'
 import { Route as AuthenticatedDashboardSettingsRouteImport } from './routes/_authenticated/dashboard.settings'
 import { Route as AuthenticatedDashboardOrdersRouteImport } from './routes/_authenticated/dashboard.orders'
@@ -119,6 +121,11 @@ const AdminBannersRoute = AdminBannersRouteImport.update({
   path: '/banners',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminAddProductRoute = AdminAddProductRouteImport.update({
+  id: '/add-product',
+  path: '/add-product',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -130,6 +137,11 @@ const AuthenticatedDashboardIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
+const AdminEditProductIdRoute = AdminEditProductIdRouteImport.update({
+  id: '/edit-product/$id',
+  path: '/edit-product/$id',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AuthenticatedDashboardWishlistRoute =
   AuthenticatedDashboardWishlistRouteImport.update({
     id: '/wishlist',
@@ -176,6 +188,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/shop': typeof ShopRoute
   '/dashboard': typeof AuthenticatedDashboardRouteWithChildren
+  '/admin/add-product': typeof AdminAddProductRoute
   '/admin/banners': typeof AdminBannersRoute
   '/admin/brands': typeof AdminBrandsRoute
   '/admin/notices': typeof AdminNoticesRoute
@@ -191,6 +204,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/orders': typeof AuthenticatedDashboardOrdersRoute
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
   '/dashboard/wishlist': typeof AuthenticatedDashboardWishlistRoute
+  '/admin/edit-product/$id': typeof AdminEditProductIdRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
 }
 export interface FileRoutesByTo {
@@ -200,6 +214,7 @@ export interface FileRoutesByTo {
   '/checkout': typeof CheckoutRoute
   '/reset-password': typeof ResetPasswordRoute
   '/shop': typeof ShopRoute
+  '/admin/add-product': typeof AdminAddProductRoute
   '/admin/banners': typeof AdminBannersRoute
   '/admin/brands': typeof AdminBrandsRoute
   '/admin/notices': typeof AdminNoticesRoute
@@ -215,6 +230,7 @@ export interface FileRoutesByTo {
   '/dashboard/orders': typeof AuthenticatedDashboardOrdersRoute
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
   '/dashboard/wishlist': typeof AuthenticatedDashboardWishlistRoute
+  '/admin/edit-product/$id': typeof AdminEditProductIdRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
 }
 export interface FileRoutesById {
@@ -228,6 +244,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/shop': typeof ShopRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteWithChildren
+  '/admin/add-product': typeof AdminAddProductRoute
   '/admin/banners': typeof AdminBannersRoute
   '/admin/brands': typeof AdminBrandsRoute
   '/admin/notices': typeof AdminNoticesRoute
@@ -243,6 +260,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/orders': typeof AuthenticatedDashboardOrdersRoute
   '/_authenticated/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
   '/_authenticated/dashboard/wishlist': typeof AuthenticatedDashboardWishlistRoute
+  '/admin/edit-product/$id': typeof AdminEditProductIdRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
 }
 export interface FileRouteTypes {
@@ -256,6 +274,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/shop'
     | '/dashboard'
+    | '/admin/add-product'
     | '/admin/banners'
     | '/admin/brands'
     | '/admin/notices'
@@ -271,6 +290,7 @@ export interface FileRouteTypes {
     | '/dashboard/orders'
     | '/dashboard/settings'
     | '/dashboard/wishlist'
+    | '/admin/edit-product/$id'
     | '/dashboard/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -280,6 +300,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/reset-password'
     | '/shop'
+    | '/admin/add-product'
     | '/admin/banners'
     | '/admin/brands'
     | '/admin/notices'
@@ -295,6 +316,7 @@ export interface FileRouteTypes {
     | '/dashboard/orders'
     | '/dashboard/settings'
     | '/dashboard/wishlist'
+    | '/admin/edit-product/$id'
     | '/dashboard'
   id:
     | '__root__'
@@ -307,6 +329,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/shop'
     | '/_authenticated/dashboard'
+    | '/admin/add-product'
     | '/admin/banners'
     | '/admin/brands'
     | '/admin/notices'
@@ -322,6 +345,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/orders'
     | '/_authenticated/dashboard/settings'
     | '/_authenticated/dashboard/wishlist'
+    | '/admin/edit-product/$id'
     | '/_authenticated/dashboard/'
   fileRoutesById: FileRoutesById
 }
@@ -458,6 +482,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminBannersRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/add-product': {
+      id: '/admin/add-product'
+      path: '/add-product'
+      fullPath: '/admin/add-product'
+      preLoaderRoute: typeof AdminAddProductRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -471,6 +502,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/'
       preLoaderRoute: typeof AuthenticatedDashboardIndexRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/admin/edit-product/$id': {
+      id: '/admin/edit-product/$id'
+      path: '/edit-product/$id'
+      fullPath: '/admin/edit-product/$id'
+      preLoaderRoute: typeof AdminEditProductIdRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/_authenticated/dashboard/wishlist': {
       id: '/_authenticated/dashboard/wishlist'
@@ -556,6 +594,7 @@ const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
 interface AdminRouteChildren {
+  AdminAddProductRoute: typeof AdminAddProductRoute
   AdminBannersRoute: typeof AdminBannersRoute
   AdminBrandsRoute: typeof AdminBrandsRoute
   AdminNoticesRoute: typeof AdminNoticesRoute
@@ -564,9 +603,11 @@ interface AdminRouteChildren {
   AdminReviewsRoute: typeof AdminReviewsRoute
   AdminUsersRoute: typeof AdminUsersRoute
   AdminIndexRoute: typeof AdminIndexRoute
+  AdminEditProductIdRoute: typeof AdminEditProductIdRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminAddProductRoute: AdminAddProductRoute,
   AdminBannersRoute: AdminBannersRoute,
   AdminBrandsRoute: AdminBrandsRoute,
   AdminNoticesRoute: AdminNoticesRoute,
@@ -575,6 +616,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminReviewsRoute: AdminReviewsRoute,
   AdminUsersRoute: AdminUsersRoute,
   AdminIndexRoute: AdminIndexRoute,
+  AdminEditProductIdRoute: AdminEditProductIdRoute,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
@@ -593,13 +635,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
