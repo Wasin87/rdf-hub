@@ -99,6 +99,26 @@ export async function fetchProductBySlug(slug: string): Promise<Product | null> 
   return data as unknown as Product | null;
 }
 
+export async function fetchRelatedProducts(productId: string, brandId: string | null, categoryId: string | null, limit = 8): Promise<Product[]> {
+  let q = supabase.from("products").select(PRODUCT_SELECT).eq("is_active", true).neq("id", productId).limit(limit);
+  if (brandId) q = q.eq("brand_id", brandId);
+  else if (categoryId) q = q.eq("category_id", categoryId);
+  const { data, error } = await q;
+  if (error) throw error;
+  return (data ?? []) as unknown as Product[];
+}
+
+export async function fetchProductReviews(productId: string): Promise<Review[]> {
+  const { data, error } = await supabase
+    .from("reviews")
+    .select("id, author_name, rating, title, body, created_at")
+    .eq("product_id", productId)
+    .eq("is_approved", true)
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return data ?? [];
+}
+
 export async function fetchBrands(): Promise<Brand[]> {
   const { data, error } = await supabase.from("brands").select("*").order("name");
   if (error) throw error;
