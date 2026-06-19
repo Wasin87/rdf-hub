@@ -28,6 +28,7 @@ export type Product = {
   category: { id: string; name: string; slug: string } | null;
   collection: { id: string; name: string; slug: string } | null;
   variants: Variant[];
+  images?: ProductImage[];
 };
 
 export type ProductImage = { id: string; image_url: string; alt_text: string | null; sort_order: number };
