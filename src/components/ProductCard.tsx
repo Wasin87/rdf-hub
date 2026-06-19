@@ -70,28 +70,7 @@ export function ProductCard({ product }: { product: Product }) {
       </button>
 
       <Link to="/products/$slug" params={{ slug: product.slug }} className="block">
-        <div className="relative aspect-[4/5] overflow-hidden bg-secondary">
-          <motion.img
-            variants={{ initial: { scale: 1 }, hover: { scale: 1.06 } }}
-            transition={{ duration: 0.7, ease: [0.2, 0.8, 0.2, 1] }}
-            src={resolveImage(product.image_url)}
-            alt={`${product.brand?.name} ${product.name}`}
-            loading="lazy"
-            className="h-full w-full object-cover"
-          />
-          <motion.div
-            variants={{ initial: { y: 20, opacity: 0 }, hover: { y: 0, opacity: 1 } }}
-            transition={{ duration: 0.35 }}
-            className="absolute inset-x-3 bottom-3"
-          >
-            <button
-              onClick={(e) => { e.preventDefault(); onAdd(); }}
-              className="flex w-full items-center justify-center gap-2 rounded-sm bg-foreground py-2.5 text-[10px] track-luxury text-background transition-transform hover:scale-[1.02]"
-            >
-              <ShoppingBag className="h-3 w-3" /> Add to cart
-            </button>
-          </motion.div>
-        </div>
+        <ProductCardImage product={product} onAdd={onAdd} />
       </Link>
 
       <div className="flex flex-1 flex-col gap-1.5 p-4">
