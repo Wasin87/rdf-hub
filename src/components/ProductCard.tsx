@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { Heart, ShoppingBag } from "lucide-react";
@@ -70,28 +70,7 @@ export function ProductCard({ product }: { product: Product }) {
       </button>
 
       <Link to="/products/$slug" params={{ slug: product.slug }} className="block">
-        <div className="relative aspect-[4/5] overflow-hidden bg-secondary">
-          <motion.img
-            variants={{ initial: { scale: 1 }, hover: { scale: 1.06 } }}
-            transition={{ duration: 0.7, ease: [0.2, 0.8, 0.2, 1] }}
-            src={resolveImage(product.image_url)}
-            alt={`${product.brand?.name} ${product.name}`}
-            loading="lazy"
-            className="h-full w-full object-cover"
-          />
-          <motion.div
-            variants={{ initial: { y: 20, opacity: 0 }, hover: { y: 0, opacity: 1 } }}
-            transition={{ duration: 0.35 }}
-            className="absolute inset-x-3 bottom-3"
-          >
-            <button
-              onClick={(e) => { e.preventDefault(); onAdd(); }}
-              className="flex w-full items-center justify-center gap-2 rounded-sm bg-foreground py-2.5 text-[10px] track-luxury text-background transition-transform hover:scale-[1.02]"
-            >
-              <ShoppingBag className="h-3 w-3" /> Add to cart
-            </button>
-          </motion.div>
-        </div>
+        <ProductCardImage product={product} onAdd={onAdd} />
       </Link>
 
       <div className="flex flex-1 flex-col gap-1.5 p-4">
@@ -119,5 +98,65 @@ export function ProductCard({ product }: { product: Product }) {
         </div>
       </div>
     </motion.article>
+  );
+}
+
+function ProductCardImage({ product, onAdd }: { product: Product; onAdd: () => void }) {
+  const images = useMemo(() => {
+    const list = (product.images ?? []).slice().sort((a, b) => a.sort_order - b.sort_order).map((i) => i.image_url);
+    const primary = product.image_url ?? null;
+    const merged = primary ? [primary, ...list.filter((u) => u !== primary)] : list;
+    return merged.length > 0 ? merged : [product.image_url ?? ""];
+  }, [product.images, product.image_url]);
+
+  const [idx, setIdx] = useState(0);
+  const timer = useRef<ReturnType<typeof setInterval> | null>(null);
+  const hasMany = images.length > 1;
+
+  const onEnter = () => {
+    if (!hasMany) return;
+    if (timer.current) clearInterval(timer.current);
+    timer.current = setInterval(() => setIdx((i) => (i + 1) % images.length), 1100);
+  };
+  const onLeave = () => {
+    if (timer.current) { clearInterval(timer.current); timer.current = null; }
+    setIdx(0);
+  };
+  useEffect(() => () => { if (timer.current) clearInterval(timer.current); }, []);
+
+  return (
+    <div className="relative aspect-[4/5] overflow-hidden bg-secondary" onMouseEnter={onEnter} onMouseLeave={onLeave}>
+      {images.map((url, i) => (
+        <motion.img
+          key={`${url}-${i}`}
+          src={resolveImage(url)}
+          alt={`${product.brand?.name ?? ""} ${product.name}`}
+          loading="lazy"
+          className="absolute inset-0 h-full w-full object-cover"
+          initial={false}
+          animate={{ opacity: i === idx ? 1 : 0, x: i === idx ? 0 : i < idx ? "-6%" : "6%", scale: i === idx ? 1.02 : 1 }}
+          transition={{ duration: 0.6, ease: [0.2, 0.8, 0.2, 1] }}
+        />
+      ))}
+      {hasMany && (
+        <div className="absolute bottom-2 left-1/2 z-10 flex -translate-x-1/2 gap-1">
+          {images.map((_, i) => (
+            <span key={i} className={`h-1 rounded-full transition-all ${i === idx ? "w-5 bg-[color:var(--gold)]" : "w-1.5 bg-background/60"}`} />
+          ))}
+        </div>
+      )}
+      <motion.div
+        variants={{ initial: { y: 20, opacity: 0 }, hover: { y: 0, opacity: 1 } }}
+        transition={{ duration: 0.35 }}
+        className="absolute inset-x-3 bottom-3 z-10"
+      >
+        <button
+          onClick={(e) => { e.preventDefault(); e.stopPropagation(); onAdd(); }}
+          className="flex w-full items-center justify-center gap-2 rounded-sm bg-foreground py-2.5 text-[10px] track-luxury text-background transition-transform hover:scale-[1.02]"
+        >
+          <ShoppingBag className="h-3 w-3" /> Add to cart
+        </button>
+      </motion.div>
+    </div>
   );
 }

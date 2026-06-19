@@ -28,13 +28,15 @@ export type Product = {
   category: { id: string; name: string; slug: string } | null;
   collection: { id: string; name: string; slug: string } | null;
   variants: Variant[];
+  images?: ProductImage[];
 };
 
+export type ProductImage = { id: string; image_url: string; alt_text: string | null; sort_order: number };
 export type Brand = { id: string; name: string; slug: string; description: string | null };
 export type Category = { id: string; name: string; slug: string };
 export type Collection = { id: string; name: string; slug: string; description: string | null };
 export type Banner = { id: string; title: string; subtitle: string | null; image_url: string; cta_text: string | null; cta_link: string | null };
-export type Review = { id: string; author_name: string; rating: number; title: string | null; body: string };
+export type Review = { id: string; author_name: string; rating: number; title: string | null; body: string; created_at?: string };
 
 const PRODUCT_SELECT = `
   id, name, slug, description, notes_top, notes_heart, notes_base, image_url,
@@ -42,7 +44,8 @@ const PRODUCT_SELECT = `
   brand:brands(id, name, slug),
   category:categories(id, name, slug),
   collection:collections(id, name, slug),
-  variants:product_variants(id, product_id, size_ml, price, stock)
+  variants:product_variants(id, product_id, size_ml, price, stock),
+  images:product_images(id, image_url, alt_text, sort_order)
 `;
 
 export async function fetchProducts(opts?: {
@@ -94,6 +97,26 @@ export async function fetchProductBySlug(slug: string): Promise<Product | null> 
   const { data, error } = await supabase.from("products").select(PRODUCT_SELECT).eq("slug", slug).maybeSingle();
   if (error) throw error;
   return data as unknown as Product | null;
+}
+
+export async function fetchRelatedProducts(productId: string, brandId: string | null, categoryId: string | null, limit = 8): Promise<Product[]> {
+  let q = supabase.from("products").select(PRODUCT_SELECT).eq("is_active", true).neq("id", productId).limit(limit);
+  if (brandId) q = q.eq("brand_id", brandId);
+  else if (categoryId) q = q.eq("category_id", categoryId);
+  const { data, error } = await q;
+  if (error) throw error;
+  return (data ?? []) as unknown as Product[];
+}
+
+export async function fetchProductReviews(productId: string): Promise<Review[]> {
+  const { data, error } = await supabase
+    .from("reviews")
+    .select("id, author_name, rating, title, body, created_at")
+    .eq("product_id", productId)
+    .eq("is_approved", true)
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return data ?? [];
 }
 
 export async function fetchBrands(): Promise<Brand[]> {
