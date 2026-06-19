@@ -36,6 +36,19 @@ function AuthPage() {
     resolver: zodResolver(mode === "login" ? loginSchema : registerSchema) as never,
   });
 
+  const resolvePostAuthDest = async (): Promise<string> => {
+    const { data: u } = await supabase.auth.getUser();
+    if (!u.user) return "/";
+    const [rolesRes, profileRes] = await Promise.all([
+      supabase.from("user_roles").select("role").eq("user_id", u.user.id),
+      supabase.from("profiles").select("must_change_password").eq("id", u.user.id).maybeSingle(),
+    ]);
+    if (profileRes.data?.must_change_password) return "/reset-password";
+    const isAdmin = (rolesRes.data ?? []).some((r) => r.role === "admin");
+    if (isAdmin) return "/admin";
+    return search.redirect ?? "/dashboard";
+  };
+
   const onSubmit = form.handleSubmit(async (data) => {
     setSubmitting(true);
     try {
@@ -51,7 +64,7 @@ function AuthPage() {
         if (error) throw error;
         toast.success("Account created");
       }
-      navigate({ to: search.redirect ?? "/" });
+      navigate({ to: await resolvePostAuthDest() });
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : "Something went wrong";
       toast.error(msg);
@@ -66,7 +79,7 @@ function AuthPage() {
       const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
       if (result.error) throw result.error;
       if (result.redirected) return;
-      navigate({ to: search.redirect ?? "/" });
+      navigate({ to: await resolvePostAuthDest() });
     } catch (e: unknown) {
       toast.error(e instanceof Error ? e.message : "Google sign-in failed");
     } finally { setSubmitting(false); }

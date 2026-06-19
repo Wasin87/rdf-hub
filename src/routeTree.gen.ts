@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ShopRouteImport } from './routes/shop'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AboutRouteImport } from './routes/about'
@@ -28,6 +29,11 @@ import { Route as AuthenticatedDashboardAddressesRouteImport } from './routes/_a
 const ShopRoute = ShopRouteImport.update({
   id: '/shop',
   path: '/shop',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CheckoutRoute = CheckoutRouteImport.update({
@@ -112,6 +118,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
   '/checkout': typeof CheckoutRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/shop': typeof ShopRoute
   '/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/products/$slug': typeof ProductsSlugRoute
@@ -128,6 +135,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
   '/checkout': typeof CheckoutRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/shop': typeof ShopRoute
   '/products/$slug': typeof ProductsSlugRoute
   '/dashboard/addresses': typeof AuthenticatedDashboardAddressesRoute
@@ -145,6 +153,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
   '/checkout': typeof CheckoutRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/shop': typeof ShopRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/products/$slug': typeof ProductsSlugRoute
@@ -163,6 +172,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/auth'
     | '/checkout'
+    | '/reset-password'
     | '/shop'
     | '/dashboard'
     | '/products/$slug'
@@ -179,6 +189,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/auth'
     | '/checkout'
+    | '/reset-password'
     | '/shop'
     | '/products/$slug'
     | '/dashboard/addresses'
@@ -195,6 +206,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/auth'
     | '/checkout'
+    | '/reset-password'
     | '/shop'
     | '/_authenticated/dashboard'
     | '/products/$slug'
@@ -213,6 +225,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   AuthRoute: typeof AuthRoute
   CheckoutRoute: typeof CheckoutRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   ShopRoute: typeof ShopRoute
   ProductsSlugRoute: typeof ProductsSlugRoute
 }
@@ -224,6 +237,13 @@ declare module '@tanstack/react-router' {
       path: '/shop'
       fullPath: '/shop'
       preLoaderRoute: typeof ShopRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/checkout': {
@@ -371,6 +391,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   AuthRoute: AuthRoute,
   CheckoutRoute: CheckoutRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   ShopRoute: ShopRoute,
   ProductsSlugRoute: ProductsSlugRoute,
 }
