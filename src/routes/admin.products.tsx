@@ -35,7 +35,8 @@ function AdminProducts() {
   });
 
   const toggle = async (id: string, field: "is_active" | "is_featured" | "is_new", value: boolean) => {
-    const { error } = await supabase.from("products").update({ [field]: !value }).eq("id", id);
+    const patch = field === "is_active" ? { is_active: !value } : field === "is_featured" ? { is_featured: !value } : { is_new: !value };
+    const { error } = await supabase.from("products").update(patch).eq("id", id);
     if (error) return toast.error(error.message);
     qc.invalidateQueries({ queryKey: ["admin-products"] });
   };
