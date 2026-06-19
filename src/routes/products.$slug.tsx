@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Heart, ShoppingBag, Sparkles, ShieldCheck, Truck, Star, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
