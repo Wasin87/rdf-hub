@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ChevronDown, User as UserIcon, LogOut } from "lucide-react";
+import { Menu, X, ChevronDown, User as UserIcon, LogOut, Search, LayoutDashboard, Heart, ShoppingBag, Settings as SettingsIcon } from "lucide-react";
 import { Logo } from "./Logo";
 import { ThemeToggle } from "./ThemeToggle";
-import { SearchBar } from "./SearchBar";
+import { SearchModal } from "./SearchModal";
 import { CartSheet } from "./CartSheet";
 import { WishlistSheet } from "./WishlistSheet";
 import { useAuth } from "@/hooks/useAuth";
@@ -37,6 +37,7 @@ const navItems: { label: string; to: string; dropdown?: { label: string; to: str
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { user } = useAuth();
@@ -49,7 +50,7 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  useEffect(() => { setMobileOpen(false); }, [pathname]);
+  useEffect(() => { setMobileOpen(false); setSearchOpen(false); }, [pathname]);
 
   return (
     <header className={`sticky top-0 z-40 transition-all duration-500 ${scrolled ? "glass-nav" : "bg-background"}`}>
@@ -89,34 +90,42 @@ export function Navbar() {
           })}
         </nav>
 
-        <div className="ml-auto flex items-center gap-2">
-          <div className="hidden xl:block"><SearchBar /></div>
-          <WishlistSheet />
+        <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
+          <button
+            onClick={() => setSearchOpen(true)}
+            aria-label="Open search"
+            className="grid h-9 w-9 place-items-center rounded-sm border border-transparent text-foreground transition-all hover:border-[color:var(--gold)]/40 hover:text-[color:var(--gold)]"
+          >
+            <Search className="h-4 w-4" />
+          </button>
+          <div className="hidden sm:block"><WishlistSheet /></div>
           <CartSheet />
-          <ThemeToggle />
+          <div className="hidden lg:block"><ThemeToggle /></div>
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button aria-label="Account menu" className="hidden h-9 w-9 place-items-center rounded-sm border border-[color:var(--gold)]/30 hover:border-[color:var(--gold)] hover:text-[color:var(--gold)] sm:grid">
+                <button aria-label="Account menu" className="grid h-9 w-9 place-items-center rounded-sm border border-[color:var(--gold)]/30 hover:border-[color:var(--gold)] hover:text-[color:var(--gold)]">
                   <UserIcon className="h-4 w-4" />
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-52">
+              <DropdownMenuContent align="end" className="w-56">
                 <div className="px-3 py-2">
                   <div className="text-[10px] track-luxury text-muted-foreground">Signed in</div>
                   <div className="truncate text-sm">{user.email}</div>
                 </div>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild><Link to="/dashboard">Dashboard</Link></DropdownMenuItem>
+                <DropdownMenuItem asChild><Link to="/dashboard"><LayoutDashboard className="mr-2 h-3.5 w-3.5" /> Dashboard</Link></DropdownMenuItem>
                 {isAdmin && (
                   <DropdownMenuItem asChild>
                     <Link to="/admin" className="text-[color:var(--gold)]"><Shield className="mr-2 h-3.5 w-3.5" /> Admin Panel</Link>
                   </DropdownMenuItem>
                 )}
+                <DropdownMenuItem asChild><Link to="/dashboard/cart"><ShoppingBag className="mr-2 h-3.5 w-3.5" /> Cart</Link></DropdownMenuItem>
+                <DropdownMenuItem asChild><Link to="/dashboard/wishlist"><Heart className="mr-2 h-3.5 w-3.5" /> Wishlist</Link></DropdownMenuItem>
                 <DropdownMenuItem asChild><Link to="/dashboard/orders">My Orders</Link></DropdownMenuItem>
-                <DropdownMenuItem asChild><Link to="/dashboard/wishlist">Wishlist</Link></DropdownMenuItem>
-                <DropdownMenuItem asChild><Link to="/dashboard/settings">Settings</Link></DropdownMenuItem>
+                <DropdownMenuItem asChild><Link to="/dashboard/settings"><SettingsIcon className="mr-2 h-3.5 w-3.5" /> Settings</Link></DropdownMenuItem>
                 <DropdownMenuSeparator />
+                <div className="px-2 py-1.5 lg:hidden"><ThemeToggle /></div>
                 <DropdownMenuItem onClick={async () => { await supabase.auth.signOut(); window.location.assign("/"); }}>
                   <LogOut className="mr-2 h-3.5 w-3.5" /> Sign out
                 </DropdownMenuItem>
@@ -135,6 +144,8 @@ export function Navbar() {
       </div>
       <div className="hairline" />
 
+      <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
+
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
@@ -142,7 +153,9 @@ export function Navbar() {
             className="overflow-hidden border-t border-border bg-background lg:hidden"
           >
             <div className="container-luxury flex flex-col gap-1 py-5">
-              <div className="mb-3"><SearchBar inDrawer /></div>
+              <button onClick={() => { setMobileOpen(false); setSearchOpen(true); }} className="mb-3 flex h-10 items-center gap-2 rounded-sm border border-border bg-card px-3 text-xs text-muted-foreground hover:border-[color:var(--gold)]/40">
+                <Search className="h-3.5 w-3.5" /> Search fragrances...
+              </button>
               {navItems.map((item) => (
                 <div key={item.label}>
                   <Link to={item.to as never} className="block py-2.5 text-sm track-luxury">{item.label}</Link>

@@ -19,7 +19,8 @@ export function ProductCard({ product }: { product: Product }) {
   const toggleWish = useWishlist((s) => s.toggle);
   const isWished = useWishlist((s) => s.has(product.id));
 
-  const onAdd = () => {
+  const onAdd = (e: React.MouseEvent) => {
+    e.preventDefault(); e.stopPropagation();
     if (!v) return;
     addToCart({
       productId: product.id,
@@ -49,11 +50,7 @@ export function ProductCard({ product }: { product: Product }) {
   };
 
   return (
-    <motion.article
-      whileHover="hover"
-      initial="initial"
-      className="card-luxury group relative flex flex-col"
-    >
+    <motion.article className="card-luxury group relative flex flex-col">
       {(product.is_new || product.discount_percent > 0 || product.is_limited) && (
         <div className="absolute left-3 top-3 z-10 flex flex-col gap-1.5">
           {product.is_new && <span className="rounded-sm bg-foreground px-2 py-0.5 text-[9px] track-luxury text-background">New</span>}
@@ -70,7 +67,7 @@ export function ProductCard({ product }: { product: Product }) {
       </button>
 
       <Link to="/products/$slug" params={{ slug: product.slug }} className="block">
-        <ProductCardImage product={product} onAdd={onAdd} />
+        <ProductCardImage product={product} />
       </Link>
 
       <div className="flex flex-1 flex-col gap-1.5 p-4">
@@ -90,18 +87,28 @@ export function ProductCard({ product }: { product: Product }) {
         >
           {variants.map((vr) => <option key={vr.id} value={vr.id}>{vr.size_ml} ML</option>)}
         </select>
-        <div className="mt-1 flex items-baseline gap-2">
-          <span className="font-display text-lg text-[color:var(--gold)]">{formatBDT(finalPrice)}</span>
-          {product.discount_percent > 0 && v && (
-            <span className="text-xs text-muted-foreground line-through">{formatBDT(v.price)}</span>
-          )}
+        <div className="mt-1 flex items-center justify-between gap-2">
+          <div className="flex items-baseline gap-2 min-w-0">
+            <span className="font-display text-lg text-[color:var(--gold)] truncate">{formatBDT(finalPrice)}</span>
+            {product.discount_percent > 0 && v && (
+              <span className="text-xs text-muted-foreground line-through">{formatBDT(v.price)}</span>
+            )}
+          </div>
+          <button
+            type="button"
+            onClick={onAdd}
+            aria-label="Add to cart"
+            className="shrink-0 grid h-9 w-9 place-items-center rounded-sm border border-[color:var(--gold)]/40 bg-foreground text-background transition-all hover:bg-[color:var(--gold)] hover:text-[color:var(--gold-foreground)] hover:scale-105 active:scale-95"
+          >
+            <ShoppingBag className="h-4 w-4" />
+          </button>
         </div>
       </div>
     </motion.article>
   );
 }
 
-function ProductCardImage({ product, onAdd }: { product: Product; onAdd: () => void }) {
+function ProductCardImage({ product }: { product: Product }) {
   const images = useMemo(() => {
     const list = (product.images ?? []).slice().sort((a, b) => a.sort_order - b.sort_order).map((i) => i.image_url);
     const primary = product.image_url ?? null;
@@ -134,7 +141,7 @@ function ProductCardImage({ product, onAdd }: { product: Product; onAdd: () => v
           loading="lazy"
           className="absolute inset-0 h-full w-full object-cover"
           initial={false}
-          animate={{ opacity: i === idx ? 1 : 0, x: i === idx ? 0 : i < idx ? "-6%" : "6%", scale: i === idx ? 1.02 : 1 }}
+          animate={{ opacity: i === idx ? 1 : 0, scale: i === idx ? 1.02 : 1 }}
           transition={{ duration: 0.6, ease: [0.2, 0.8, 0.2, 1] }}
         />
       ))}
@@ -145,18 +152,6 @@ function ProductCardImage({ product, onAdd }: { product: Product; onAdd: () => v
           ))}
         </div>
       )}
-      <motion.div
-        variants={{ initial: { y: 20, opacity: 0 }, hover: { y: 0, opacity: 1 } }}
-        transition={{ duration: 0.35 }}
-        className="absolute inset-x-3 bottom-3 z-10"
-      >
-        <button
-          onClick={(e) => { e.preventDefault(); e.stopPropagation(); onAdd(); }}
-          className="flex w-full items-center justify-center gap-2 rounded-sm bg-foreground py-2.5 text-[10px] track-luxury text-background transition-transform hover:scale-[1.02]"
-        >
-          <ShoppingBag className="h-3 w-3" /> Add to cart
-        </button>
-      </motion.div>
     </div>
   );
 }

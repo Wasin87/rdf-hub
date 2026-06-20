@@ -12,6 +12,8 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { AnnouncementBar } from "@/components/AnnouncementBar";
+import { MobileBottomNav } from "@/components/MobileBottomNav";
+import { FloatingStack } from "@/components/FloatingStack";
 
 function NotFoundComponent() {
   return (
@@ -87,10 +89,12 @@ function RootComponent() {
         <div className="flex min-h-dvh flex-col bg-background text-foreground">
           <Navbar />
           <AnnouncementBar />
-          <main className="flex-1">
+          <main className="flex-1 pb-20 lg:pb-0">
             <Outlet />
           </main>
           <Footer />
+          <MobileBottomNav />
+          <FloatingStack />
         </div>
         <Toaster
           position="bottom-right"
