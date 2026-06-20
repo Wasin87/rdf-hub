@@ -32,9 +32,7 @@ export const Route = createFileRoute("/products/$slug")({
     ],
   }),
   component: ProductPage,
-  pendingComponent: () => (
-    <div className="container-luxury py-24 text-center text-sm text-muted-foreground">Loading fragrance…</div>
-  ),
+  pendingComponent: () => <LuxuryLoader label="Loading fragrance" />,
   errorComponent: ({ error }) => (
     <div className="container-luxury py-24 text-center">
       <h1 className="font-display text-3xl">Could not load this fragrance.</h1>
