@@ -94,18 +94,17 @@ export function Navbar() {
           <button
             onClick={() => setSearchOpen(true)}
             aria-label="Open search"
-            className="grid h-9 w-9 place-items-center rounded-sm border border-transparent text-foreground transition-all hover:border-[color:var(--gold)]/40 hover:text-[color:var(--gold)]"
+            className="grid h-9 w-9 place-items-center rounded-full text-foreground transition-all duration-300 hover:scale-110 hover:text-[color:var(--gold)]"
           >
-            <Search className="h-4 w-4" />
+            <Search className="h-[18px] w-[18px]" />
           </button>
           <div className="hidden sm:block"><WishlistSheet /></div>
           <CartSheet />
-          <div className="hidden lg:block"><ThemeToggle /></div>
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button aria-label="Account menu" className="grid h-9 w-9 place-items-center rounded-sm border border-[color:var(--gold)]/30 hover:border-[color:var(--gold)] hover:text-[color:var(--gold)]">
-                  <UserIcon className="h-4 w-4" />
+                <button aria-label="Account menu" className="grid h-9 w-9 place-items-center rounded-full text-foreground transition-all duration-300 hover:scale-110 hover:text-[color:var(--gold)]">
+                  <UserIcon className="h-[18px] w-[18px]" />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
