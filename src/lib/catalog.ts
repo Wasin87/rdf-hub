@@ -111,12 +111,12 @@ export async function fetchRelatedProducts(productId: string, brandId: string | 
 export async function fetchProductReviews(productId: string): Promise<Review[]> {
   const { data, error } = await supabase
     .from("reviews")
-    .select("id, author_name, rating, title, body, created_at")
+    .select("id, author_name, email, rating, title, body, images, created_at")
     .eq("product_id", productId)
     .eq("is_approved", true)
     .order("created_at", { ascending: false });
   if (error) throw error;
-  return data ?? [];
+  return (data ?? []).map((r) => ({ ...r, images: Array.isArray((r as { images?: unknown }).images) ? ((r as { images: string[] }).images) : [] })) as Review[];
 }
 
 export async function fetchBrands(): Promise<Brand[]> {
