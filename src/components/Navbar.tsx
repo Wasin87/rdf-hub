@@ -124,7 +124,7 @@ export function Navbar() {
                 <DropdownMenuItem asChild><Link to="/dashboard/orders">My Orders</Link></DropdownMenuItem>
                 <DropdownMenuItem asChild><Link to="/dashboard/settings"><SettingsIcon className="mr-2 h-3.5 w-3.5" /> Settings</Link></DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <div className="px-2 py-1.5 lg:hidden"><ThemeToggle /></div>
+                <div className="px-2 py-1.5"><ThemeToggle /></div>
                 <DropdownMenuItem onClick={async () => { await supabase.auth.signOut(); window.location.assign("/"); }}>
                   <LogOut className="mr-2 h-3.5 w-3.5" /> Sign out
                 </DropdownMenuItem>
