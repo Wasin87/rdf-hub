@@ -1,14 +1,18 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { DashboardShell } from "@/components/DashboardShell";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { formatBDT } from "@/lib/format";
-import { Package, Check, Clock, Truck, X, Sparkles, RefreshCw } from "lucide-react";
+import { Package, Check, Clock, Truck, X, Sparkles, RefreshCw, Star } from "lucide-react";
+import { ReviewForm } from "@/components/ReviewForm";
+import { LuxuryLoader } from "@/components/Loader";
 
 export const Route = createFileRoute("/_authenticated/dashboard/orders")({
   head: () => ({ meta: [{ title: "Orders — RDF" }] }),
   component: OrdersPage,
+  pendingComponent: () => <LuxuryLoader label="Loading orders" />,
 });
 
 const TIMELINE: { key: string; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
