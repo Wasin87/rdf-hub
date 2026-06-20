@@ -27,21 +27,31 @@ const TIMELINE: { key: string; label: string; icon: React.ComponentType<{ classN
 
 function OrdersPage() {
   const { user } = useAuth();
+  const [reviewing, setReviewing] = useState<{ productId: string; productName: string; orderId: string } | null>(null);
   const q = useQuery({
     queryKey: ["my-orders", user?.id], enabled: !!user,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("orders")
-        .select("id, order_number, total, status, payment_method, txn_id, created_at, order_items(id, product_name, brand_name, size_ml, quantity, unit_price, image_url)")
+        .select("id, order_number, total, status, payment_method, txn_id, created_at, order_items(id, product_id, product_name, brand_name, size_ml, quantity, unit_price, image_url)")
         .eq("user_id", user!.id).order("created_at", { ascending: false });
       if (error) throw error;
       return data ?? [];
     },
   });
 
+  const reviewedQ = useQuery({
+    queryKey: ["my-reviews", user?.id], enabled: !!user,
+    queryFn: async () => {
+      const { data, error } = await supabase.from("reviews").select("product_id, order_id").eq("user_id", user!.id);
+      if (error) throw error;
+      return new Set((data ?? []).map((r) => `${r.order_id}:${r.product_id}`));
+    },
+  });
+
   return (
     <DashboardShell title="My Orders" description="Track and review every order you've placed.">
-      {q.isLoading ? <p className="text-sm text-muted-foreground">Loading orders…</p> :
+      {q.isLoading ? <LuxuryLoader label="Loading orders" /> :
        (q.data?.length ?? 0) === 0 ? (
         <div className="grid place-items-center rounded-sm border border-dashed border-border py-16 text-center">
           <Package className="h-8 w-8 text-muted-foreground" />
