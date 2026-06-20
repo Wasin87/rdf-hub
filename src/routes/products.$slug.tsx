@@ -248,7 +248,7 @@ function ProductPage() {
               <button onClick={() => setQty(qty + 1)} className="h-11 w-11 hover:text-[color:var(--gold)]">+</button>
             </div>
             <button onClick={onAdd} disabled={!v || v.stock <= 0} className="btn-liquid flex-1 disabled:cursor-not-allowed disabled:opacity-50">
-              <ShoppingBag className="h-3.5 w-3.5" /> Add to Cart
+              <ShoppingBag className="h-3.5 w-3.5" /> <span className="sm:hidden">Cart</span><span className="hidden sm:inline">Add to Cart</span>
             </button>
             <button
               onClick={() =>
