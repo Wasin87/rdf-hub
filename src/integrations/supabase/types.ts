@@ -604,9 +604,12 @@ export type Database = {
           author_name: string
           body: string
           created_at: string
+          email: string | null
           id: string
+          images: Json
           is_approved: boolean
           is_featured: boolean
+          order_id: string | null
           product_id: string | null
           rating: number
           title: string | null
@@ -616,9 +619,12 @@ export type Database = {
           author_name: string
           body: string
           created_at?: string
+          email?: string | null
           id?: string
+          images?: Json
           is_approved?: boolean
           is_featured?: boolean
+          order_id?: string | null
           product_id?: string | null
           rating: number
           title?: string | null
@@ -628,15 +634,25 @@ export type Database = {
           author_name?: string
           body?: string
           created_at?: string
+          email?: string | null
           id?: string
+          images?: Json
           is_approved?: boolean
           is_featured?: boolean
+          order_id?: string | null
           product_id?: string | null
           rating?: number
           title?: string | null
           user_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "reviews_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "reviews_product_id_fkey"
             columns: ["product_id"]
