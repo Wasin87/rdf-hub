@@ -15,6 +15,7 @@ import { formatBDT, discountedPrice } from "@/lib/format";
 import { useCart } from "@/stores/cart";
 import { useWishlist } from "@/stores/wishlist";
 import { ProductCard } from "@/components/ProductCard";
+import { LuxuryLoader } from "@/components/Loader";
 
 export const Route = createFileRoute("/products/$slug")({
   ssr: false,
