@@ -15,6 +15,7 @@ import { formatBDT, discountedPrice } from "@/lib/format";
 import { useCart } from "@/stores/cart";
 import { useWishlist } from "@/stores/wishlist";
 import { ProductCard } from "@/components/ProductCard";
+import { LuxuryLoader } from "@/components/Loader";
 
 export const Route = createFileRoute("/products/$slug")({
   ssr: false,
@@ -32,9 +33,7 @@ export const Route = createFileRoute("/products/$slug")({
     ],
   }),
   component: ProductPage,
-  pendingComponent: () => (
-    <div className="container-luxury py-24 text-center text-sm text-muted-foreground">Loading fragrance…</div>
-  ),
+  pendingComponent: () => <LuxuryLoader label="Loading fragrance" />,
   errorComponent: ({ error }) => (
     <div className="container-luxury py-24 text-center">
       <h1 className="font-display text-3xl">Could not load this fragrance.</h1>
@@ -249,7 +248,7 @@ function ProductPage() {
               <button onClick={() => setQty(qty + 1)} className="h-11 w-11 hover:text-[color:var(--gold)]">+</button>
             </div>
             <button onClick={onAdd} disabled={!v || v.stock <= 0} className="btn-liquid flex-1 disabled:cursor-not-allowed disabled:opacity-50">
-              <ShoppingBag className="h-3.5 w-3.5" /> Add to Cart
+              <ShoppingBag className="h-3.5 w-3.5" /> <span className="sm:hidden">Cart</span><span className="hidden sm:inline">Add to Cart</span>
             </button>
             <button
               onClick={() =>
@@ -322,14 +321,24 @@ function ReviewsSection({ productId }: { productId: string }) {
     queryFn: () => fetchProductReviews(productId),
   });
 
+  const [zoom, setZoom] = useState<{ images: string[]; idx: number } | null>(null);
+
   const avg = useMemo(() => {
     if (!reviews.length) return 0;
     return reviews.reduce((s, r) => s + r.rating, 0) / reviews.length;
   }, [reviews]);
 
+  const maskEmail = (email?: string | null) => {
+    if (!email) return "";
+    const [u, d] = email.split("@");
+    if (!d) return email;
+    const masked = u.length <= 2 ? u[0] + "*" : u.slice(0, 2) + "***";
+    return `${masked}@${d}`;
+  };
+
   return (
     <section className="mt-20 border-t border-border pt-12">
-      <div className="mb-6 flex items-end justify-between">
+      <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
         <div>
           <p className="text-[11px] track-luxury text-[color:var(--gold)]">Reviews</p>
           <h2 className="mt-1 font-display text-3xl">Customer Reviews</h2>
@@ -345,25 +354,50 @@ function ReviewsSection({ productId }: { productId: string }) {
         <div className="text-sm text-muted-foreground">Loading reviews…</div>
       ) : reviews.length === 0 ? (
         <div className="rounded-sm border border-dashed border-border p-8 text-center text-sm text-muted-foreground">
-          No reviews yet. Be the first to share your experience.
+          No reviews yet. Purchase &amp; receive this fragrance to share your experience.
         </div>
       ) : (
         <div className="grid gap-4 md:grid-cols-2">
           {reviews.map((r) => (
             <article key={r.id} className="rounded-sm border border-border bg-card p-5">
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="font-medium">{r.author_name}</div>
+              <div className="flex items-center justify-between gap-2">
+                <div className="min-w-0">
+                  <div className="truncate font-medium">{r.author_name}</div>
+                  {r.email && <div className="truncate text-[10px] text-muted-foreground">{maskEmail(r.email)}</div>}
                   {r.created_at && <div className="text-[10px] track-luxury text-muted-foreground">{new Date(r.created_at).toLocaleDateString()}</div>}
                 </div>
                 <Stars value={r.rating} />
               </div>
               {r.title && <h3 className="mt-3 font-display text-lg">{r.title}</h3>}
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{r.body}</p>
+              {Array.isArray(r.images) && r.images.length > 0 && (
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {r.images.map((url, i) => (
+                    <button key={i} type="button" onClick={() => setZoom({ images: r.images!, idx: i })} className="h-16 w-16 overflow-hidden rounded-sm border border-border hover:border-[color:var(--gold)]">
+                      <img src={url} alt="" className="h-full w-full object-cover" loading="lazy" />
+                    </button>
+                  ))}
+                </div>
+              )}
             </article>
           ))}
         </div>
       )}
+
+      <AnimatePresence>
+        {zoom && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[100] grid place-items-center bg-background/95 p-4 backdrop-blur" onClick={() => setZoom(null)}>
+            <button onClick={() => setZoom(null)} className="absolute right-6 top-6 grid h-10 w-10 place-items-center rounded-full border border-border bg-background/80" aria-label="Close"><X className="h-4 w-4" /></button>
+            <motion.img key={zoom.images[zoom.idx]} src={zoom.images[zoom.idx]} initial={{ scale: 0.96, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.96, opacity: 0 }} alt="" className="max-h-[88vh] max-w-[88vw] rounded-sm object-contain" onClick={(e) => e.stopPropagation()} />
+            {zoom.images.length > 1 && (
+              <>
+                <button onClick={(e) => { e.stopPropagation(); setZoom({ ...zoom, idx: (zoom.idx - 1 + zoom.images.length) % zoom.images.length }); }} className="absolute left-6 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full border border-border bg-background/80" aria-label="Previous"><ChevronLeft className="h-4 w-4" /></button>
+                <button onClick={(e) => { e.stopPropagation(); setZoom({ ...zoom, idx: (zoom.idx + 1) % zoom.images.length }); }} className="absolute right-6 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full border border-border bg-background/80" aria-label="Next"><ChevronRight className="h-4 w-4" /></button>
+              </>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }

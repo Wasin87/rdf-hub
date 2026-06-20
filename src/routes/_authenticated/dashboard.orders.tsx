@@ -1,14 +1,18 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { DashboardShell } from "@/components/DashboardShell";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { formatBDT } from "@/lib/format";
-import { Package, Check, Clock, Truck, X, Sparkles, RefreshCw } from "lucide-react";
+import { Package, Check, Clock, Truck, X, Sparkles, RefreshCw, Star } from "lucide-react";
+import { ReviewForm } from "@/components/ReviewForm";
+import { LuxuryLoader } from "@/components/Loader";
 
 export const Route = createFileRoute("/_authenticated/dashboard/orders")({
   head: () => ({ meta: [{ title: "Orders — RDF" }] }),
   component: OrdersPage,
+  pendingComponent: () => <LuxuryLoader label="Loading orders" />,
 });
 
 const TIMELINE: { key: string; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
@@ -23,21 +27,31 @@ const TIMELINE: { key: string; label: string; icon: React.ComponentType<{ classN
 
 function OrdersPage() {
   const { user } = useAuth();
+  const [reviewing, setReviewing] = useState<{ productId: string; productName: string; orderId: string } | null>(null);
   const q = useQuery({
     queryKey: ["my-orders", user?.id], enabled: !!user,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("orders")
-        .select("id, order_number, total, status, payment_method, txn_id, created_at, order_items(id, product_name, brand_name, size_ml, quantity, unit_price, image_url)")
+        .select("id, order_number, total, status, payment_method, txn_id, created_at, order_items(id, product_id, product_name, brand_name, size_ml, quantity, unit_price, image_url)")
         .eq("user_id", user!.id).order("created_at", { ascending: false });
       if (error) throw error;
       return data ?? [];
     },
   });
 
+  const reviewedQ = useQuery({
+    queryKey: ["my-reviews", user?.id], enabled: !!user,
+    queryFn: async () => {
+      const { data, error } = await supabase.from("reviews").select("product_id, order_id").eq("user_id", user!.id);
+      if (error) throw error;
+      return new Set((data ?? []).map((r) => `${r.order_id}:${r.product_id}`));
+    },
+  });
+
   return (
     <DashboardShell title="My Orders" description="Track and review every order you've placed.">
-      {q.isLoading ? <p className="text-sm text-muted-foreground">Loading orders…</p> :
+      {q.isLoading ? <LuxuryLoader label="Loading orders" /> :
        (q.data?.length ?? 0) === 0 ? (
         <div className="grid place-items-center rounded-sm border border-dashed border-border py-16 text-center">
           <Package className="h-8 w-8 text-muted-foreground" />
@@ -104,22 +118,47 @@ function OrdersPage() {
                 )}
 
                 <div className="mt-4 divide-y divide-border">
-                  {o.order_items.map((it) => (
-                    <div key={it.id} className="flex items-center gap-4 py-3">
-                      {it.image_url && <img src={it.image_url} alt={it.product_name} className="h-14 w-14 rounded-sm object-cover" />}
-                      <div className="flex-1">
-                        <div className="text-[10px] track-luxury text-muted-foreground">{it.brand_name}</div>
-                        <div className="text-sm">{it.product_name}</div>
-                        <div className="text-[11px] text-muted-foreground">{it.size_ml}ml × {it.quantity}</div>
+                  {o.order_items.map((it) => {
+                    const delivered = o.status === "delivered";
+                    const already = reviewedQ.data?.has(`${o.id}:${it.product_id}`) ?? false;
+                    return (
+                      <div key={it.id} className="flex flex-wrap items-center gap-4 py-3">
+                        {it.image_url && <img src={it.image_url} alt={it.product_name} className="h-14 w-14 rounded-sm object-cover" />}
+                        <div className="min-w-0 flex-1">
+                          <div className="text-[10px] track-luxury text-muted-foreground">{it.brand_name}</div>
+                          <div className="truncate text-sm">{it.product_name}</div>
+                          <div className="text-[11px] text-muted-foreground">{it.size_ml}ml × {it.quantity}</div>
+                        </div>
+                        <div className="text-sm">{formatBDT(Number(it.unit_price) * it.quantity)}</div>
+                        {delivered && it.product_id && (
+                          already ? (
+                            <span className="inline-flex items-center gap-1 rounded-sm border border-[color:var(--gold)]/30 px-2 py-1 text-[10px] track-luxury text-[color:var(--gold)]"><Check className="h-3 w-3" /> Reviewed</span>
+                          ) : (
+                            <button
+                              onClick={() => setReviewing({ productId: it.product_id!, productName: it.product_name, orderId: o.id })}
+                              className="inline-flex items-center gap-1.5 rounded-sm border border-[color:var(--gold)] bg-[color:var(--gold)]/5 px-3 py-1.5 text-[10px] track-luxury text-[color:var(--gold)] transition-colors hover:bg-[color:var(--gold)] hover:text-[color:var(--gold-foreground)]"
+                            >
+                              <Star className="h-3 w-3" /> Write Review
+                            </button>
+                          )
+                        )}
                       </div>
-                      <div className="text-sm">{formatBDT(Number(it.unit_price) * it.quantity)}</div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             );
           })}
         </div>
+      )}
+      {reviewing && (
+        <ReviewForm
+          productId={reviewing.productId}
+          productName={reviewing.productName}
+          orderId={reviewing.orderId}
+          onClose={() => setReviewing(null)}
+          onSubmitted={() => reviewedQ.refetch()}
+        />
       )}
     </DashboardShell>
   );

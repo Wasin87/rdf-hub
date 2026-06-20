@@ -36,7 +36,7 @@ export type Brand = { id: string; name: string; slug: string; description: strin
 export type Category = { id: string; name: string; slug: string };
 export type Collection = { id: string; name: string; slug: string; description: string | null };
 export type Banner = { id: string; title: string; subtitle: string | null; image_url: string; cta_text: string | null; cta_link: string | null };
-export type Review = { id: string; author_name: string; rating: number; title: string | null; body: string; created_at?: string };
+export type Review = { id: string; author_name: string; email?: string | null; rating: number; title: string | null; body: string; images?: string[]; created_at?: string };
 
 const PRODUCT_SELECT = `
   id, name, slug, description, notes_top, notes_heart, notes_base, image_url,
@@ -111,12 +111,12 @@ export async function fetchRelatedProducts(productId: string, brandId: string | 
 export async function fetchProductReviews(productId: string): Promise<Review[]> {
   const { data, error } = await supabase
     .from("reviews")
-    .select("id, author_name, rating, title, body, created_at")
+    .select("id, author_name, email, rating, title, body, images, created_at")
     .eq("product_id", productId)
     .eq("is_approved", true)
     .order("created_at", { ascending: false });
   if (error) throw error;
-  return data ?? [];
+  return (data ?? []).map((r) => ({ ...r, images: Array.isArray((r as { images?: unknown }).images) ? ((r as { images: string[] }).images) : [] })) as Review[];
 }
 
 export async function fetchBrands(): Promise<Brand[]> {

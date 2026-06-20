@@ -15,14 +15,14 @@ export function CartSheet() {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <button aria-label="Cart" className="relative grid h-9 w-9 place-items-center rounded-sm border border-[color:var(--gold)]/30 text-foreground transition-colors hover:border-[color:var(--gold)] hover:text-[color:var(--gold)]">
-          <ShoppingBag className="h-4 w-4" />
+        <button aria-label="Cart" className="relative grid h-9 w-9 place-items-center rounded-full text-foreground transition-all duration-300 hover:scale-110 hover:text-[color:var(--gold)]">
+          <ShoppingBag className="h-[18px] w-[18px]" />
           <AnimatePresence>
             {count > 0 && (
               <motion.span
                 key={count}
                 initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}
-                className="absolute -right-2 -top-2 grid h-5 min-w-5 place-items-center rounded-full bg-[color:var(--gold)] px-1 text-[10px] font-semibold text-[color:var(--gold-foreground)]"
+                className="absolute -right-1.5 -top-1.5 grid h-4 min-w-4 place-items-center rounded-full bg-[color:var(--gold)] px-1 text-[9px] font-semibold text-[color:var(--gold-foreground)] shadow"
               >{count}</motion.span>
             )}
           </AnimatePresence>
