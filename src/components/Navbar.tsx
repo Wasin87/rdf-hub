@@ -153,7 +153,9 @@ export function Navbar() {
             className="overflow-hidden border-t border-border bg-background lg:hidden"
           >
             <div className="container-luxury flex flex-col gap-1 py-5">
-              <div className="mb-3"><SearchBar inDrawer /></div>
+              <button onClick={() => { setMobileOpen(false); setSearchOpen(true); }} className="mb-3 flex h-10 items-center gap-2 rounded-sm border border-border bg-card px-3 text-xs text-muted-foreground hover:border-[color:var(--gold)]/40">
+                <Search className="h-3.5 w-3.5" /> Search fragrances...
+              </button>
               {navItems.map((item) => (
                 <div key={item.label}>
                   <Link to={item.to as never} className="block py-2.5 text-sm track-luxury">{item.label}</Link>
