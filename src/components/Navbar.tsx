@@ -37,6 +37,7 @@ const navItems: { label: string; to: string; dropdown?: { label: string; to: str
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { user } = useAuth();
@@ -49,7 +50,7 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  useEffect(() => { setMobileOpen(false); }, [pathname]);
+  useEffect(() => { setMobileOpen(false); setSearchOpen(false); }, [pathname]);
 
   return (
     <header className={`sticky top-0 z-40 transition-all duration-500 ${scrolled ? "glass-nav" : "bg-background"}`}>
