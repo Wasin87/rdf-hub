@@ -21,7 +21,7 @@ export function LuxuryLoader({ label = "Loading" }: { label?: string }) {
             transition={{ repeat: Infinity, duration: 2.2, ease: "easeInOut" }}
             className="font-display text-lg tracking-[0.18em] text-[color:var(--gold)]"
           >
-            RDF
+            FA
           </motion.div>
         </div>
         <div className="text-[10px] track-luxury text-muted-foreground">{label}…</div>
