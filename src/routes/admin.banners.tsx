@@ -8,7 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 type Banner = { id: string; title: string; subtitle: string | null; image_url: string; cta_text: string | null; cta_link: string | null; is_active: boolean; order_index: number };
 
 export const Route = createFileRoute("/admin/banners")({
-  head: () => ({ meta: [{ title: "Hero Banners — Admin RDF" }] }),
+  head: () => ({ meta: [{ title: "Hero Banners — Admin FRAG AVENUE" }] }),
   component: AdminBanners,
 });
 

@@ -5,7 +5,7 @@ import { useCart } from "@/stores/cart";
 import { formatBDT } from "@/lib/format";
 
 export const Route = createFileRoute("/_authenticated/dashboard/cart")({
-  head: () => ({ meta: [{ title: "Cart — RDF" }] }),
+  head: () => ({ meta: [{ title: "Cart — FRAG AVENUE" }] }),
   component: CartPage,
 });
 

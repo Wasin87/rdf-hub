@@ -4,7 +4,7 @@ import { ProductForm } from "@/components/admin/ProductForm";
 
 export const Route = createFileRoute("/admin/add-product")({
   ssr: false,
-  head: () => ({ meta: [{ title: "Add Product — Admin RDF" }] }),
+  head: () => ({ meta: [{ title: "Add Product — Admin FRAG AVENUE" }] }),
   component: AddProduct,
 });
 

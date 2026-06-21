@@ -10,7 +10,7 @@ import { ReviewForm } from "@/components/ReviewForm";
 import { LuxuryLoader } from "@/components/Loader";
 
 export const Route = createFileRoute("/_authenticated/dashboard/orders")({
-  head: () => ({ meta: [{ title: "Orders — RDF" }] }),
+  head: () => ({ meta: [{ title: "Orders — FRAG AVENUE" }] }),
   component: OrdersPage,
   pendingComponent: () => <LuxuryLoader label="Loading orders" />,
 });

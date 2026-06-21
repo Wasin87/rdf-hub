@@ -19,7 +19,7 @@ export const Route = createFileRoute("/admin")({
     }
     return { user: u.user };
   },
-  head: () => ({ meta: [{ title: "Admin — RDF" }] }),
+  head: () => ({ meta: [{ title: "Admin — FRAG AVENUE" }] }),
   component: AdminLayout,
 });
 

@@ -9,7 +9,7 @@ import { useCart } from "@/stores/cart";
 import { formatBDT } from "@/lib/format";
 
 export const Route = createFileRoute("/_authenticated/dashboard/")({
-  head: () => ({ meta: [{ title: "Dashboard — RDF" }] }),
+  head: () => ({ meta: [{ title: "Dashboard — FRAG AVENUE" }] }),
   component: Overview,
 });
 

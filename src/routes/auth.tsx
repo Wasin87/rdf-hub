@@ -22,7 +22,7 @@ const registerSchema = loginSchema.extend({
 
 export const Route = createFileRoute("/auth")({
   validateSearch: searchSchema,
-  head: () => ({ meta: [{ title: "Sign In — RDF" }, { name: "description", content: "Sign in or create an account at RDF — Rezoan's Decant & Fragrance." }] }),
+  head: () => ({ meta: [{ title: "Sign In — FRAG AVENUE" }, { name: "description", content: "Sign in or create an account at FRAG AVENUE." }] }),
   component: AuthPage,
 });
 
@@ -137,7 +137,7 @@ function AuthPage() {
           </form>
 
           <p className="mt-6 text-center text-xs text-muted-foreground">
-            {mode === "login" ? "New to RDF? " : "Already have an account? "}
+            {mode === "login" ? "New here? " : "Already have an account? "}
             <button type="button" onClick={() => { setMode(mode === "login" ? "register" : "login"); form.reset(); }} className="font-medium text-[color:var(--gold)] hover:underline">
               {mode === "login" ? "Create an account" : "Sign in"}
             </button>

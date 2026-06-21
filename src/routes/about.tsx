@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Award, Globe, Sparkles, ShieldCheck } from "lucide-react";
 
 export const Route = createFileRoute("/about")({
-  head: () => ({ meta: [{ title: "About — RDF" }, { name: "description", content: "RDF — Rezoan's Decant & Fragrance is Bangladesh's premier luxury fragrance decant atelier." }] }),
+  head: () => ({ meta: [{ title: "About — FRAG AVENUE" }, { name: "description", content: "RDF — Rezoan's Decant & Fragrance is Bangladesh's premier luxury fragrance decant atelier." }] }),
   component: AboutPage,
 });
 

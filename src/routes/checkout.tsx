@@ -12,7 +12,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { formatBDT } from "@/lib/format";
 
 export const Route = createFileRoute("/checkout")({
-  head: () => ({ meta: [{ title: "Checkout — RDF" }] }),
+  head: () => ({ meta: [{ title: "Checkout — FRAG AVENUE" }] }),
   component: CheckoutPage,
 });
 

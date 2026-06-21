@@ -16,7 +16,7 @@ const schema = z.object({
 
 export const Route = createFileRoute("/reset-password")({
   ssr: false,
-  head: () => ({ meta: [{ title: "Reset Password — RDF" }] }),
+  head: () => ({ meta: [{ title: "Reset Password — FRAG AVENUE" }] }),
   component: ResetPasswordPage,
 });
 

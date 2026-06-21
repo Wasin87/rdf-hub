@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/admin/edit-product/$id")({
   ssr: false,
-  head: () => ({ meta: [{ title: "Edit Product — Admin RDF" }] }),
+  head: () => ({ meta: [{ title: "Edit Product — Admin FRAG AVENUE" }] }),
   component: EditProduct,
 });
 

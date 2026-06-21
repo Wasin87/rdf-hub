@@ -21,7 +21,7 @@ const searchSchema = z.object({
 
 export const Route = createFileRoute("/shop")({
   validateSearch: searchSchema,
-  head: () => ({ meta: [{ title: "Shop — RDF Luxury Fragrances" }, { name: "description", content: "Browse luxury fragrance decants from the world's finest houses." }] }),
+  head: () => ({ meta: [{ title: "Shop — FRAG AVENUE Luxury Fragrances" }, { name: "description", content: "Browse luxury fragrance decants from the world's finest houses." }] }),
   component: ShopPage,
 });
 

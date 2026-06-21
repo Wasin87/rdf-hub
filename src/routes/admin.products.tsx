@@ -8,7 +8,7 @@ import { formatBDT } from "@/lib/format";
 import { resolveImage } from "@/lib/catalog";
 
 export const Route = createFileRoute("/admin/products")({
-  head: () => ({ meta: [{ title: "Products — Admin RDF" }] }),
+  head: () => ({ meta: [{ title: "Products — Admin FRAG AVENUE" }] }),
   component: AdminProducts,
 });
 
