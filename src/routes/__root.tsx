@@ -51,18 +51,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "RDF — Rezoan's Decant & Fragrance | Luxury Perfume Decants" },
+      { title: "FRAG AVENUE — Luxury Perfume Decants" },
       { name: "description", content: "Authentic luxury perfume decants from Dior, Chanel, Tom Ford, Creed, Lattafa & more. 3ml–30ml decants delivered with discretion." },
-      { name: "author", content: "RDF — Rezoan's Decant & Fragrance" },
+      { name: "author", content: "FRAG AVENUE" },
       { name: "theme-color", content: "#0B0B0B" },
-      { property: "og:title", content: "RDF — Rezoan's Decant & Fragrance | Luxury Perfume Decants" },
-      { property: "og:description", content: "Authentic luxury perfume decants from Dior, Chanel, Tom Ford, Creed, Lattafa & more. 3ml–30ml decants delivered with discretion." },
+      { property: "og:title", content: "FRAG AVENUE — Luxury Perfume Decants" },
+      { property: "og:description", content: "Authentic luxury perfume decants from Dior, Chanel, Tom Ford, Creed, Lattafa & more." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "RDF — Rezoan's Decant & Fragrance | Luxury Perfume Decants" },
-      { name: "twitter:description", content: "Authentic luxury perfume decants from Dior, Chanel, Tom Ford, Creed, Lattafa & more. 3ml–30ml decants delivered with discretion." },
-      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/7c81a071-015e-41dc-a320-147af526937f" },
-      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/7c81a071-015e-41dc-a320-147af526937f" },
+      { name: "twitter:title", content: "FRAG AVENUE — Luxury Perfume Decants" },
+      { name: "twitter:description", content: "Authentic luxury perfume decants from Dior, Chanel, Tom Ford, Creed, Lattafa & more." },
     ],
     links: [{ rel: "stylesheet", href: appCss }],
   }),
@@ -87,8 +85,8 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <div className="flex min-h-dvh flex-col bg-background text-foreground">
-          <Navbar />
           <AnnouncementBar />
+          <Navbar />
           <main className="flex-1 pb-20 lg:pb-0">
             <Outlet />
           </main>
