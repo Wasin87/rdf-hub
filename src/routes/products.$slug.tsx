@@ -26,9 +26,9 @@ export const Route = createFileRoute("/products/$slug")({
   },
   head: ({ loaderData }) => ({
     meta: [
-      { title: loaderData ? `${loaderData.product.brand?.name ?? ""} ${loaderData.product.name} — RDF` : "Product — RDF" },
+      { title: loaderData ? `${loaderData.product.brand?.name ?? ""} ${loaderData.product.name} — FRAG AVENUE` : "Product — FRAG AVENUE" },
       { name: "description", content: loaderData?.product.description ?? "Luxury fragrance decant" },
-      { property: "og:title", content: loaderData ? `${loaderData.product.name} — RDF` : "RDF" },
+      { property: "og:title", content: loaderData ? `${loaderData.product.name} — FRAG AVENUE` : "FRAG AVENUE" },
       { property: "og:image", content: loaderData ? resolveImage(loaderData.product.image_url) : undefined },
     ],
   }),

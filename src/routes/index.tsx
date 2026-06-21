@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { fetchBanners, fetchBrands, fetchProducts, fetchFeaturedReviews } from "@/lib/catalog";
 import { HeroSlider } from "@/components/HeroSlider";
@@ -6,13 +6,14 @@ import { BrandMarquee } from "@/components/BrandMarquee";
 import { CollectionGrid } from "@/components/CollectionGrid";
 import { ProductSection } from "@/components/ProductSection";
 import { ReviewsSlider } from "@/components/ReviewsSlider";
+import { TrustSection } from "@/components/TrustSection";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "RDF — Rezoan's Decant & Fragrance | Luxury Perfume Decants" },
+      { title: "FRAG AVENUE — Luxury Perfume Decants" },
       { name: "description", content: "Authentic luxury fragrance decants from the world's most prestigious houses. Dior, Chanel, Tom Ford, Creed and more — 3ml to 30ml." },
-      { property: "og:title", content: "RDF — Rezoan's Decant & Fragrance" },
+      { property: "og:title", content: "FRAG AVENUE — Luxury Perfume Decants" },
       { property: "og:description", content: "Authentic luxury fragrance decants from the world's most prestigious houses." },
     ],
   }),
@@ -44,13 +45,17 @@ function HomePage() {
         <div className="bg-section">
           <ProductSection
             eyebrow="Special Acquisitions"
-            title="The Discount Edit"
+            title="Discounted Products"
             description="Exceptional pieces, briefly available at a refined price."
             products={discounts.data.data}
             viewAllSearch={{ filter: "discount" }}
           />
+          <div className="container-luxury -mt-6 flex justify-center pb-16">
+            <Link to="/shop" className="btn-liquid">All Products</Link>
+          </div>
         </div>
       )}
+      <TrustSection />
       {reviews.data && <ReviewsSlider reviews={reviews.data} />}
     </>
   );

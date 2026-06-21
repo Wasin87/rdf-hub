@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ChevronDown, User as UserIcon, LogOut, Search, LayoutDashboard, Heart, ShoppingBag, Settings as SettingsIcon } from "lucide-react";
+import { Menu, X, ChevronDown, User as UserIcon, LogOut, Search, LayoutDashboard, Heart, ShoppingBag, Settings as SettingsIcon, Shield } from "lucide-react";
 import { Logo } from "./Logo";
 import { ThemeToggle } from "./ThemeToggle";
 import { SearchModal } from "./SearchModal";
@@ -11,27 +11,26 @@ import { useAuth } from "@/hooks/useAuth";
 import { useRole } from "@/hooks/useRole";
 import { supabase } from "@/integrations/supabase/client";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Shield } from "lucide-react";
 
-const navItems: { label: string; to: string; dropdown?: { label: string; to: string; search?: Record<string, string> }[] }[] = [
+const navItems: { label: string; to: string; dropdown?: { heading?: string; items: { label: string; to: string; search?: Record<string, string> }[] }[] }[] = [
   { label: "Home", to: "/" },
   { label: "Shop", to: "/shop" },
   {
     label: "Collection", to: "/shop",
     dropdown: [
-      { label: "Men", to: "/shop", search: { category: "men" } },
-      { label: "Women", to: "/shop", search: { category: "women" } },
-      { label: "Unisex", to: "/shop", search: { category: "unisex" } },
+      { heading: "By Recipient", items: [
+        { label: "Men", to: "/shop", search: { category: "men" } },
+        { label: "Women", to: "/shop", search: { category: "women" } },
+        { label: "Unisex", to: "/shop", search: { category: "unisex" } },
+      ]},
+      { heading: "Featured", items: [
+        { label: "Discount", to: "/shop", search: { filter: "discount" } },
+        { label: "New Arrivals", to: "/shop", search: { filter: "new" } },
+        { label: "Limited Products", to: "/shop", search: { filter: "limited" } },
+      ]},
     ],
   },
-  {
-    label: "Discount", to: "/shop",
-    dropdown: [
-      { label: "New Arrivals", to: "/shop", search: { filter: "new" } },
-      { label: "Limited Products", to: "/shop", search: { filter: "limited" } },
-    ],
-  },
-  { label: "About", to: "/about" },
+  { label: "Our Story", to: "/our-story" },
 ];
 
 export function Navbar() {
@@ -52,65 +51,81 @@ export function Navbar() {
 
   useEffect(() => { setMobileOpen(false); setSearchOpen(false); }, [pathname]);
 
+  const iconBtn = "grid h-9 w-9 place-items-center rounded-full text-foreground transition-all duration-300 hover:scale-110 hover:text-[color:var(--gold)]";
+
   return (
     <header className={`sticky top-0 z-40 transition-all duration-500 ${scrolled ? "glass-nav" : "bg-background"}`}>
-      <div className="container-luxury flex h-16 items-center gap-6 lg:h-20">
-        <Logo />
-        <nav className="hidden flex-1 items-center justify-center gap-9 lg:flex">
-          {navItems.map((item) => {
-            const active = pathname === item.to && !item.dropdown;
-            if (item.dropdown) {
+      <div className="container-luxury grid h-16 grid-cols-[auto_1fr_auto] items-center gap-4 lg:h-20 lg:grid-cols-3">
+        {/* LEFT: nav (desktop) / menu (mobile) */}
+        <div className="flex items-center">
+          <button onClick={() => setMobileOpen((o) => !o)} aria-label="Menu" className="grid h-9 w-9 place-items-center lg:hidden">
+            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+          <nav className="hidden items-center gap-7 lg:flex">
+            {navItems.map((item) => {
+              const active = pathname === item.to && !item.dropdown;
+              if (item.dropdown) {
+                return (
+                  <div key={item.label} className="relative" onMouseEnter={() => setOpenDropdown(item.label)} onMouseLeave={() => setOpenDropdown(null)}>
+                    <button className="nav-link flex items-center gap-1" data-active={active}>
+                      {item.label}<ChevronDown className="h-3 w-3" />
+                    </button>
+                    <AnimatePresence>
+                      {openDropdown === item.label && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8 }}
+                          transition={{ duration: 0.18 }}
+                          className="absolute left-0 top-[calc(100%+10px)] z-50 min-w-64 rounded-sm border border-[color:var(--gold)]/20 bg-popover p-3 shadow-2xl"
+                        >
+                          {item.dropdown.map((group) => (
+                            <div key={group.heading} className="mb-2 last:mb-0">
+                              {group.heading && (
+                                <div className="px-3 pb-1.5 pt-1 text-[9px] track-luxury text-[color:var(--gold)]">{group.heading}</div>
+                              )}
+                              {group.items.map((d) => (
+                                <Link
+                                  key={d.label} to={d.to as never} search={d.search as never}
+                                  className="block px-3 py-2 text-xs track-luxury text-foreground/85 transition-colors hover:bg-secondary hover:text-[color:var(--gold)]"
+                                >{d.label}</Link>
+                              ))}
+                            </div>
+                          ))}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                );
+              }
               return (
-                <div key={item.label} className="relative" onMouseEnter={() => setOpenDropdown(item.label)} onMouseLeave={() => setOpenDropdown(null)}>
-                  <button className="nav-link flex items-center gap-1" data-active={active}>
-                    {item.label}<ChevronDown className="h-3 w-3" />
-                  </button>
-                  <AnimatePresence>
-                    {openDropdown === item.label && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8 }}
-                        transition={{ duration: 0.18 }}
-                        className="absolute left-1/2 top-[calc(100%+10px)] z-50 min-w-44 -translate-x-1/2 rounded-sm border border-[color:var(--gold)]/20 bg-popover p-2 shadow-2xl"
-                      >
-                        {item.dropdown.map((d) => (
-                          <Link
-                            key={d.label} to={d.to as never} search={d.search as never}
-                            className="block px-4 py-2.5 text-xs track-luxury text-foreground/85 transition-colors hover:bg-secondary hover:text-[color:var(--gold)]"
-                          >{d.label}</Link>
-                        ))}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
+                <Link key={item.label} to={item.to as never} className="nav-link" data-active={active}>{item.label}</Link>
               );
-            }
-            return (
-              <Link key={item.label} to={item.to as never} className="nav-link" data-active={active}>{item.label}</Link>
-            );
-          })}
-        </nav>
+            })}
+          </nav>
+        </div>
 
-        <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
-          <button
-            onClick={() => setSearchOpen(true)}
-            aria-label="Open search"
-            className="grid h-9 w-9 place-items-center rounded-full text-foreground transition-all duration-300 hover:scale-110 hover:text-[color:var(--gold)]"
-          >
+        {/* CENTER: logo */}
+        <div className="flex justify-center">
+          <Logo />
+        </div>
+
+        {/* RIGHT: icons */}
+        <div className="flex items-center justify-end gap-1.5 sm:gap-2">
+          <button onClick={() => setSearchOpen(true)} aria-label="Open search" className={iconBtn}>
             <Search className="h-[18px] w-[18px]" />
           </button>
           <div className="hidden sm:block"><WishlistSheet /></div>
           <CartSheet />
-          {user ? (
+          {user && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button aria-label="Account menu" className="grid h-9 w-9 place-items-center rounded-full text-foreground transition-all duration-300 hover:scale-110 hover:text-[color:var(--gold)]">
+                <button aria-label="Account menu" className={iconBtn}>
                   <UserIcon className="h-[18px] w-[18px]" />
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
-                <div className="px-3 py-2">
-                  <div className="text-[10px] track-luxury text-muted-foreground">Signed in</div>
-                  <div className="truncate text-sm">{user.email}</div>
+              <DropdownMenuContent align="end" className="w-60">
+                <div className="px-3 py-2.5">
+                  <div className="truncate text-sm font-medium">{user.user_metadata?.full_name || user.email?.split("@")[0]}</div>
+                  <div className="truncate text-[11px] text-muted-foreground">{user.email}</div>
                 </div>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild><Link to="/dashboard"><LayoutDashboard className="mr-2 h-3.5 w-3.5" /> Dashboard</Link></DropdownMenuItem>
@@ -119,26 +134,23 @@ export function Navbar() {
                     <Link to="/admin" className="text-[color:var(--gold)]"><Shield className="mr-2 h-3.5 w-3.5" /> Admin Panel</Link>
                   </DropdownMenuItem>
                 )}
-                <DropdownMenuItem asChild><Link to="/dashboard/cart"><ShoppingBag className="mr-2 h-3.5 w-3.5" /> Cart</Link></DropdownMenuItem>
+                <DropdownMenuItem asChild><Link to="/dashboard/orders"><ShoppingBag className="mr-2 h-3.5 w-3.5" /> Orders</Link></DropdownMenuItem>
                 <DropdownMenuItem asChild><Link to="/dashboard/wishlist"><Heart className="mr-2 h-3.5 w-3.5" /> Wishlist</Link></DropdownMenuItem>
-                <DropdownMenuItem asChild><Link to="/dashboard/orders">My Orders</Link></DropdownMenuItem>
                 <DropdownMenuItem asChild><Link to="/dashboard/settings"><SettingsIcon className="mr-2 h-3.5 w-3.5" /> Settings</Link></DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <div className="px-2 py-1.5"><ThemeToggle /></div>
                 <DropdownMenuItem onClick={async () => { await supabase.auth.signOut(); window.location.assign("/"); }}>
-                  <LogOut className="mr-2 h-3.5 w-3.5" /> Sign out
+                  <LogOut className="mr-2 h-3.5 w-3.5" /> Logout
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-          ) : (
-            <div className="hidden items-center gap-1.5 sm:flex">
-              <Link to="/auth" search={{ mode: "login" } as never} className="px-3 py-2 text-[11px] track-luxury text-foreground hover:text-[color:var(--gold)]">Login</Link>
-              <Link to="/auth" search={{ mode: "register" } as never} className="rounded-sm border border-[color:var(--gold)] px-3 py-2 text-[11px] track-luxury text-[color:var(--gold)] transition-all hover:bg-[color:var(--gold)] hover:text-[color:var(--gold-foreground)]">Register</Link>
-            </div>
           )}
-          <button onClick={() => setMobileOpen((o) => !o)} aria-label="Menu" className="grid h-9 w-9 place-items-center lg:hidden">
-            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </button>
+          {/* Theme toggle — always to the RIGHT of cart (and right of profile when signed in) */}
+          <ThemeToggle />
+          {!user && (
+            <Link to="/auth" search={{ mode: "login" } as never} className="hidden rounded-sm border border-[color:var(--gold)]/40 px-3 py-2 text-[11px] track-luxury text-foreground transition-all hover:border-[color:var(--gold)] hover:text-[color:var(--gold)] sm:inline-block">
+              Login
+            </Link>
+          )}
         </div>
       </div>
       <div className="hairline" />
@@ -160,7 +172,7 @@ export function Navbar() {
                   <Link to={item.to as never} className="block py-2.5 text-sm track-luxury">{item.label}</Link>
                   {item.dropdown && (
                     <div className="ml-4 flex flex-col">
-                      {item.dropdown.map((d) => (
+                      {item.dropdown.flatMap((g) => g.items).map((d) => (
                         <Link key={d.label} to={d.to as never} search={d.search as never} className="py-1.5 text-xs text-muted-foreground hover:text-[color:var(--gold)]">{d.label}</Link>
                       ))}
                     </div>
@@ -168,10 +180,7 @@ export function Navbar() {
                 </div>
               ))}
               {!user && (
-                <div className="mt-3 grid grid-cols-2 gap-2">
-                  <Link to="/auth" search={{ mode: "login" } as never} className="rounded-sm border border-border py-2.5 text-center text-xs track-luxury">Login</Link>
-                  <Link to="/auth" search={{ mode: "register" } as never} className="rounded-sm bg-[color:var(--gold)] py-2.5 text-center text-xs track-luxury text-[color:var(--gold-foreground)]">Register</Link>
-                </div>
+                <Link to="/auth" search={{ mode: "login" } as never} className="mt-3 rounded-sm bg-[color:var(--gold)] py-2.5 text-center text-xs track-luxury text-[color:var(--gold-foreground)]">Login</Link>
               )}
             </div>
           </motion.div>

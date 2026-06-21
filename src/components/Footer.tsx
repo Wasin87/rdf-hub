@@ -54,7 +54,7 @@ export function Footer() {
           </div>
         </div>
         <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-border pt-6 sm:flex-row">
-          <p className="text-[11px] text-muted-foreground">© {new Date().getFullYear()} RDF — Rezoan's Decant &amp; Fragrance. All rights reserved.</p>
+          <p className="text-[11px] text-muted-foreground">© {new Date().getFullYear()} FRAG AVENUE. All rights reserved.</p>
           <p className="text-[10px] track-luxury text-muted-foreground">Crafted with discernment in Bangladesh</p>
         </div>
       </div>

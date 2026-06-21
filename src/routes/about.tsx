@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Award, Globe, Sparkles, ShieldCheck } from "lucide-react";
 
 export const Route = createFileRoute("/about")({
-  head: () => ({ meta: [{ title: "About — RDF" }, { name: "description", content: "RDF — Rezoan's Decant & Fragrance is Bangladesh's premier luxury fragrance decant atelier." }] }),
+  head: () => ({ meta: [{ title: "About — FRAG AVENUE" }, { name: "description", content: "FRAG AVENUE is Bangladesh's premier luxury fragrance decant atelier." }] }),
   component: AboutPage,
 });
 
@@ -14,7 +14,7 @@ function AboutPage() {
         <p className="text-[11px] track-luxury text-[color:var(--gold)]">Our Story</p>
         <h1 className="mt-3 font-display text-5xl md:text-6xl"><span className="gold-text">The Art of Decant</span></h1>
         <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
-          RDF was founded with a singular conviction: that the great fragrances of our time should not be locked behind a single, intimidating bottle. Through painstakingly hand-decanted vials of 3ml to 30ml, we make the world's most prestigious houses accessible to discerning Bangladeshi connoisseurs.
+          FRAG AVENUE was founded with a singular conviction: that the great fragrances of our time should not be locked behind a single, intimidating bottle. Through painstakingly hand-decanted vials of 3ml to 30ml, we make the world's most prestigious houses accessible to discerning Bangladeshi connoisseurs.
         </p>
       </motion.div>
 

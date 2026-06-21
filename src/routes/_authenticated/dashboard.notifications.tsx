@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/_authenticated/dashboard/notifications")({
-  head: () => ({ meta: [{ title: "Notifications — RDF" }] }),
+  head: () => ({ meta: [{ title: "Notifications — FRAG AVENUE" }] }),
   component: NotificationsPage,
 });
 

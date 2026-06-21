@@ -49,7 +49,7 @@ export function HeroSlider({ banners }: { banners: Banner[] }) {
             className="max-w-2xl text-white"
           >
             <span className="mb-5 inline-block rounded-sm border border-[color:var(--gold-soft)]/60 px-3 py-1 text-[10px] track-luxury text-[color:var(--gold-soft)]">
-              The RDF Maison
+              FRAG AVENUE
             </span>
             <h1 className="font-display text-5xl leading-[1.05] text-balance md:text-6xl lg:text-7xl">
               <span className="gold-text">{current.title}</span>
@@ -57,10 +57,13 @@ export function HeroSlider({ banners }: { banners: Banner[] }) {
             {current.subtitle && (
               <p className="mt-5 max-w-xl text-base leading-relaxed text-white/80 md:text-lg">{current.subtitle}</p>
             )}
-            <div className="mt-9">
+            <div className="mt-9 flex flex-wrap items-center gap-3">
               <Link to={(current.cta_link as never) || "/shop"} className="btn-liquid">
                 {current.cta_text || "Shop Now"}
                 <span className="ml-1">→</span>
+              </Link>
+              <Link to="/our-story" className="inline-flex items-center gap-2 rounded-sm border border-[color:var(--gold-soft)]/70 px-7 py-[0.95rem] text-[0.78rem] font-medium uppercase tracking-[0.32em] text-[color:var(--gold-soft)] backdrop-blur-sm transition-all hover:bg-[color:var(--gold-soft)]/10">
+                Our Story
               </Link>
             </div>
           </motion.div>

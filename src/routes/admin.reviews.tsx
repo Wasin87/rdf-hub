@@ -10,7 +10,7 @@ type Review = {
 };
 
 export const Route = createFileRoute("/admin/reviews")({
-  head: () => ({ meta: [{ title: "Reviews — Admin RDF" }] }),
+  head: () => ({ meta: [{ title: "Reviews — Admin FRAG AVENUE" }] }),
   component: AdminReviews,
 });
 

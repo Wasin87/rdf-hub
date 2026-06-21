@@ -5,7 +5,7 @@ import { useWishlist } from "@/stores/wishlist";
 import { formatBDT, discountedPrice } from "@/lib/format";
 
 export const Route = createFileRoute("/_authenticated/dashboard/wishlist")({
-  head: () => ({ meta: [{ title: "Wishlist — RDF" }] }),
+  head: () => ({ meta: [{ title: "Wishlist — FRAG AVENUE" }] }),
   component: WishPage,
 });
 

@@ -11,7 +11,7 @@ type Notice = {
 };
 
 export const Route = createFileRoute("/admin/notices")({
-  head: () => ({ meta: [{ title: "Notice Banners — Admin RDF" }] }),
+  head: () => ({ meta: [{ title: "Notice Banners — Admin FRAG AVENUE" }] }),
   component: AdminNotices,
 });
 

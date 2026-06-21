@@ -9,7 +9,7 @@ const ALL_STATUSES = ["pending", "confirmed", "processing", "in_progress", "ship
 type Status = typeof ALL_STATUSES[number];
 
 export const Route = createFileRoute("/admin/orders")({
-  head: () => ({ meta: [{ title: "Orders — Admin RDF" }] }),
+  head: () => ({ meta: [{ title: "Orders — Admin FRAG AVENUE" }] }),
   component: AdminOrders,
 });
 
