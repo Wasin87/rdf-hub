@@ -39,7 +39,7 @@ export function Navbar() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const { user, profile } = useAuth();
+  const { user } = useAuth();
   const { isAdmin } = useRole();
 
   useEffect(() => {
@@ -124,7 +124,7 @@ export function Navbar() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-60">
                 <div className="px-3 py-2.5">
-                  <div className="truncate text-sm font-medium">{profile?.full_name || user.email?.split("@")[0]}</div>
+                  <div className="truncate text-sm font-medium">{user.user_metadata?.full_name || user.email?.split("@")[0]}</div>
                   <div className="truncate text-[11px] text-muted-foreground">{user.email}</div>
                 </div>
                 <DropdownMenuSeparator />
