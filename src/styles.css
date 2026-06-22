@@ -12,13 +12,15 @@
 @import "@fontsource/inter/400.css";
 @import "@fontsource/inter/500.css";
 @import "@fontsource/inter/600.css";
+@import "@fontsource/lato/400.css";
+@import "@fontsource/lato/700.css";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {
   --font-display: "Playfair Display", "Cormorant Garamond", Georgia, serif;
   --font-serif: "Cormorant Garamond", Georgia, serif;
-  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-sans: "Lato", "Inter", system-ui, -apple-system, sans-serif;
 
   --radius-sm: 2px;
   --radius-md: 4px;
@@ -57,42 +59,41 @@
   --shadow-card-dark: 0 1px 3px rgba(0,0,0,0.4), 0 8px 24px -12px rgba(0,0,0,0.6);
 }
 
-/* ===== LIGHT THEME =====
-   Background: #F9F6F0 cream
-   Cards: #FFFFFF
-   Text primary: #111111  Secondary: #666666
-   Accent: Champagne gold #C9A961, Beige #D9CBA9
+/* ===== LIGHT THEME — Pure White, Product-Focused =====
+   Background: #FFFFFF  Text: #000000
+   Cards: #FFFFFF with subtle border + shadow
+   Accent reserved for highlights (modern minimal)
 */
 :root {
-  --background: oklch(0.972 0.012 87);          /* #F9F6F0 cream */
-  --foreground: oklch(0.18 0 0);                /* #111111 */
+  --background: oklch(1 0 0);                   /* #FFFFFF */
+  --foreground: oklch(0 0 0);                   /* #000000 */
   --card: oklch(1 0 0);                         /* #FFFFFF */
-  --card-foreground: oklch(0.18 0 0);
+  --card-foreground: oklch(0 0 0);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.18 0 0);
-  --section: oklch(0.96 0.014 86);              /* slightly warmer cream */
+  --popover-foreground: oklch(0 0 0);
+  --section: oklch(0.985 0 0);                  /* #F8F8F8 subtle gray */
 
-  --primary: oklch(0.18 0 0);                   /* black for buttons */
-  --primary-foreground: oklch(0.972 0.012 87);
-  --secondary: oklch(0.94 0.018 86);            /* premium beige #E8DDC4 */
-  --secondary-foreground: oklch(0.22 0.01 60);
+  --primary: oklch(0 0 0);                      /* pure black */
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.97 0 0);                 /* #F5F5F5 */
+  --secondary-foreground: oklch(0.18 0 0);
 
-  --muted: oklch(0.94 0.012 87);
-  --muted-foreground: oklch(0.46 0 0);          /* #666666 */
-  --accent: oklch(0.78 0.10 80);                /* champagne gold accent */
-  --accent-foreground: oklch(0.18 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.42 0 0);          /* #6B6B6B */
+  --accent: oklch(0.74 0.115 79);
+  --accent-foreground: oklch(0.13 0 0);
 
   --destructive: oklch(0.55 0.22 25);
   --destructive-foreground: oklch(0.98 0 0);
 
-  --border: oklch(0.88 0.012 86);
-  --input: oklch(0.88 0.012 86);
-  --ring: oklch(0.78 0.10 80);
+  --border: oklch(0.91 0 0);                    /* #E8E8E8 */
+  --input: oklch(0.91 0 0);
+  --ring: oklch(0 0 0);
 
-  --gold: oklch(0.74 0.115 79);                 /* champagne gold #C9A961 */
-  --gold-soft: oklch(0.86 0.075 84);            /* #E5CC8E */
-  --gold-muted: oklch(0.55 0.07 73);            /* darker bronze */
-  --gold-foreground: oklch(0.16 0 0);
+  --gold: oklch(0.74 0.115 79);
+  --gold-soft: oklch(0.86 0.075 84);
+  --gold-muted: oklch(0.55 0.07 73);
+  --gold-foreground: oklch(1 0 0);
 }
 
 /* ===== DARK THEME =====
@@ -172,9 +173,9 @@
 }
 
 @utility glass-nav {
-  background: color-mix(in oklab, var(--background) 78%, transparent);
-  backdrop-filter: saturate(180%) blur(18px);
-  border-bottom: 1px solid color-mix(in oklab, var(--gold) 14%, transparent);
+  background: color-mix(in oklab, var(--background) 72%, transparent);
+  backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid var(--border);
 }
 
 @utility track-luxury {
