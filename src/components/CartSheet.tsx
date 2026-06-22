@@ -94,9 +94,3 @@ export function CartSheet() {
     </Sheet>
   );
 }
-          </>
-        )}
-      </SheetContent>
-    </Sheet>
-  );
-}
