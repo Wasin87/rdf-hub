@@ -51,7 +51,7 @@ export function Navbar() {
 
   useEffect(() => { setMobileOpen(false); setSearchOpen(false); }, [pathname]);
 
-  const iconBtn = "grid h-9 w-9 place-items-center rounded-full text-foreground transition-all duration-300 hover:scale-110 hover:text-[color:var(--gold)]";
+  const iconBtn = "grid h-10 w-10 place-items-center rounded-full text-foreground transition-all duration-300 hover:scale-110 hover:bg-secondary hover:text-[color:var(--gold)] active:scale-95";
 
   return (
     <header className={`sticky top-0 z-40 transition-all duration-500 ${scrolled ? "glass-nav" : "bg-background"}`}>
@@ -61,13 +61,13 @@ export function Navbar() {
           <button onClick={() => setMobileOpen((o) => !o)} aria-label="Menu" className="grid h-9 w-9 place-items-center lg:hidden">
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
-          <nav className="hidden items-center gap-7 lg:flex">
+          <nav className="hidden items-center gap-7 lg:flex whitespace-nowrap">
             {navItems.map((item) => {
               const active = pathname === item.to && !item.dropdown;
               if (item.dropdown) {
                 return (
                   <div key={item.label} className="relative" onMouseEnter={() => setOpenDropdown(item.label)} onMouseLeave={() => setOpenDropdown(null)}>
-                    <button className="nav-link flex items-center gap-1" data-active={active}>
+                    <button className="nav-link flex items-center gap-1 whitespace-nowrap" data-active={active}>
                       {item.label}<ChevronDown className="h-3 w-3" />
                     </button>
                     <AnimatePresence>
@@ -75,7 +75,7 @@ export function Navbar() {
                         <motion.div
                           initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8 }}
                           transition={{ duration: 0.18 }}
-                          className="absolute left-0 top-[calc(100%+10px)] z-50 min-w-64 rounded-sm border border-[color:var(--gold)]/20 bg-popover p-3 shadow-2xl"
+                          className="absolute left-0 top-[calc(100%+10px)] z-50 min-w-64 rounded-lg border border-border bg-popover p-3 shadow-xl"
                         >
                           {item.dropdown.map((group) => (
                             <div key={group.heading} className="mb-2 last:mb-0">
@@ -97,7 +97,7 @@ export function Navbar() {
                 );
               }
               return (
-                <Link key={item.label} to={item.to as never} className="nav-link" data-active={active}>{item.label}</Link>
+                <Link key={item.label} to={item.to as never} className="nav-link whitespace-nowrap" data-active={active}>{item.label}</Link>
               );
             })}
           </nav>
