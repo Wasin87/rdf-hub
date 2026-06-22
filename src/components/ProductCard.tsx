@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { Heart, ShoppingBag } from "lucide-react";
+import { Heart, ShoppingBag, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
 import type { Product } from "@/lib/catalog";
 import { resolveImage } from "@/lib/catalog";
@@ -50,12 +50,12 @@ export function ProductCard({ product }: { product: Product }) {
   };
 
   return (
-    <motion.article className="card-luxury group/card relative flex flex-col">
+    <motion.article className="group/card relative flex flex-col overflow-hidden rounded-lg border border-border bg-card p-0 shadow-xl transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl">
       {(product.is_new || product.discount_percent > 0 || product.is_limited) && (
         <div className="absolute left-3 top-3 z-10 flex flex-col gap-1.5">
-          {product.is_new && <span className="rounded-sm bg-foreground px-2 py-0.5 text-[9px] track-luxury text-background">New</span>}
-          {product.discount_percent > 0 && <span className="rounded-sm bg-[color:var(--gold)] px-2 py-0.5 text-[9px] track-luxury text-[color:var(--gold-foreground)]">−{product.discount_percent}%</span>}
-          {product.is_limited && <span className="rounded-sm border border-[color:var(--gold)] bg-background/80 px-2 py-0.5 text-[9px] track-luxury text-[color:var(--gold)]">Limited</span>}
+          {product.is_new && <span className="rounded-full bg-foreground px-2.5 py-1 text-[9px] font-semibold uppercase tracking-wider text-background shadow-md">New</span>}
+          {product.discount_percent > 0 && <span className="rounded-full bg-destructive px-2.5 py-1 text-[9px] font-semibold uppercase tracking-wider text-destructive-foreground shadow-md">Sale −{product.discount_percent}%</span>}
+          {product.is_limited && <span className="rounded-full bg-[color:var(--gold)] px-2.5 py-1 text-[9px] font-semibold uppercase tracking-wider text-[color:var(--gold-foreground)] shadow-md">Limited</span>}
         </div>
       )}
 
@@ -63,31 +63,40 @@ export function ProductCard({ product }: { product: Product }) {
         <ProductCardImage product={product} />
       </Link>
 
-      {/* Desktop hover: wishlist top-right */}
-      <motion.button
+      {/* Wishlist — desktop hover top-right; mobile always visible top-right of image */}
+      <button
         onClick={onWish}
         aria-label={isWished ? "Remove from wishlist" : "Add to wishlist"}
-        initial={false}
-        className={`absolute right-3 top-3 z-20 hidden lg:grid h-9 w-9 place-items-center rounded-full border border-[color:var(--gold)]/40 bg-background/85 backdrop-blur-md shadow-lg transition-all duration-300 opacity-0 scale-90 translate-y-1 group-hover/card:opacity-100 group-hover/card:scale-100 group-hover/card:translate-y-0 hover:border-[color:var(--gold)] hover:text-[color:var(--gold)] ${isWished ? "text-[color:var(--gold)] !opacity-100 !scale-100" : "text-foreground"}`}
+        className={`absolute right-3 top-3 z-20 grid h-9 w-9 place-items-center rounded-full border border-border bg-background/90 backdrop-blur-md shadow-md transition-all duration-300 hover:border-[color:var(--gold)] hover:text-[color:var(--gold)] active:scale-95 lg:opacity-0 lg:scale-90 lg:translate-y-1 group-hover/card:lg:opacity-100 group-hover/card:lg:scale-100 group-hover/card:lg:translate-y-0 ${isWished ? "text-[color:var(--gold)] lg:!opacity-100 lg:!scale-100" : "text-foreground"}`}
       >
         <Heart className={`h-4 w-4 ${isWished ? "fill-current" : ""}`} />
-      </motion.button>
+      </button>
 
-      {/* Desktop hover: cart bottom-right over image */}
-      <motion.button
+      {/* Desktop hover: cart button bottom-right of image */}
+      <button
         type="button"
         onClick={onAdd}
         aria-label="Add to cart"
-        className="absolute right-3 z-20 hidden lg:grid h-10 w-10 place-items-center rounded-full bg-[color:var(--gold)] text-[color:var(--gold-foreground)] shadow-xl transition-all duration-300 opacity-0 scale-90 hover:scale-110 group-hover/card:opacity-100 group-hover/card:scale-100"
-        style={{ top: "calc(80% - 1.25rem)" }}
+        className="absolute right-3 z-20 hidden lg:grid h-10 w-10 place-items-center rounded-full bg-foreground text-background shadow-xl transition-all duration-300 opacity-0 scale-90 hover:scale-110 hover:bg-[color:var(--gold)] hover:text-[color:var(--gold-foreground)] group-hover/card:opacity-100 group-hover/card:scale-100"
+        style={{ top: "calc(75% - 1.25rem)" }}
       >
         <ShoppingBag className="h-4 w-4" />
-      </motion.button>
+      </button>
 
-      <div className="flex flex-1 flex-col gap-1.5 p-4">
+      {/* Desktop hover: full-width Explore button */}
+      <Link
+        to="/products/$slug"
+        params={{ slug: product.slug }}
+        className="absolute inset-x-0 z-20 hidden lg:flex items-center justify-center gap-2 bg-foreground py-3 text-[10px] font-semibold uppercase tracking-[0.28em] text-background opacity-0 translate-y-full transition-all duration-500 group-hover/card:opacity-100 group-hover/card:translate-y-0 hover:bg-[color:var(--gold)] hover:text-[color:var(--gold-foreground)]"
+        style={{ top: "calc(80% - 0px)" }}
+      >
+        <ArrowRight className="h-3.5 w-3.5" /> Explore
+      </Link>
+
+      <div className="flex flex-1 flex-col gap-1.5 p-5">
         <div className="flex items-center justify-between gap-2">
           <span className="truncate text-[10px] track-luxury text-muted-foreground">{product.brand?.name}</span>
-          {product.category && <span className="rounded-sm border border-[color:var(--gold)]/30 px-1.5 py-px text-[8px] track-luxury text-[color:var(--gold)]">{product.category.name}</span>}
+          {product.category && <span className="rounded-full border border-border px-2 py-px text-[8px] track-luxury text-muted-foreground">{product.category.name}</span>}
         </div>
         <Link to="/products/$slug" params={{ slug: product.slug }} className="line-clamp-1 font-display text-[1rem] font-medium leading-snug text-foreground transition-colors hover:text-[color:var(--gold)]">
           {product.name}
@@ -108,25 +117,15 @@ export function ProductCard({ product }: { product: Product }) {
               <span className="text-xs text-muted-foreground line-through">{formatBDT(v.price)}</span>
             )}
           </div>
-          {/* Mobile/Tablet always-visible actions */}
-          <div className="flex items-center gap-1.5 lg:hidden">
-            <button
-              type="button"
-              onClick={onWish}
-              aria-label="Wishlist"
-              className={`grid h-9 w-9 place-items-center rounded-sm border transition-all ${isWished ? "border-[color:var(--gold)] text-[color:var(--gold)]" : "border-border text-foreground hover:border-[color:var(--gold)]"}`}
-            >
-              <Heart className={`h-4 w-4 ${isWished ? "fill-current" : ""}`} />
-            </button>
-            <button
-              type="button"
-              onClick={onAdd}
-              aria-label="Add to cart"
-              className="shrink-0 grid h-9 w-9 place-items-center rounded-sm bg-foreground text-background transition-all hover:bg-[color:var(--gold)] hover:text-[color:var(--gold-foreground)] active:scale-95"
-            >
-              <ShoppingBag className="h-4 w-4" />
-            </button>
-          </div>
+          {/* Mobile/Tablet always-visible cart action */}
+          <button
+            type="button"
+            onClick={onAdd}
+            aria-label="Add to cart"
+            className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-foreground text-background transition-all hover:bg-[color:var(--gold)] hover:text-[color:var(--gold-foreground)] active:scale-95 lg:hidden"
+          >
+            <ShoppingBag className="h-4 w-4" />
+          </button>
         </div>
       </div>
     </motion.article>
@@ -157,7 +156,7 @@ function ProductCardImage({ product }: { product: Product }) {
   useEffect(() => () => { if (timer.current) clearInterval(timer.current); }, []);
 
   return (
-    <div className="relative aspect-[4/5] overflow-hidden bg-secondary" onMouseEnter={onEnter} onMouseLeave={onLeave}>
+    <div className="relative aspect-[3/4] overflow-hidden bg-secondary" onMouseEnter={onEnter} onMouseLeave={onLeave}>
       {images.map((url, i) => (
         <motion.img
           key={`${url}-${i}`}

@@ -1,9 +1,11 @@
-import { Link } from "@tanstack/react-router";
+import { useState } from "react";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { ShoppingBag, Plus, Minus, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "@/stores/cart";
 import { formatBDT } from "@/lib/format";
+import { useAuth } from "@/hooks/useAuth";
 
 export function CartSheet() {
   const items = useCart((s) => s.items);
@@ -11,9 +13,18 @@ export function CartSheet() {
   const remove = useCart((s) => s.remove);
   const subtotal = useCart((s) => s.subtotal());
   const count = useCart((s) => s.count());
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+
+  const goCheckout = () => {
+    setOpen(false);
+    if (!user) navigate({ to: "/auth", search: { mode: "login", redirect: "/checkout" } as never });
+    else navigate({ to: "/checkout" });
+  };
 
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <button aria-label="Cart" className="relative grid h-9 w-9 place-items-center rounded-full text-foreground transition-all duration-300 hover:scale-110 hover:text-[color:var(--gold)]">
           <ShoppingBag className="h-[18px] w-[18px]" />
@@ -74,7 +85,7 @@ export function CartSheet() {
                 <span className="font-display text-xl text-[color:var(--gold)]">{formatBDT(subtotal)}</span>
               </div>
               <p className="mb-4 text-[11px] text-muted-foreground">Shipping calculated at checkout. Free over ৳ 5,000.</p>
-              <Link to="/checkout" className="btn-liquid w-full">Checkout</Link>
+              <button onClick={goCheckout} className="btn-liquid w-full">Checkout</button>
             </div>
           </>
         )}
