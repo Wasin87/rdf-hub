@@ -201,7 +201,7 @@ function ProductPage() {
             {v && <span className="text-xs text-muted-foreground">/ {v.size_ml}ml</span>}
           </div>
 
-          <p className="mt-6 max-w-prose text-sm leading-relaxed text-muted-foreground">{product.description}</p>
+          <p className="mt-6 max-w-prose text-sm leading-relaxed text-muted-foreground line-clamp-3">{product.description}</p>
 
           {(product.notes_top || product.notes_heart || product.notes_base) && (
             <div className="mt-6 grid gap-3 rounded-sm border border-border bg-section p-5 text-xs">
@@ -276,6 +276,17 @@ function ProductPage() {
           </div>
         </motion.div>
       </div>
+
+      {product.description && (
+        <section className="mt-16">
+          <div className="rounded-lg border border-border bg-card p-6 shadow-xl md:p-8">
+            <p className="text-[11px] track-luxury text-[color:var(--gold)]">About this fragrance</p>
+            <h2 className="mt-1 font-display text-3xl">Product Description</h2>
+            <div className="mt-5 hairline w-16" />
+            <p className="mt-5 whitespace-pre-line text-[15px] leading-relaxed text-foreground/85">{product.description}</p>
+          </div>
+        </section>
+      )}
 
       <ReviewsSection productId={product.id} />
       <RelatedSection product={product} />
