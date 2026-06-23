@@ -59,8 +59,14 @@ export function ProductCard({ product }: { product: Product }) {
         </div>
       )}
 
-      <Link to="/products/$slug" params={{ slug: product.slug }} className="block">
+      <Link to="/products/$slug" params={{ slug: product.slug }} className="relative block overflow-hidden">
         <ProductCardImage product={product} />
+        {/* Desktop hover: Explore slides up from the bottom of the IMAGE only */}
+        <span
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-10 hidden lg:flex items-center justify-center gap-2 bg-foreground py-3 text-[10px] font-semibold uppercase tracking-[0.28em] text-background opacity-0 translate-y-full transition-all duration-500 group-hover/card:opacity-100 group-hover/card:translate-y-0 group-hover/card:pointer-events-auto hover:bg-[color:var(--gold)] hover:text-[color:var(--gold-foreground)]"
+        >
+          <ArrowRight className="h-3.5 w-3.5" /> Explore
+        </span>
       </Link>
 
       {/* Wishlist — desktop hover top-right; mobile always visible top-right of image */}
@@ -71,27 +77,6 @@ export function ProductCard({ product }: { product: Product }) {
       >
         <Heart className={`h-4 w-4 ${isWished ? "fill-current" : ""}`} />
       </button>
-
-      {/* Desktop hover: cart button bottom-right of image */}
-      <button
-        type="button"
-        onClick={onAdd}
-        aria-label="Add to cart"
-        className="absolute right-3 z-20 hidden lg:grid h-10 w-10 place-items-center rounded-full bg-foreground text-background shadow-xl transition-all duration-300 opacity-0 scale-90 hover:scale-110 hover:bg-[color:var(--gold)] hover:text-[color:var(--gold-foreground)] group-hover/card:opacity-100 group-hover/card:scale-100"
-        style={{ top: "calc(75% - 1.25rem)" }}
-      >
-        <ShoppingBag className="h-4 w-4" />
-      </button>
-
-      {/* Desktop hover: full-width Explore button */}
-      <Link
-        to="/products/$slug"
-        params={{ slug: product.slug }}
-        className="absolute inset-x-0 z-20 hidden lg:flex items-center justify-center gap-2 bg-foreground py-3 text-[10px] font-semibold uppercase tracking-[0.28em] text-background opacity-0 translate-y-full transition-all duration-500 group-hover/card:opacity-100 group-hover/card:translate-y-0 hover:bg-[color:var(--gold)] hover:text-[color:var(--gold-foreground)]"
-        style={{ top: "calc(80% - 0px)" }}
-      >
-        <ArrowRight className="h-3.5 w-3.5" /> Explore
-      </Link>
 
       <div className="flex flex-1 flex-col gap-1.5 p-5">
         <div className="flex items-center justify-between gap-2">
@@ -117,12 +102,12 @@ export function ProductCard({ product }: { product: Product }) {
               <span className="text-xs text-muted-foreground line-through">{formatBDT(v.price)}</span>
             )}
           </div>
-          {/* Mobile/Tablet always-visible cart action */}
+          {/* Cart icon — always visible, bottom-right of card next to price */}
           <button
             type="button"
             onClick={onAdd}
             aria-label="Add to cart"
-            className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-foreground text-background transition-all hover:bg-[color:var(--gold)] hover:text-[color:var(--gold-foreground)] active:scale-95 lg:hidden"
+            className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-foreground text-background transition-all duration-300 hover:scale-110 hover:bg-[color:var(--gold)] hover:text-[color:var(--gold-foreground)] active:scale-95"
           >
             <ShoppingBag className="h-4 w-4" />
           </button>
