@@ -20,20 +20,26 @@ export function CollectionGrid() {
           Explore fragrances by gender and discover scents tailored to every personality.
         </p>
       </div>
-      <div className="grid gap-5 md:grid-cols-3">
+      <div className="mx-auto grid max-w-5xl gap-5 md:grid-cols-3">
         {items.map((c, i) => (
           <motion.div key={c.slug} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.6, delay: i * 0.1 }}>
             <Link
               to="/shop"
               search={{ category: c.slug } as never}
-              className="group relative block aspect-[4/5] overflow-hidden rounded-sm bg-foreground"
+              className="group relative block aspect-[4/5] overflow-hidden rounded-lg border border-border bg-foreground shadow-md transition-shadow hover:shadow-xl"
             >
-              <img src={c.image} alt={c.name} loading="lazy" className="h-full w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-110" />
+              <img
+                src={c.image}
+                alt={c.name}
+                loading="lazy"
+                onError={(e) => { e.currentTarget.style.opacity = "0"; }}
+                className="h-full w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-110"
+              />
               <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
-              <div className="absolute inset-x-0 bottom-0 p-7 text-white">
-                <h3 className="font-display text-3xl"><span className="gold-text">{c.name}</span></h3>
-                <p className="mt-1 text-sm text-white/75">{c.desc}</p>
-                <div className="mt-4 inline-flex items-center gap-2 text-[10px] track-luxury text-[color:var(--gold-soft)]">
+              <div className="absolute inset-x-0 bottom-0 p-6 text-white">
+                <h3 className="font-display text-2xl"><span className="gold-text">{c.name}</span></h3>
+                <p className="mt-1 text-xs text-white/75">{c.desc}</p>
+                <div className="mt-3 inline-flex items-center gap-2 text-[10px] track-luxury text-[color:var(--gold-soft)]">
                   Discover <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
                 </div>
               </div>
