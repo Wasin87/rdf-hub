@@ -102,12 +102,12 @@ export function ProductCard({ product }: { product: Product }) {
               <span className="text-xs text-muted-foreground line-through">{formatBDT(v.price)}</span>
             )}
           </div>
-          {/* Cart icon — always visible, bottom-right of card next to price */}
+          {/* Cart icon — mobile: always visible; desktop: shows on card hover */}
           <button
             type="button"
             onClick={onAdd}
             aria-label="Add to cart"
-            className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-foreground text-background transition-all duration-300 hover:scale-110 hover:bg-[color:var(--gold)] hover:text-[color:var(--gold-foreground)] active:scale-95"
+            className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-foreground text-background transition-all duration-300 hover:scale-110 hover:bg-[color:var(--gold)] hover:text-[color:var(--gold-foreground)] active:scale-95 lg:opacity-0 lg:translate-y-1 group-hover/card:lg:opacity-100 group-hover/card:lg:translate-y-0"
           >
             <ShoppingBag className="h-4 w-4" />
           </button>
