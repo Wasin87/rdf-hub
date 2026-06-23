@@ -102,12 +102,12 @@ export function ProductCard({ product }: { product: Product }) {
               <span className="text-xs text-muted-foreground line-through">{formatBDT(v.price)}</span>
             )}
           </div>
-          {/* Cart icon — always visible, bottom-right of card next to price */}
+          {/* Cart icon — mobile: always visible; desktop: shows on card hover */}
           <button
             type="button"
             onClick={onAdd}
             aria-label="Add to cart"
-            className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-foreground text-background transition-all duration-300 hover:scale-110 hover:bg-[color:var(--gold)] hover:text-[color:var(--gold-foreground)] active:scale-95"
+            className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-foreground text-background transition-all duration-300 hover:scale-110 hover:bg-[color:var(--gold)] hover:text-[color:var(--gold-foreground)] active:scale-95 lg:opacity-0 lg:translate-y-1 group-hover/card:lg:opacity-100 group-hover/card:lg:translate-y-0"
           >
             <ShoppingBag className="h-4 w-4" />
           </button>
@@ -141,13 +141,20 @@ function ProductCardImage({ product }: { product: Product }) {
   useEffect(() => () => { if (timer.current) clearInterval(timer.current); }, []);
 
   return (
-    <div className="relative aspect-[3/4] overflow-hidden bg-secondary" onMouseEnter={onEnter} onMouseLeave={onLeave}>
+    <div className="relative aspect-[4/5] overflow-hidden bg-secondary" onMouseEnter={onEnter} onMouseLeave={onLeave}>
       {images.map((url, i) => (
         <motion.img
           key={`${url}-${i}`}
           src={resolveImage(url)}
           alt={`${product.brand?.name ?? ""} ${product.name}`}
           loading="lazy"
+          onError={(e) => {
+            const img = e.currentTarget;
+            if (img.dataset.fallback !== "1") {
+              img.dataset.fallback = "1";
+              img.src = resolveImage(null);
+            }
+          }}
           className="absolute inset-0 h-full w-full object-cover"
           initial={false}
           animate={{ opacity: i === idx ? 1 : 0, scale: i === idx ? 1.02 : 1 }}
