@@ -144,7 +144,13 @@ export async function fetchBanners(): Promise<Banner[]> {
 }
 
 export async function fetchFeaturedReviews(): Promise<Review[]> {
-  const { data, error } = await supabase.from("reviews").select("id, author_name, rating, title, body").eq("is_approved", true).eq("is_featured", true).order("created_at", { ascending: false });
+  const { data, error } = await supabase
+    .from("reviews")
+    .select("id, author_name, rating, title, body, created_at")
+    .eq("is_approved", true)
+    .eq("rating", 5)
+    .order("created_at", { ascending: false })
+    .limit(24);
   if (error) throw error;
   return data ?? [];
 }
