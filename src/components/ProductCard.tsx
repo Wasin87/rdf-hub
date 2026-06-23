@@ -141,13 +141,20 @@ function ProductCardImage({ product }: { product: Product }) {
   useEffect(() => () => { if (timer.current) clearInterval(timer.current); }, []);
 
   return (
-    <div className="relative aspect-[3/4] overflow-hidden bg-secondary" onMouseEnter={onEnter} onMouseLeave={onLeave}>
+    <div className="relative aspect-[4/5] overflow-hidden bg-secondary" onMouseEnter={onEnter} onMouseLeave={onLeave}>
       {images.map((url, i) => (
         <motion.img
           key={`${url}-${i}`}
           src={resolveImage(url)}
           alt={`${product.brand?.name ?? ""} ${product.name}`}
           loading="lazy"
+          onError={(e) => {
+            const img = e.currentTarget;
+            if (img.dataset.fallback !== "1") {
+              img.dataset.fallback = "1";
+              img.src = resolveImage(null);
+            }
+          }}
           className="absolute inset-0 h-full w-full object-cover"
           initial={false}
           animate={{ opacity: i === idx ? 1 : 0, scale: i === idx ? 1.02 : 1 }}
