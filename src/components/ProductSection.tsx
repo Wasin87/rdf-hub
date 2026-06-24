@@ -11,18 +11,18 @@ export function ProductSection({ eyebrow, title, description, products, viewAllS
 }) {
   if (!products.length) return null;
   return (
-    <section className="container-luxury py-20 lg:py-24">
-      <div className="mb-10 flex flex-col items-start justify-between gap-5 md:flex-row md:items-end">
-        <div>
-          <p className="text-[11px] track-luxury text-[color:var(--gold)]">{eyebrow}</p>
-          <h2 className="mt-2 font-display text-3xl md:text-4xl"><span className="gold-text">{title}</span></h2>
-          {description && <p className="mt-2 max-w-md text-sm text-muted-foreground">{description}</p>}
+    <section className="container-luxury py-12 md:py-20 lg:py-24">
+      <div className="mb-6 flex items-end justify-between gap-3 md:mb-10">
+        <div className="min-w-0">
+          <p className="text-[10px] track-luxury text-[color:var(--gold)] md:text-[11px]">{eyebrow}</p>
+          <h2 className="mt-1.5 font-display text-xl font-bold text-foreground md:mt-2 md:text-3xl lg:text-4xl">{title}</h2>
+          {description && <p className="mt-2 hidden max-w-md text-sm text-muted-foreground md:block">{description}</p>}
         </div>
-        <Link to="/shop" search={viewAllSearch as never} className="group inline-flex items-center gap-2 text-[11px] track-luxury text-foreground hover:text-[color:var(--gold)]">
+        <Link to="/shop" search={viewAllSearch as never} className="group inline-flex shrink-0 items-center gap-1.5 text-[10px] track-luxury text-foreground hover:text-[color:var(--gold)] md:gap-2 md:text-[11px]">
           View all <span className="transition-transform group-hover:translate-x-1">→</span>
         </Link>
       </div>
-      <div className="grid grid-cols-2 gap-4 sm:gap-5 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 md:gap-5 lg:grid-cols-4 xl:grid-cols-5">
         {products.map((p) => <ProductCard key={p.id} product={p} />)}
       </div>
     </section>
