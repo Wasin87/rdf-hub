@@ -52,10 +52,10 @@ export function ProductCard({ product }: { product: Product }) {
   return (
     <motion.article className="group/card relative flex flex-col overflow-hidden rounded-lg border border-border bg-card p-0 shadow-xl transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl">
       {(product.is_new || product.discount_percent > 0 || product.is_limited) && (
-        <div className="absolute left-3 top-3 z-10 flex flex-col gap-1.5">
-          {product.is_new && <span className="rounded-full bg-foreground px-2.5 py-1 text-[9px] font-semibold uppercase tracking-wider text-background shadow-md">New</span>}
-          {product.discount_percent > 0 && <span className="rounded-full bg-destructive px-2.5 py-1 text-[9px] font-semibold uppercase tracking-wider text-destructive-foreground shadow-md">Sale −{product.discount_percent}%</span>}
-          {product.is_limited && <span className="rounded-full bg-[color:var(--gold)] px-2.5 py-1 text-[9px] font-semibold uppercase tracking-wider text-[color:var(--gold-foreground)] shadow-md">Limited</span>}
+        <div className="absolute left-2 top-2 z-10 flex flex-col gap-1 sm:left-3 sm:top-3 sm:gap-1.5">
+          {product.is_new && <span className="rounded-full bg-foreground px-2 py-0.5 text-[8px] font-semibold uppercase tracking-wider text-background shadow-md sm:px-2.5 sm:py-1 sm:text-[9px]">New</span>}
+          {product.discount_percent > 0 && <span className="rounded-full bg-destructive px-2 py-0.5 text-[8px] font-semibold uppercase tracking-wider text-destructive-foreground shadow-md sm:px-2.5 sm:py-1 sm:text-[9px]">−{product.discount_percent}%</span>}
+          {product.is_limited && <span className="rounded-full bg-[color:var(--gold)] px-2 py-0.5 text-[8px] font-semibold uppercase tracking-wider text-[color:var(--gold-foreground)] shadow-md sm:px-2.5 sm:py-1 sm:text-[9px]">Limited</span>}
         </div>
       )}
 
@@ -69,13 +69,13 @@ export function ProductCard({ product }: { product: Product }) {
         </span>
       </Link>
 
-      {/* Wishlist — desktop hover top-right; mobile always visible top-right of image */}
+      {/* Wishlist */}
       <button
         onClick={onWish}
         aria-label={isWished ? "Remove from wishlist" : "Add to wishlist"}
-        className={`absolute right-3 top-3 z-20 grid h-9 w-9 place-items-center rounded-full border border-border bg-background/90 backdrop-blur-md shadow-md transition-all duration-300 hover:border-[color:var(--gold)] hover:text-[color:var(--gold)] active:scale-95 lg:opacity-0 lg:scale-90 lg:translate-y-1 group-hover/card:lg:opacity-100 group-hover/card:lg:scale-100 group-hover/card:lg:translate-y-0 ${isWished ? "text-[color:var(--gold)] lg:!opacity-100 lg:!scale-100" : "text-foreground"}`}
+        className={`absolute right-2 top-2 z-20 grid h-7 w-7 place-items-center rounded-full border border-border bg-background/90 backdrop-blur-md shadow-md transition-all duration-300 hover:border-[color:var(--gold)] hover:text-[color:var(--gold)] active:scale-95 sm:right-3 sm:top-3 sm:h-9 sm:w-9 lg:opacity-0 lg:scale-90 lg:translate-y-1 group-hover/card:lg:opacity-100 group-hover/card:lg:scale-100 group-hover/card:lg:translate-y-0 ${isWished ? "text-[color:var(--gold)] lg:!opacity-100 lg:!scale-100" : "text-foreground"}`}
       >
-        <Heart className={`h-4 w-4 ${isWished ? "fill-current" : ""}`} />
+        <Heart className={`h-3 w-3 sm:h-4 sm:w-4 ${isWished ? "fill-current" : ""}`} />
       </button>
 
       <div className="flex flex-1 flex-col gap-1 p-2.5 sm:gap-1.5 sm:p-4 md:p-5">
