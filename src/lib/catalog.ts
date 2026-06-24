@@ -150,7 +150,7 @@ export async function fetchFeaturedReviews(): Promise<Review[]> {
     .order("created_at", { ascending: false })
     .limit(24);
   if (error) throw error;
-  return data ?? [];
+  return (data ?? []) as unknown as Review[];
 }
 
 // Resolve asset paths used in seed data to actual bundled URLs
