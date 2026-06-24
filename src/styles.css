@@ -198,31 +198,38 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 0.95rem 2.4rem;
+  padding: 0.85rem 2.2rem;
   font-family: var(--font-sans);
-  font-weight: 500;
-  font-size: 0.78rem;
-  letter-spacing: 0.32em;
+  font-weight: 700;
+  font-size: 0.74rem;
+  letter-spacing: 0.3em;
   text-transform: uppercase;
-  background: linear-gradient(135deg, var(--gold-soft), var(--gold) 60%, var(--gold-muted));
-  color: var(--gold-foreground);
-  border: 1px solid var(--gold);
+  background: var(--foreground);
+  color: var(--background);
+  border: 1px solid var(--foreground);
   border-radius: 2px;
   overflow: hidden;
-  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s ease;
-  box-shadow: 0 6px 22px -10px color-mix(in oklab, var(--gold) 70%, transparent);
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s ease, background 0.3s ease, color 0.3s ease;
+  box-shadow: 0 8px 24px -12px color-mix(in oklab, var(--foreground) 50%, transparent);
   cursor: pointer;
   &::before {
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(120deg, transparent 30%, color-mix(in oklab, white 70%, transparent) 50%, transparent 70%);
+    background: linear-gradient(120deg, transparent 30%, color-mix(in oklab, var(--gold) 70%, transparent) 50%, transparent 70%);
     transform: translateX(-100%);
     transition: transform 0.9s ease;
   }
-  &:hover { transform: translateY(-2px); box-shadow: 0 14px 38px -12px color-mix(in oklab, var(--gold) 80%, transparent); }
+  &:hover { transform: translateY(-2px); background: var(--gold); color: var(--gold-foreground); border-color: var(--gold); box-shadow: 0 14px 38px -12px color-mix(in oklab, var(--gold) 70%, transparent); }
   &:hover::before { transform: translateX(100%); }
   &:active { transform: translateY(0); }
+}
+
+.dark .btn-liquid {
+  background: linear-gradient(135deg, var(--gold-soft), var(--gold) 60%, var(--gold-muted));
+  color: var(--gold-foreground);
+  border-color: var(--gold);
+  box-shadow: 0 6px 22px -10px color-mix(in oklab, var(--gold) 70%, transparent);
 }
 
 @utility nav-link {
