@@ -42,17 +42,17 @@ export function SearchBar({ inDrawer = false }: { inDrawer?: boolean }) {
   return (
     <div ref={ref} className={`relative ${inDrawer ? "w-full" : "w-full max-w-xs"}`}>
       <form onSubmit={submit} className="relative">
-        <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+        <Search className="pointer-events-none absolute left-4 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
         <input
           value={q}
           onChange={(e) => { setQ(e.target.value); setOpen(true); }}
           onFocus={() => setOpen(true)}
-          placeholder="Search fragrances..."
+          placeholder="Search fragrance"
           aria-label="Search products"
-          className="h-9 w-full rounded-sm border border-[color:var(--border)] bg-card pl-9 pr-9 text-xs tracking-wide text-foreground placeholder:text-muted-foreground focus:border-[color:var(--gold)] focus:outline-none focus:ring-1 focus:ring-[color:var(--gold)]/40"
+          className="h-9 w-full rounded-full border border-[color:var(--border)] bg-card pl-10 pr-9 text-xs tracking-wide text-foreground placeholder:text-muted-foreground focus:border-[color:var(--gold)] focus:outline-none focus:ring-1 focus:ring-[color:var(--gold)]/40"
         />
         {q && (
-          <button type="button" onClick={() => { setQ(""); setResults([]); }} className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground" aria-label="Clear search">
+          <button type="button" onClick={() => { setQ(""); setResults([]); }} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground" aria-label="Clear search">
             <X className="h-3.5 w-3.5" />
           </button>
         )}

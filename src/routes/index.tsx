@@ -30,16 +30,20 @@ function HomePage() {
   return (
     <>
       {banners.data && <HeroSlider banners={banners.data} />}
-      {brands.data && brands.data.length > 0 && <BrandMarquee brands={brands.data} />}
       <CollectionGrid />
       {newArrivals.data && (
-        <ProductSection
-          eyebrow="Fresh from the Atelier"
-          title="New Arrivals"
-          description="The latest fragrances to enter our boutique."
-          products={newArrivals.data.data}
-          viewAllSearch={{ filter: "new" }}
-        />
+        <>
+          <ProductSection
+            eyebrow="Fresh from the Atelier"
+            title="New Arrivals"
+            description="The latest fragrances to enter our boutique."
+            products={newArrivals.data.data}
+            viewAllSearch={{ filter: "new" }}
+          />
+          <div className="container-luxury -mt-4 flex justify-center pb-10 md:pb-14">
+            <Link to="/shop" className="btn-liquid">All Products</Link>
+          </div>
+        </>
       )}
       {discounts.data && discounts.data.data.length > 0 && (
         <div className="bg-section">
@@ -50,11 +54,12 @@ function HomePage() {
             products={discounts.data.data}
             viewAllSearch={{ filter: "discount" }}
           />
-          <div className="container-luxury -mt-6 flex justify-center pb-16">
+          <div className="container-luxury -mt-4 flex justify-center pb-10 md:pb-14">
             <Link to="/shop" className="btn-liquid">All Products</Link>
           </div>
         </div>
       )}
+      {brands.data && brands.data.length > 0 && <BrandMarquee brands={brands.data} />}
       <TrustSection />
       {reviews.data && <ReviewsSlider reviews={reviews.data} />}
     </>
