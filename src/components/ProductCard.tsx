@@ -80,10 +80,10 @@ export function ProductCard({ product }: { product: Product }) {
 
       <div className="flex flex-1 flex-col gap-1 p-2.5 sm:gap-1.5 sm:p-4 md:p-5">
         <div className="flex items-center justify-between gap-2">
-          <span className="truncate text-[10px] track-luxury text-muted-foreground">{product.brand?.name}</span>
-          {product.category && <span className="rounded-full border border-border px-2 py-px text-[8px] track-luxury text-muted-foreground">{product.category.name}</span>}
+          <span className="truncate text-[9px] track-luxury text-muted-foreground sm:text-[10px]">{product.brand?.name}</span>
+          {product.category && <span className="hidden rounded-full border border-border px-2 py-px text-[8px] track-luxury text-muted-foreground sm:inline">{product.category.name}</span>}
         </div>
-        <Link to="/products/$slug" params={{ slug: product.slug }} className="line-clamp-1 font-display text-[1rem] font-medium leading-snug text-foreground transition-colors hover:text-[color:var(--gold)]">
+        <Link to="/products/$slug" params={{ slug: product.slug }} className="line-clamp-1 font-display text-[13px] font-semibold leading-snug text-foreground transition-colors hover:text-[color:var(--gold)] sm:text-[15px] md:text-base">
           {product.name}
         </Link>
         <select
@@ -91,25 +91,24 @@ export function ProductCard({ product }: { product: Product }) {
           onChange={(e) => setSelected(e.target.value)}
           onClick={(e) => e.stopPropagation()}
           aria-label="Select size"
-          className="mt-1 h-7 w-fit rounded-sm border border-border bg-transparent px-2 text-[10px] track-luxury text-muted-foreground focus:border-[color:var(--gold)] focus:outline-none"
+          className="mt-0.5 h-6 w-fit rounded-sm border border-border bg-transparent px-1.5 text-[9px] track-luxury text-muted-foreground focus:border-[color:var(--gold)] focus:outline-none sm:h-7 sm:px-2 sm:text-[10px]"
         >
           {variants.map((vr) => <option key={vr.id} value={vr.id}>{vr.size_ml} ML</option>)}
         </select>
-        <div className="mt-1 flex items-center justify-between gap-2">
-          <div className="flex items-baseline gap-2 min-w-0">
-            <span className="font-display text-lg text-[color:var(--gold)] truncate">{formatBDT(finalPrice)}</span>
+        <div className="mt-0.5 flex items-center justify-between gap-2 sm:mt-1">
+          <div className="flex items-baseline gap-1.5 min-w-0 sm:gap-2">
+            <span className="font-display text-sm font-bold text-[color:var(--gold)] truncate sm:text-base md:text-lg">{formatBDT(finalPrice)}</span>
             {product.discount_percent > 0 && v && (
-              <span className="text-xs text-muted-foreground line-through">{formatBDT(v.price)}</span>
+              <span className="text-[10px] text-muted-foreground line-through sm:text-xs">{formatBDT(v.price)}</span>
             )}
           </div>
-          {/* Cart icon — mobile: always visible; desktop: shows on card hover */}
           <button
             type="button"
             onClick={onAdd}
             aria-label="Add to cart"
-            className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-foreground text-background transition-all duration-300 hover:scale-110 hover:bg-[color:var(--gold)] hover:text-[color:var(--gold-foreground)] active:scale-95 lg:opacity-0 lg:translate-y-1 group-hover/card:lg:opacity-100 group-hover/card:lg:translate-y-0"
+            className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-foreground text-background transition-all duration-300 hover:scale-110 hover:bg-[color:var(--gold)] hover:text-[color:var(--gold-foreground)] active:scale-95 sm:h-9 sm:w-9 lg:opacity-0 lg:translate-y-1 group-hover/card:lg:opacity-100 group-hover/card:lg:translate-y-0"
           >
-            <ShoppingBag className="h-4 w-4" />
+            <ShoppingBag className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
           </button>
         </div>
       </div>
