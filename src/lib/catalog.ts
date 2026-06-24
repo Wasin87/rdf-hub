@@ -115,7 +115,7 @@ export async function fetchProductReviews(productId: string): Promise<Review[]> 
     .eq("product_id", productId)
     .order("created_at", { ascending: false });
   if (error) throw error;
-  return (data ?? []).map((r) => ({ ...r, images: Array.isArray((r as { images?: unknown }).images) ? ((r as { images: string[] }).images) : [] })) as Review[];
+  return (data ?? []).map((r) => ({ ...r, images: Array.isArray((r as { images?: unknown }).images) ? ((r as { images: string[] }).images) : [] })) as unknown as Review[];
 }
 
 export async function fetchBrands(): Promise<Brand[]> {
