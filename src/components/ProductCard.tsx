@@ -78,7 +78,7 @@ export function ProductCard({ product }: { product: Product }) {
         <Heart className={`h-4 w-4 ${isWished ? "fill-current" : ""}`} />
       </button>
 
-      <div className="flex flex-1 flex-col gap-1.5 p-5">
+      <div className="flex flex-1 flex-col gap-1 p-2.5 sm:gap-1.5 sm:p-4 md:p-5">
         <div className="flex items-center justify-between gap-2">
           <span className="truncate text-[10px] track-luxury text-muted-foreground">{product.brand?.name}</span>
           {product.category && <span className="rounded-full border border-border px-2 py-px text-[8px] track-luxury text-muted-foreground">{product.category.name}</span>}
