@@ -176,7 +176,7 @@ function ProductPage() {
                   className={`relative aspect-square overflow-hidden rounded-sm border bg-secondary transition-colors ${i === active ? "border-[color:var(--gold)]" : "border-border hover:border-foreground"}`}
                   aria-label={`Show image ${i + 1}`}
                 >
-                  <img src={resolveImage(url)} alt="" className="h-full w-full object-cover" loading="lazy" />
+                  <img src={resolveImage(url)} alt="" className="h-full w-full object-cover" loading="lazy" onError={(e) => { const el = e.currentTarget as HTMLImageElement; if (el.dataset.fb !== "1") { el.dataset.fb = "1"; el.src = resolveImage(null); } }} />
                 </button>
               ))}
             </div>
