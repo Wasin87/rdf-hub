@@ -339,13 +339,8 @@ function ReviewsSection({ productId }: { productId: string }) {
     return reviews.reduce((s, r) => s + r.rating, 0) / reviews.length;
   }, [reviews]);
 
-  const maskEmail = (email?: string | null) => {
-    if (!email) return "";
-    const [u, d] = email.split("@");
-    if (!d) return email;
-    const masked = u.length <= 2 ? u[0] + "*" : u.slice(0, 2) + "***";
-    return `${masked}@${d}`;
-  };
+
+
 
   return (
     <section className="mt-20 border-t border-border pt-12">
