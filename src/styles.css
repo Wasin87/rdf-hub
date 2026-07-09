@@ -296,3 +296,31 @@
   ::-webkit-scrollbar-thumb { background: color-mix(in oklab, var(--gold) 35%, transparent); border-radius: 8px; }
   ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
 }
+
+/* Thin custom scrollbar for filter lists */
+@utility thin-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklab, var(--gold) 45%, transparent) transparent;
+  &::-webkit-scrollbar { width: 6px; height: 6px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb { background: color-mix(in oklab, var(--gold) 40%, transparent); border-radius: 999px; }
+  &::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+}
+
+/* Dual-range slider thumbs (transparent track, custom thumb, stackable via pointer-events) */
+.range-thumb { pointer-events: none; }
+.range-thumb::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  height: 18px; width: 18px; border-radius: 999px;
+  background: var(--gold); border: 2px solid var(--background);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+  pointer-events: auto; cursor: pointer;
+}
+.range-thumb::-moz-range-thumb {
+  height: 18px; width: 18px; border-radius: 999px;
+  background: var(--gold); border: 2px solid var(--background);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+  pointer-events: auto; cursor: pointer;
+}
+.range-thumb::-webkit-slider-runnable-track { background: transparent; }
+.range-thumb::-moz-range-track { background: transparent; }
