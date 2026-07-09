@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Star, X, Upload, Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Star, X, Upload, Loader2, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -8,8 +8,11 @@ type Props = {
   productId: string;
   productName: string;
   orderId?: string | null;
+  reviewId?: string | null;
+  initial?: { rating: number; title: string | null; body: string; images: string[] } | null;
   onClose: () => void;
   onSubmitted?: () => void;
+  onDeleted?: () => void;
 };
 
 const BUCKET = "review-images";
