@@ -136,6 +136,7 @@ function ProductPage() {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.4 }}
+                onError={(e) => { const el = e.currentTarget as HTMLImageElement; if (el.dataset.fb !== "1") { el.dataset.fb = "1"; el.src = resolveImage(null); } }}
               />
             </AnimatePresence>
             {product.discount_percent > 0 && (
