@@ -119,20 +119,36 @@ function OrdersPage() {
 
                 <div className="mt-4 divide-y divide-border">
                   {o.order_items.map((it) => {
-                    const delivered = o.status === "delivered";
+                    const canReview = o.status === "delivered" || o.status === "resolved";
                     const already = reviewedQ.data?.has(`${o.id}:${it.product_id}`) ?? false;
                     return (
                       <div key={it.id} className="flex flex-wrap items-center gap-4 py-3">
-                        {it.image_url && <img src={it.image_url} alt={it.product_name} className="h-14 w-14 rounded-sm object-cover" />}
+                        {it.image_url && (
+                          <img
+                            src={it.image_url}
+                            alt={it.product_name}
+                            className="h-14 w-14 rounded-sm object-cover"
+                            onError={(e) => {
+                              const el = e.currentTarget;
+                              if (el.dataset.fb !== "1") { el.dataset.fb = "1"; el.src = "data:image/svg+xml;utf8," + encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'><rect fill='#eee' width='60' height='60'/></svg>"); }
+                            }}
+                          />
+                        )}
                         <div className="min-w-0 flex-1">
                           <div className="text-[10px] track-luxury text-muted-foreground">{it.brand_name}</div>
                           <div className="truncate text-sm">{it.product_name}</div>
                           <div className="text-[11px] text-muted-foreground">{it.size_ml}ml × {it.quantity}</div>
                         </div>
                         <div className="text-sm">{formatBDT(Number(it.unit_price) * it.quantity)}</div>
-                        {delivered && it.product_id && (
+                        {canReview && it.product_id && (
                           already ? (
-                            <span className="inline-flex items-center gap-1 rounded-sm border border-[color:var(--gold)]/30 px-2 py-1 text-[10px] track-luxury text-[color:var(--gold)]"><Check className="h-3 w-3" /> Reviewed</span>
+                            <button
+                              onClick={() => setReviewing({ productId: it.product_id!, productName: it.product_name, orderId: o.id })}
+                              className="inline-flex items-center gap-1 rounded-sm border border-[color:var(--gold)]/30 px-2 py-1 text-[10px] track-luxury text-[color:var(--gold)] hover:bg-[color:var(--gold)]/5"
+                              title="Manage your review"
+                            >
+                              <Check className="h-3 w-3" /> Reviewed · Edit
+                            </button>
                           ) : (
                             <button
                               onClick={() => setReviewing({ productId: it.product_id!, productName: it.product_name, orderId: o.id })}
