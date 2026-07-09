@@ -17,8 +17,9 @@ type Props = {
 
 const BUCKET = "review-images";
 
-export function ReviewForm({ productId, productName, orderId, reviewId, initial, onClose, onSubmitted, onDeleted }: Props) {
+export function ReviewForm({ productId, productName, orderId, reviewId: reviewIdProp, initial, onClose, onSubmitted, onDeleted }: Props) {
   const { user } = useAuth();
+  const [reviewId, setReviewId] = useState<string | null>(reviewIdProp ?? null);
   const isEdit = !!reviewId;
   const [rating, setRating] = useState(initial?.rating ?? 5);
   const [hover, setHover] = useState(0);
@@ -28,12 +29,31 @@ export function ReviewForm({ productId, productName, orderId, reviewId, initial,
   const [files, setFiles] = useState<File[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [loading, setLoading] = useState(!reviewIdProp && !initial);
 
   useEffect(() => {
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => { document.body.style.overflow = prev; };
   }, []);
+
+  useEffect(() => {
+    if (reviewIdProp || initial || !user) { setLoading(false); return; }
+    let alive = true;
+    (async () => {
+      const { data } = await supabase.from("reviews").select("id, rating, title, body, images").eq("product_id", productId).eq("user_id", user.id).maybeSingle();
+      if (!alive) return;
+      if (data) {
+        setReviewId(data.id);
+        setRating(data.rating);
+        setTitle(data.title ?? "");
+        setBody(data.body ?? "");
+        setExisting(Array.isArray(data.images) ? (data.images as string[]) : []);
+      }
+      setLoading(false);
+    })();
+    return () => { alive = false; };
+  }, [productId, user, reviewIdProp, initial]);
 
   const onFiles = (list: FileList | null) => {
     if (!list) return;
