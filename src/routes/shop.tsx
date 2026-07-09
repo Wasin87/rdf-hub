@@ -57,8 +57,26 @@ function ShopPage() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   useEffect(() => { setMobileFiltersOpen(false); }, [search]);
 
+  const PRICE_FLOOR = 0;
+  const PRICE_CEIL = 30000;
+  const [priceLo, setPriceLo] = useState<number>(search.min ?? PRICE_FLOOR);
+  const [priceHi, setPriceHi] = useState<number>(search.max ?? PRICE_CEIL);
+  useEffect(() => {
+    setPriceLo(search.min ?? PRICE_FLOOR);
+    setPriceHi(search.max ?? PRICE_CEIL);
+  }, [search.min, search.max]);
+
+  const applyPrice = () => {
+    const lo = Math.min(priceLo, priceHi);
+    const hi = Math.max(priceLo, priceHi);
+    setSearch({
+      min: lo > PRICE_FLOOR ? lo : undefined,
+      max: hi < PRICE_CEIL ? hi : undefined,
+    });
+  };
+
   const Filters = (
-    <aside className="space-y-7">
+    <aside className="space-y-6 rounded-xl border border-border bg-card p-5 shadow-sm">
       <div>
         <h3 className="mb-3 text-[11px] track-luxury text-[color:var(--gold)]">Category</h3>
         <div className="flex flex-col gap-1.5">
@@ -76,33 +94,57 @@ function ShopPage() {
         </div>
       </div>
 
-      <div>
+      <div className="border-t border-border pt-5">
         <h3 className="mb-3 text-[11px] track-luxury text-[color:var(--gold)]">Price (BDT)</h3>
-        <form className="flex gap-2" onSubmit={(e) => {
-          e.preventDefault();
-          const f = e.currentTarget;
-          const min = (f.elements.namedItem("min") as HTMLInputElement).value;
-          const max = (f.elements.namedItem("max") as HTMLInputElement).value;
-          setSearch({ min: min ? Number(min) : undefined, max: max ? Number(max) : undefined });
-        }}>
-          <input name="min" type="number" placeholder="Min" defaultValue={search.min ?? ""} className="h-9 w-20 rounded-sm border border-border bg-card px-2 text-xs focus:border-[color:var(--gold)] focus:outline-none" />
-          <input name="max" type="number" placeholder="Max" defaultValue={search.max ?? ""} className="h-9 w-20 rounded-sm border border-border bg-card px-2 text-xs focus:border-[color:var(--gold)] focus:outline-none" />
-          <button type="submit" className="rounded-sm bg-foreground px-3 text-[10px] track-luxury text-background hover:bg-[color:var(--gold)] hover:text-[color:var(--gold-foreground)]">Apply</button>
-        </form>
-        {(search.min || search.max) && (
-          <p className="mt-2 text-[11px] text-muted-foreground">
-            {formatBDT(search.min ?? 0)} – {search.max ? formatBDT(search.max) : "∞"}
-          </p>
-        )}
+        <div className="mb-3 flex items-center justify-between text-[11px] text-muted-foreground">
+          <span>{formatBDT(Math.min(priceLo, priceHi))}</span>
+          <span>{Math.max(priceLo, priceHi) >= PRICE_CEIL ? "∞" : formatBDT(Math.max(priceLo, priceHi))}</span>
+        </div>
+        <div className="relative h-6">
+          <div className="absolute inset-x-0 top-1/2 h-1 -translate-y-1/2 rounded-full bg-secondary" />
+          <div
+            className="absolute top-1/2 h-1 -translate-y-1/2 rounded-full bg-[color:var(--gold)]"
+            style={{
+              left: `${(Math.min(priceLo, priceHi) / PRICE_CEIL) * 100}%`,
+              right: `${100 - (Math.max(priceLo, priceHi) / PRICE_CEIL) * 100}%`,
+            }}
+          />
+          <input
+            type="range" min={PRICE_FLOOR} max={PRICE_CEIL} step={100} value={priceLo}
+            onChange={(e) => setPriceLo(Number(e.target.value))}
+            onMouseUp={applyPrice} onTouchEnd={applyPrice} onKeyUp={applyPrice}
+            className="range-thumb absolute inset-0 w-full appearance-none bg-transparent"
+            aria-label="Minimum price"
+          />
+          <input
+            type="range" min={PRICE_FLOOR} max={PRICE_CEIL} step={100} value={priceHi}
+            onChange={(e) => setPriceHi(Number(e.target.value))}
+            onMouseUp={applyPrice} onTouchEnd={applyPrice} onKeyUp={applyPrice}
+            className="range-thumb absolute inset-0 w-full appearance-none bg-transparent"
+            aria-label="Maximum price"
+          />
+        </div>
+        <div className="mt-4 grid grid-cols-2 gap-2">
+          <label className="flex flex-col gap-1">
+            <span className="text-[9px] track-luxury text-muted-foreground">Min</span>
+            <input type="number" min={PRICE_FLOOR} value={priceLo} onChange={(e) => setPriceLo(Number(e.target.value) || PRICE_FLOOR)} onBlur={applyPrice}
+              className="h-9 rounded-sm border border-border bg-background px-2 text-xs focus:border-[color:var(--gold)] focus:outline-none" />
+          </label>
+          <label className="flex flex-col gap-1">
+            <span className="text-[9px] track-luxury text-muted-foreground">Max</span>
+            <input type="number" max={PRICE_CEIL} value={priceHi} onChange={(e) => setPriceHi(Number(e.target.value) || PRICE_CEIL)} onBlur={applyPrice}
+              className="h-9 rounded-sm border border-border bg-background px-2 text-xs focus:border-[color:var(--gold)] focus:outline-none" />
+          </label>
+        </div>
       </div>
 
-      <div>
+      <div className="border-t border-border pt-5">
         <h3 className="mb-3 text-[11px] track-luxury text-[color:var(--gold)]">Brands</h3>
-        <div className="max-h-72 space-y-1.5 overflow-y-auto pr-2">
+        <div className="thin-scroll max-h-64 space-y-1.5 overflow-y-auto pr-2">
           <button onClick={() => setSearch({ brand: undefined })} className={`block text-left text-sm transition-colors ${!search.brand ? "text-[color:var(--gold)]" : "text-muted-foreground hover:text-foreground"}`}>All Brands</button>
           {brandsQ.data?.map((b) => (
             <button key={b.id} onClick={() => setSearch({ brand: b.slug })}
-              className={`block text-left text-sm transition-colors ${search.brand === b.slug ? "text-[color:var(--gold)]" : "text-muted-foreground hover:text-foreground"}`}>
+              className={`block w-full text-left text-sm transition-colors ${search.brand === b.slug ? "text-[color:var(--gold)]" : "text-muted-foreground hover:text-foreground"}`}>
               {b.name}
             </button>
           ))}

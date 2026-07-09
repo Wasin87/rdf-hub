@@ -7,7 +7,7 @@ export function Footer() {
     <footer className="mt-24 border-t border-[color:var(--gold)]/30 bg-black text-white">
       <div className="container-luxury py-16">
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 [&_.font-display]:!text-white [&_.uppercase]:!text-white/80">
             <Logo />
             <p className="mt-5 max-w-xs text-sm leading-relaxed text-white/70">
               Curated luxury fragrance decants. Authentic, beautifully presented, delivered with discretion.

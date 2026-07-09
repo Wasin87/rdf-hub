@@ -118,6 +118,19 @@ export async function fetchProductReviews(productId: string): Promise<Review[]> 
   return (data ?? []).map((r) => ({ ...r, images: Array.isArray((r as { images?: unknown }).images) ? ((r as { images: string[] }).images) : [] })) as unknown as Review[];
 }
 
+export type OwnReview = { id: string; rating: number; title: string | null; body: string; images: string[]; is_approved: boolean; created_at: string };
+export async function fetchMyReviewForProduct(productId: string, userId: string): Promise<OwnReview | null> {
+  const { data, error } = await supabase
+    .from("reviews")
+    .select("id, rating, title, body, images, is_approved, created_at")
+    .eq("product_id", productId)
+    .eq("user_id", userId)
+    .maybeSingle();
+  if (error) throw error;
+  if (!data) return null;
+  return { ...data, images: Array.isArray(data.images) ? (data.images as string[]) : [] } as OwnReview;
+}
+
 export async function fetchBrands(): Promise<Brand[]> {
   const { data, error } = await supabase.from("brands").select("*").order("name");
   if (error) throw error;
