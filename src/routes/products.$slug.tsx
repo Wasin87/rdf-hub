@@ -368,24 +368,29 @@ function ReviewsSection({ productId }: { productId: string }) {
           No reviews yet. Purchase &amp; receive this fragrance to share your experience.
         </div>
       ) : (
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {reviews.map((r) => (
-            <article key={r.id} className="rounded-sm border border-border bg-card p-5">
-              <div className="flex items-center justify-between gap-2">
+            <article key={r.id} className="flex flex-col rounded-xl border border-border bg-card p-4 shadow-sm">
+              <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0">
-                  <div className="truncate font-medium">{r.author_name}</div>
-                  {r.email && <div className="truncate text-[10px] text-muted-foreground">{maskEmail(r.email)}</div>}
-                  {r.created_at && <div className="text-[10px] track-luxury text-muted-foreground">{new Date(r.created_at).toLocaleDateString()}</div>}
+                  <div className="truncate text-sm font-semibold">{r.author_name}</div>
+                  {r.created_at && <div className="text-[10px] text-muted-foreground">{new Date(r.created_at).toLocaleDateString()}</div>}
                 </div>
                 <Stars value={r.rating} />
               </div>
-              {r.title && <h3 className="mt-3 font-display text-lg">{r.title}</h3>}
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{r.body}</p>
+              {r.title && <h3 className="mt-2 line-clamp-1 font-display text-sm">{r.title}</h3>}
+              <p className="mt-1.5 line-clamp-4 text-[12px] leading-relaxed text-muted-foreground">{r.body}</p>
               {Array.isArray(r.images) && r.images.length > 0 && (
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {r.images.map((url, i) => (
-                    <button key={i} type="button" onClick={() => setZoom({ images: r.images!, idx: i })} className="h-16 w-16 overflow-hidden rounded-sm border border-border hover:border-[color:var(--gold)]">
-                      <img src={url} alt="" className="h-full w-full object-cover" loading="lazy" />
+                <div className="mt-2 flex flex-wrap gap-1.5">
+                  {r.images.slice(0, 4).map((url, i) => (
+                    <button key={i} type="button" onClick={() => setZoom({ images: r.images!, idx: i })} className="h-11 w-11 overflow-hidden rounded-sm border border-border hover:border-[color:var(--gold)]">
+                      <img
+                        src={url}
+                        alt=""
+                        className="h-full w-full object-cover"
+                        loading="lazy"
+                        onError={(e) => { const el = e.currentTarget; if (el.dataset.fb !== "1") { el.dataset.fb = "1"; el.src = "data:image/svg+xml;utf8," + encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 44'><rect fill='#eee' width='44' height='44'/></svg>"); } }}
+                      />
                     </button>
                   ))}
                 </div>
