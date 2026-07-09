@@ -34,7 +34,7 @@ export function HeroSlider({ banners }: { banners: Banner[] }) {
           transition={{ duration: 1.1, ease: [0.2, 0.8, 0.2, 1] }}
           className="absolute inset-0"
         >
-          <img src={resolveImage(current.image_url)} alt={current.title} fetchPriority="high" className="h-full w-full object-cover" />
+          <img src={resolveImage(current.image_url)} alt={current.title} fetchPriority="high" className="h-full w-full object-cover" onError={(e) => { const el = e.currentTarget; if (el.dataset.fb !== "1") { el.dataset.fb = "1"; el.src = resolveImage(null); } }} />
           <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/35 to-black/15" />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/40" />
         </motion.div>
