@@ -17,7 +17,21 @@ export function HeroSlider({ banners }: { banners: Banner[] }) {
     return () => clearInterval(t);
   }, [paused, total]);
 
-  if (total === 0) return null;
+  if (total === 0) {
+    return (
+      <section className="relative h-[70vh] min-h-[520px] w-full overflow-hidden bg-foreground" aria-label="FRAG AVENUE hero">
+        <SafeImage src={resolveImage(null)} alt="Luxury fragrance collection" fetchPriority="high" wrapperClassName="h-full w-full" className="h-full w-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/35 to-black/15" />
+        <div className="container-luxury relative z-10 flex h-full items-center">
+          <div className="max-w-2xl text-white">
+            <span className="mb-5 inline-block rounded-sm border border-[color:var(--gold-soft)]/60 px-3 py-1 text-[10px] track-luxury text-[color:var(--gold-soft)]">FRAG AVENUE</span>
+            <h1 className="font-display text-5xl leading-[1.05] text-balance md:text-6xl lg:text-7xl"><span className="gold-text">Luxury Fragrance Decants</span></h1>
+            <Link to="/shop" className="btn-liquid mt-9">Shop Now <span className="ml-1">→</span></Link>
+          </div>
+        </div>
+      </section>
+    );
+  }
   const current = banners[i];
 
   return (

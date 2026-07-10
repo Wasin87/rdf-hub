@@ -3,6 +3,7 @@ import { ShoppingBag, Plus, Minus, X } from "lucide-react";
 import { DashboardShell } from "@/components/DashboardShell";
 import { useCart } from "@/stores/cart";
 import { formatBDT } from "@/lib/format";
+import { SafeImage } from "@/components/SafeImage";
 
 export const Route = createFileRoute("/_authenticated/dashboard/cart")({
   head: () => ({ meta: [{ title: "Cart — FRAG AVENUE" }] }),
@@ -27,7 +28,7 @@ function CartPage() {
           <div className="space-y-3">
             {items.map((i) => (
               <div key={i.variantId} className="flex gap-4 rounded-sm border border-border bg-card p-4">
-                <img src={i.imageUrl} alt={i.productName} className="h-24 w-24 rounded-sm object-cover" />
+                <SafeImage src={i.imageUrl} alt={i.productName} wrapperClassName="h-24 w-24 rounded-sm" className="h-24 w-24 object-cover" />
                 <div className="flex flex-1 flex-col">
                   <div className="text-[10px] track-luxury text-muted-foreground">{i.brandName}</div>
                   <div className="font-medium">{i.productName}</div>

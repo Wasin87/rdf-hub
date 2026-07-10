@@ -3,6 +3,7 @@ import { Heart, X } from "lucide-react";
 import { DashboardShell } from "@/components/DashboardShell";
 import { useWishlist } from "@/stores/wishlist";
 import { formatBDT, discountedPrice } from "@/lib/format";
+import { SafeImage } from "@/components/SafeImage";
 
 export const Route = createFileRoute("/_authenticated/dashboard/wishlist")({
   head: () => ({ meta: [{ title: "Wishlist — FRAG AVENUE" }] }),
@@ -27,7 +28,7 @@ function WishPage() {
             return (
               <div key={it.productId} className="card-luxury relative flex gap-3 p-4">
                 <button onClick={() => remove(it.productId)} aria-label="Remove" className="absolute right-3 top-3 grid h-7 w-7 place-items-center text-muted-foreground hover:text-destructive"><X className="h-3.5 w-3.5" /></button>
-                <img src={it.imageUrl} alt={it.productName} className="h-24 w-20 shrink-0 rounded-sm object-cover" />
+                <SafeImage src={it.imageUrl} alt={it.productName} wrapperClassName="h-24 w-20 shrink-0 rounded-sm" className="h-24 w-20 object-cover" />
                 <div className="min-w-0 flex-1">
                   <div className="text-[10px] track-luxury text-muted-foreground">{it.brandName}</div>
                   <Link to="/products/$slug" params={{ slug: it.productSlug }} className="line-clamp-2 text-sm font-medium hover:text-[color:var(--gold)]">{it.productName}</Link>
