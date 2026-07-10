@@ -190,7 +190,7 @@ export function ReviewForm({ productId, productName, orderId, reviewId: reviewId
                 ))}
                 {files.map((f, i) => (
                   <div key={`n-${i}`} className="relative aspect-square overflow-hidden rounded-sm border border-border">
-                    <img src={URL.createObjectURL(f)} alt="" className="h-full w-full object-cover" />
+                    <LocalPreview file={f} />
                     <button onClick={() => removeFile(i)} className="absolute right-1 top-1 grid h-5 w-5 place-items-center rounded-full bg-background/90"><X className="h-3 w-3" /></button>
                   </div>
                 ))}
@@ -213,4 +213,15 @@ export function ReviewForm({ productId, productName, orderId, reviewId: reviewId
       </div>
     </div>
   );
+}
+
+function LocalPreview({ file }: { file: File }) {
+  const [url, setUrl] = useState("");
+  useEffect(() => {
+    const next = URL.createObjectURL(file);
+    setUrl(next);
+    return () => URL.revokeObjectURL(next);
+  }, [file]);
+
+  return <SafeImage src={url} alt="" wrapperClassName="h-full w-full" className="h-full w-full object-cover" />;
 }

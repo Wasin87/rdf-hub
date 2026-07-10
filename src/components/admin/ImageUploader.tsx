@@ -3,6 +3,7 @@ import { GripVertical, Trash2, UploadCloud, Star, StarOff } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { appStorageImageUrl, IMAGE_BUCKETS, isAcceptedImage, validateImageUrl } from "@/lib/catalog";
+import { SafeImage } from "@/components/SafeImage";
 
 export type UploadedImage = { id?: string; url: string; path?: string; sort_order: number };
 
@@ -120,17 +121,11 @@ export function ImageUploader({
                   isPrimary ? "border-[color:var(--gold)] ring-1 ring-[color:var(--gold)]/40" : "border-border"
                 }`}
               >
-                <img
+                <SafeImage
                   src={img.url}
                   alt=""
+                  wrapperClassName="h-full w-full"
                   className="h-full w-full object-cover"
-                  onError={(e) => {
-                    const el = e.currentTarget;
-                    if (el.dataset.fb !== "1") {
-                      el.dataset.fb = "1";
-                      el.src = "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'><rect fill='#f2f2f2' width='120' height='120'/><text x='60' y='64' font-family='sans-serif' font-size='10' fill='#999' text-anchor='middle'>No image</text></svg>`);
-                    }
-                  }}
                 />
                 <div className="absolute inset-0 flex items-end justify-between gap-1 bg-gradient-to-t from-black/70 to-transparent p-2 opacity-0 transition-opacity group-hover:opacity-100">
                   <button
