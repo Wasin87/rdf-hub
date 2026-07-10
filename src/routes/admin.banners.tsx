@@ -4,10 +4,12 @@ import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { Plus, Trash2, UploadCloud, Link2, Loader2, ImageOff } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { appStorageImageUrl, IMAGE_BUCKETS, isAcceptedImage, normalizeStorageImageUrl, validateImageUrl } from "@/lib/catalog";
+import { SafeImage } from "@/components/SafeImage";
 
 type Banner = { id: string; title: string; subtitle: string | null; image_url: string; cta_text: string | null; cta_link: string | null; is_active: boolean; order_index: number };
 
-const BUCKET = "product-images";
+const BUCKET = IMAGE_BUCKETS.products;
 
 export const Route = createFileRoute("/admin/banners")({
   head: () => ({ meta: [{ title: "Hero Banners — Admin FRAG AVENUE" }] }),
@@ -38,7 +40,7 @@ function AdminBanners() {
 
   const handleFile = async (file: File | null | undefined) => {
     if (!file) return;
-    if (!file.type.startsWith("image/")) { toast.error("Please choose an image (JPG, PNG, WEBP)"); return; }
+    if (!isAcceptedImage(file)) { toast.error("Please choose a JPG, JPEG, PNG, or WEBP image"); return; }
     if (file.size > 8 * 1024 * 1024) { toast.error("Image too large (max 8MB)"); return; }
     setUploading(true);
     try {
@@ -46,15 +48,9 @@ function AdminBanners() {
       const path = `banners/${crypto.randomUUID()}.${ext}`;
       const { error } = await supabase.storage.from(BUCKET).upload(path, file, { cacheControl: "31536000", upsert: false, contentType: file.type });
       if (error) throw error;
-      const { data } = supabase.storage.from(BUCKET).getPublicUrl(path);
-      // Validate URL loads
-      await new Promise<void>((res, rej) => {
-        const img = new Image();
-        img.onload = () => res();
-        img.onerror = () => rej(new Error("Uploaded image is not accessible"));
-        img.src = data.publicUrl;
-      });
-      setDraft((d) => ({ ...d, image_url: data.publicUrl }));
+      const imageUrl = appStorageImageUrl(BUCKET, path);
+      await validateImageUrl(imageUrl);
+      setDraft((d) => ({ ...d, image_url: imageUrl }));
       toast.success("Image uploaded");
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Upload failed");
@@ -69,10 +65,12 @@ function AdminBanners() {
     if (!draft.image_url.trim()) return toast.error(mode === "upload" ? "Upload a banner image first" : "Enter an image URL");
     setSaving(true);
     try {
+      const imageUrl = normalizeStorageImageUrl(draft.image_url);
+      await validateImageUrl(imageUrl);
       const { error } = await supabase.from("banners").insert({
         title: draft.title.trim(),
         subtitle: draft.subtitle.trim() || null,
-        image_url: draft.image_url.trim(),
+        image_url: imageUrl,
         cta_text: draft.cta_text.trim() || null,
         cta_link: draft.cta_link.trim() || null,
         is_active: draft.is_active,
@@ -170,11 +168,11 @@ function AdminBanners() {
             <div className="mb-2 text-[10px] track-luxury text-muted-foreground">Live Preview</div>
             <div className="relative aspect-[16/9] overflow-hidden rounded-sm border border-border bg-secondary">
               {draft.image_url ? (
-                <img
+                <SafeImage
                   src={draft.image_url}
                   alt="preview"
+                  wrapperClassName="h-full w-full"
                   className="h-full w-full object-cover"
-                  onError={(e) => { const el = e.currentTarget; el.style.display = "none"; el.parentElement?.setAttribute("data-broken", "1"); }}
                 />
               ) : (
                 <div className="grid h-full place-items-center text-muted-foreground">
@@ -196,11 +194,11 @@ function AdminBanners() {
         {(q.data ?? []).map((b) => (
           <div key={b.id} className="overflow-hidden rounded-sm border border-border bg-card">
             <div className="relative aspect-[16/9] bg-secondary">
-              <img
+              <SafeImage
                 src={b.image_url}
                 alt={b.title}
+                wrapperClassName="h-full w-full"
                 className="h-full w-full object-cover"
-                onError={(e) => { const el = e.currentTarget; if (el.dataset.fb !== "1") { el.dataset.fb = "1"; el.src = "data:image/svg+xml;utf8," + encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 180'><rect fill='#eee' width='320' height='180'/><text x='160' y='96' font-family='sans-serif' font-size='14' fill='#999' text-anchor='middle'>Image unavailable</text></svg>"); } }}
               />
             </div>
             <div className="p-4">

@@ -3,6 +3,8 @@ import { Star, X, Upload, Loader2, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { appStorageImageUrl, IMAGE_BUCKETS, isAcceptedImage, validateImageUrl } from "@/lib/catalog";
+import { SafeImage } from "@/components/SafeImage";
 
 type Props = {
   productId: string;
@@ -15,7 +17,7 @@ type Props = {
   onDeleted?: () => void;
 };
 
-const BUCKET = "review-images";
+const BUCKET = IMAGE_BUCKETS.reviews;
 
 export function ReviewForm({ productId, productName, orderId, reviewId: reviewIdProp, initial, onClose, onSubmitted, onDeleted }: Props) {
   const { user } = useAuth();
@@ -58,7 +60,9 @@ export function ReviewForm({ productId, productName, orderId, reviewId: reviewId
   const onFiles = (list: FileList | null) => {
     if (!list) return;
     const room = 6 - (files.length + existing.length);
-    const next = Array.from(list).filter((f) => f.type.startsWith("image/")).slice(0, Math.max(0, room));
+    const all = Array.from(list);
+    const next = all.filter(isAcceptedImage).slice(0, Math.max(0, room));
+    if (all.length && !next.length) toast.error("Use JPG, JPEG, PNG, or WEBP images only");
     setFiles((prev) => [...prev, ...next]);
   };
 
@@ -72,12 +76,15 @@ export function ReviewForm({ productId, productName, orderId, reviewId: reviewId
     try {
       const uploaded: string[] = [];
       for (const file of files) {
-        const ext = file.name.split(".").pop() || "jpg";
+        if (!isAcceptedImage(file)) throw new Error(`${file.name} must be JPG, JPEG, PNG, or WEBP`);
+        if (file.size > 8 * 1024 * 1024) throw new Error(`${file.name} is too large (max 8MB)`);
+        const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
         const path = `${user.id}/${productId}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
         const { error: upErr } = await supabase.storage.from(BUCKET).upload(path, file, { upsert: false, contentType: file.type });
         if (upErr) throw upErr;
-        const { data } = supabase.storage.from(BUCKET).getPublicUrl(path);
-        uploaded.push(data.publicUrl);
+        const imageUrl = appStorageImageUrl(BUCKET, path);
+        await validateImageUrl(imageUrl);
+        uploaded.push(imageUrl);
       }
 
       const images = [...existing, ...uploaded];
@@ -169,15 +176,15 @@ export function ReviewForm({ productId, productName, orderId, reviewId: reviewId
 
           <div className="mt-4">
             <label className="mb-1.5 block text-[10px] track-luxury text-muted-foreground">Photos (optional, max 6)</label>
-            <label className="flex h-16 cursor-pointer items-center justify-center gap-2 rounded-sm border border-dashed border-border text-xs text-muted-foreground hover:border-[color:var(--gold)] hover:text-[color:var(--gold)]">
+              <label className="flex h-16 cursor-pointer items-center justify-center gap-2 rounded-sm border border-dashed border-border text-xs text-muted-foreground hover:border-[color:var(--gold)] hover:text-[color:var(--gold)]">
               <Upload className="h-4 w-4" /> Upload images
-              <input type="file" accept="image/*" multiple className="hidden" onChange={(e) => onFiles(e.target.files)} />
+                <input type="file" accept="image/jpeg,image/jpg,image/png,image/webp" multiple className="hidden" onChange={(e) => onFiles(e.target.files)} />
             </label>
             {(existing.length + files.length) > 0 && (
               <div className="mt-3 grid grid-cols-6 gap-2">
                 {existing.map((url, i) => (
                   <div key={`e-${i}`} className="relative aspect-square overflow-hidden rounded-sm border border-border">
-                    <img src={url} alt="" className="h-full w-full object-cover" onError={(e) => { const el = e.currentTarget; el.style.display = "none"; }} />
+                    <SafeImage src={url} alt="" wrapperClassName="h-full w-full" className="h-full w-full object-cover" />
                     <button onClick={() => removeExisting(i)} className="absolute right-1 top-1 grid h-5 w-5 place-items-center rounded-full bg-background/90"><X className="h-3 w-3" /></button>
                   </div>
                 ))}

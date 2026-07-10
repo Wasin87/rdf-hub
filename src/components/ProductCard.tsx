@@ -8,6 +8,7 @@ import { resolveImage } from "@/lib/catalog";
 import { formatBDT, discountedPrice } from "@/lib/format";
 import { useCart } from "@/stores/cart";
 import { useWishlist } from "@/stores/wishlist";
+import { SafeImage } from "@/components/SafeImage";
 
 export function ProductCard({ product }: { product: Product }) {
   const variants = useMemo(() => [...product.variants].sort((a, b) => a.size_ml - b.size_ml), [product.variants]);
@@ -147,13 +148,6 @@ function ProductCardImage({ product }: { product: Product }) {
           src={resolveImage(url)}
           alt={`${product.brand?.name ?? ""} ${product.name}`}
           loading="lazy"
-          onError={(e) => {
-            const img = e.currentTarget;
-            if (img.dataset.fallback !== "1") {
-              img.dataset.fallback = "1";
-              img.src = resolveImage(null);
-            }
-          }}
           className="absolute inset-0 h-full w-full object-cover"
           initial={false}
           animate={{ opacity: i === idx ? 1 : 0, scale: i === idx ? 1.02 : 1 }}

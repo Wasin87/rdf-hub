@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
+import type { ImgHTMLAttributes } from "react";
 import { ImageOff } from "lucide-react";
 import { resolveImage } from "@/lib/catalog";
 
-type SafeImageProps = Omit<React.ImgHTMLAttributes<HTMLImageElement>, "src"> & {
+type SafeImageProps = Omit<ImgHTMLAttributes<HTMLImageElement>, "src"> & {
   src?: string | null;
   wrapperClassName?: string;
   showLoader?: boolean;
