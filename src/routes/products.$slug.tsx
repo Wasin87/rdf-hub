@@ -130,7 +130,6 @@ function ProductPage() {
             <AnimatePresence mode="wait">
               <motion.div
                 key={gallery[active]}
-                src={resolveImage(gallery[active])}
                 className="aspect-[4/5] w-full object-cover"
                 initial={{ opacity: 0, scale: 1.02 }}
                 animate={{ opacity: 1, scale: 1 }}
