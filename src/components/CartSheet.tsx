@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "@/stores/cart";
 import { formatBDT } from "@/lib/format";
 import { useAuth } from "@/hooks/useAuth";
+import { SafeImage } from "@/components/SafeImage";
 
 export function CartSheet() {
   const items = useCart((s) => s.items);
@@ -61,7 +62,7 @@ export function CartSheet() {
                   initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}
                   className="flex gap-3 border-b border-border/60 px-4 py-4 last:border-0"
                 >
-                  <img src={it.imageUrl} alt={it.productName} className="h-20 w-20 rounded-sm object-cover" loading="lazy" />
+                  <SafeImage src={it.imageUrl} alt={it.productName} wrapperClassName="h-20 w-20 rounded-sm" className="h-20 w-20 object-cover" loading="lazy" />
                   <div className="flex min-w-0 flex-1 flex-col">
                     <div className="text-[10px] track-luxury text-muted-foreground">{it.brandName}</div>
                     <Link to="/products/$slug" params={{ slug: it.productSlug }} className="truncate text-sm font-medium hover:text-[color:var(--gold)]">{it.productName}</Link>

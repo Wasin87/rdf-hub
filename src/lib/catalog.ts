@@ -55,7 +55,7 @@ export function appStorageImageUrl(bucket: string, path: string) {
 
 export function getStoragePathFromAppUrl(url: string) {
   try {
-    const parsed = new URL(url, window.location.origin);
+    const parsed = new URL(url, typeof window !== "undefined" ? window.location.origin : "http://localhost");
     if (parsed.pathname !== "/api/public/image") return null;
     const bucket = parsed.searchParams.get("bucket");
     const path = parsed.searchParams.get("path");
@@ -71,7 +71,7 @@ export function normalizeStorageImageUrl(url: string) {
   if (appImage) return appStorageImageUrl(appImage.bucket, appImage.path);
 
   try {
-    const parsed = new URL(trimmed, window.location.origin);
+    const parsed = new URL(trimmed, typeof window !== "undefined" ? window.location.origin : "http://localhost");
     const marker = "/storage/v1/object/public/";
     const idx = parsed.pathname.indexOf(marker);
     if (idx === -1) return trimmed;

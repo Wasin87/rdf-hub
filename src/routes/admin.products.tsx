@@ -6,6 +6,7 @@ import { Edit3, Trash2, Eye, EyeOff, Plus, Copy, AlertTriangle } from "lucide-re
 import { supabase } from "@/integrations/supabase/client";
 import { formatBDT } from "@/lib/format";
 import { resolveImage } from "@/lib/catalog";
+import { SafeImage } from "@/components/SafeImage";
 
 export const Route = createFileRoute("/admin/products")({
   head: () => ({ meta: [{ title: "Products — Admin FRAG AVENUE" }] }),
@@ -163,7 +164,7 @@ function AdminProducts() {
                       setSelected(next);
                     }} />
                   </td>
-                  <td className="p-3"><img src={resolveImage(p.image_url)} alt="" className="h-12 w-12 rounded-sm object-cover" /></td>
+                  <td className="p-3"><SafeImage src={resolveImage(p.image_url)} alt="" wrapperClassName="h-12 w-12 rounded-sm" className="h-12 w-12 object-cover" /></td>
                   <td className="p-3">
                     <Link to="/products/$slug" params={{ slug: p.slug }} className="font-medium hover:text-[color:var(--gold)]">{p.name}</Link>
                     <div className="text-[10px] text-muted-foreground">{p.slug}</div>

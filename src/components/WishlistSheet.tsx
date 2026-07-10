@@ -4,6 +4,7 @@ import { Heart, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useWishlist } from "@/stores/wishlist";
 import { formatBDT, discountedPrice } from "@/lib/format";
+import { SafeImage } from "@/components/SafeImage";
 
 export function WishlistSheet() {
   const items = useWishlist((s) => s.items);
@@ -37,7 +38,7 @@ export function WishlistSheet() {
               const final = discountedPrice(it.basePrice, it.discountPercent);
               return (
                 <motion.div key={it.productId} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex gap-3 border-b border-border/60 px-4 py-3 last:border-0">
-                  <img src={it.imageUrl} alt={it.productName} className="h-16 w-16 rounded-sm object-cover" loading="lazy" />
+                  <SafeImage src={it.imageUrl} alt={it.productName} wrapperClassName="h-16 w-16 rounded-sm" className="h-16 w-16 object-cover" loading="lazy" />
                   <div className="min-w-0 flex-1">
                     <div className="text-[10px] track-luxury text-muted-foreground">{it.brandName}</div>
                     <Link to="/products/$slug" params={{ slug: it.productSlug }} className="truncate text-sm font-medium hover:text-[color:var(--gold)]">{it.productName}</Link>
