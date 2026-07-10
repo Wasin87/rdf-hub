@@ -2,13 +2,14 @@ import { useCallback, useRef, useState } from "react";
 import { GripVertical, Trash2, UploadCloud, Star, StarOff } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { appStorageImageUrl, IMAGE_BUCKETS, isAcceptedImage, validateImageUrl } from "@/lib/catalog";
 
 export type UploadedImage = { id?: string; url: string; path?: string; sort_order: number };
 
-const BUCKET = "product-images";
+const BUCKET = IMAGE_BUCKETS.products;
 
 export function publicUrl(path: string) {
-  return supabase.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
+  return appStorageImageUrl(BUCKET, path);
 }
 
 export function ImageUploader({
@@ -29,21 +30,27 @@ export function ImageUploader({
 
   const upload = useCallback(
     async (files: FileList | File[]) => {
-      const list = Array.from(files).filter((f) => f.type.startsWith("image/"));
+      const list = Array.from(files).filter(isAcceptedImage);
+      if (Array.from(files).length && !list.length) {
+        toast.error("Use JPG, JPEG, PNG, or WEBP images only");
+      }
       if (!list.length) return;
       setBusy(true);
       try {
         const uploaded: UploadedImage[] = [];
         for (const file of list) {
+          if (file.size > 10 * 1024 * 1024) throw new Error(`${file.name} is too large (max 10MB)`);
           const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
-          const path = `${crypto.randomUUID()}.${ext}`;
+          const path = `products/${crypto.randomUUID()}.${ext}`;
           const { error } = await supabase.storage.from(BUCKET).upload(path, file, {
             cacheControl: "31536000",
             upsert: false,
             contentType: file.type,
           });
           if (error) throw error;
-          uploaded.push({ url: publicUrl(path), path, sort_order: images.length + uploaded.length });
+          const url = publicUrl(path);
+          await validateImageUrl(url);
+          uploaded.push({ url, path, sort_order: images.length + uploaded.length });
         }
         const next = [...images, ...uploaded];
         onChange(next);
@@ -87,7 +94,7 @@ export function ImageUploader({
       >
         <UploadCloud className="h-6 w-6 text-[color:var(--gold)]" />
         <div className="text-sm font-medium">{busy ? "Uploading…" : "Drag & drop images or click to upload"}</div>
-        <div className="text-[10px] text-muted-foreground">PNG, JPG, WEBP — first image becomes the primary</div>
+        <div className="text-[10px] text-muted-foreground">JPG, JPEG, PNG, WEBP — first image becomes the primary</div>
         <input
           ref={inputRef}
           type="file"

@@ -3,6 +3,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { validateImageUrl } from "@/lib/catalog";
 import { ImageUploader, type UploadedImage } from "./ImageUploader";
 import { VariantBuilder, type VariantDraft } from "./VariantBuilder";
 
@@ -85,6 +86,8 @@ export function ProductForm({ mode, initial }: { mode: Mode; initial?: ProductFo
 
     setSaving(true);
     try {
+      for (const img of images) await validateImageUrl(img.url);
+      const validPrimary = primary && images.some((img) => img.url === primary) ? primary : images[0]?.url ?? null;
       const payload = {
         name: name.trim(),
         slug: slugify(slug),
@@ -95,7 +98,7 @@ export function ProductForm({ mode, initial }: { mode: Mode; initial?: ProductFo
         notes_top: notesTop || null,
         notes_heart: notesHeart || null,
         notes_base: notesBase || null,
-        image_url: primary || images[0]?.url || null,
+        image_url: validPrimary,
         base_price: priceNum,
         discount_percent: Math.min(100, Math.max(0, Number(discount) || 0)),
         is_new: isNew,
