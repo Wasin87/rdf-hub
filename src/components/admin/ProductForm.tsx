@@ -3,7 +3,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { validateImageUrl } from "@/lib/catalog";
+import { normalizeStorageImageUrl, validateImageUrl } from "@/lib/catalog";
 import { ImageUploader, type UploadedImage } from "./ImageUploader";
 import { VariantBuilder, type VariantDraft } from "./VariantBuilder";
 
@@ -86,8 +86,10 @@ export function ProductForm({ mode, initial }: { mode: Mode; initial?: ProductFo
 
     setSaving(true);
     try {
-      for (const img of images) await validateImageUrl(img.url);
-      const validPrimary = primary && images.some((img) => img.url === primary) ? primary : images[0]?.url ?? null;
+      const normalizedImages = images.map((img, idx) => ({ ...img, url: normalizeStorageImageUrl(img.url), sort_order: idx }));
+      for (const img of normalizedImages) await validateImageUrl(img.url);
+      const normalizedPrimary = primary ? normalizeStorageImageUrl(primary) : null;
+      const validPrimary = normalizedPrimary && normalizedImages.some((img) => img.url === normalizedPrimary) ? normalizedPrimary : normalizedImages[0]?.url ?? null;
       const payload = {
         name: name.trim(),
         slug: slugify(slug),
@@ -120,8 +122,8 @@ export function ProductForm({ mode, initial }: { mode: Mode; initial?: ProductFo
 
       // Replace images & variants atomically (delete + insert)
       await supabase.from("product_images").delete().eq("product_id", productId);
-      if (images.length) {
-        const rows = images.map((img, idx) => ({
+      if (normalizedImages.length) {
+        const rows = normalizedImages.map((img, idx) => ({
           product_id: productId,
           image_url: img.url,
           alt_text: name,

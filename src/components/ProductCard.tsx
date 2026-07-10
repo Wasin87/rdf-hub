@@ -8,10 +8,13 @@ import { resolveImage } from "@/lib/catalog";
 import { formatBDT, discountedPrice } from "@/lib/format";
 import { useCart } from "@/stores/cart";
 import { useWishlist } from "@/stores/wishlist";
-import { SafeImage } from "@/components/SafeImage";
 
 export function ProductCard({ product }: { product: Product }) {
   const variants = useMemo(() => [...product.variants].sort((a, b) => a.size_ml - b.size_ml), [product.variants]);
+  const firstImage = useMemo(() => {
+    const list = (product.images ?? []).slice().sort((a, b) => a.sort_order - b.sort_order).map((img) => img.image_url);
+    return product.image_url ?? list[0] ?? null;
+  }, [product.image_url, product.images]);
   const [selected, setSelected] = useState(variants[2]?.id ?? variants[0]?.id);
   const v = variants.find((x) => x.id === selected) ?? variants[0];
 
@@ -32,7 +35,7 @@ export function ProductCard({ product }: { product: Product }) {
       sizeMl: v.size_ml,
       price: discountedPrice(v.price, product.discount_percent),
       quantity: 1,
-      imageUrl: resolveImage(product.image_url),
+      imageUrl: resolveImage(firstImage),
     });
     toast.success("Added to cart", { description: `${product.name} • ${v.size_ml}ml` });
   };
@@ -44,7 +47,7 @@ export function ProductCard({ product }: { product: Product }) {
       productSlug: product.slug,
       productName: product.name,
       brandName: product.brand?.name ?? "",
-      imageUrl: resolveImage(product.image_url),
+      imageUrl: resolveImage(firstImage),
       basePrice: product.base_price,
       discountPercent: product.discount_percent,
     });
@@ -148,6 +151,13 @@ function ProductCardImage({ product }: { product: Product }) {
           src={resolveImage(url)}
           alt={`${product.brand?.name ?? ""} ${product.name}`}
           loading="lazy"
+          onError={(e) => {
+            const img = e.currentTarget;
+            if (img.dataset.fallback !== "1") {
+              img.dataset.fallback = "1";
+              img.src = resolveImage(null);
+            }
+          }}
           className="absolute inset-0 h-full w-full object-cover"
           initial={false}
           animate={{ opacity: i === idx ? 1 : 0, scale: i === idx ? 1.02 : 1 }}
