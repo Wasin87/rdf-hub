@@ -4,6 +4,7 @@ import { Search, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { fetchProducts, type Product, resolveImage } from "@/lib/catalog";
 import { formatBDT, discountedPrice } from "@/lib/format";
+import { SafeImage } from "@/components/SafeImage";
 
 export function SearchBar({ inDrawer = false }: { inDrawer?: boolean }) {
   const [open, setOpen] = useState(false);
@@ -78,7 +79,7 @@ export function SearchBar({ inDrawer = false }: { inDrawer?: boolean }) {
                   onClick={() => setOpen(false)}
                   className="flex items-center gap-3 border-b border-border/50 p-3 transition-colors last:border-0 hover:bg-secondary/50"
                 >
-                  <img src={resolveImage(p.image_url)} alt={p.name} className="h-12 w-12 shrink-0 rounded-sm object-cover" loading="lazy" />
+                  <SafeImage src={resolveImage(p.image_url)} alt={p.name} wrapperClassName="h-12 w-12 shrink-0 rounded-sm" className="h-12 w-12 object-cover" loading="lazy" />
                   <div className="min-w-0 flex-1">
                     <div className="truncate text-[10px] track-luxury text-muted-foreground">{p.brand?.name}</div>
                     <div className="truncate text-sm font-medium text-foreground">{p.name}</div>

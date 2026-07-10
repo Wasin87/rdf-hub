@@ -16,6 +16,7 @@ import { useCart } from "@/stores/cart";
 import { useWishlist } from "@/stores/wishlist";
 import { ProductCard } from "@/components/ProductCard";
 import { LuxuryLoader } from "@/components/Loader";
+import { SafeImage } from "@/components/SafeImage";
 
 export const Route = createFileRoute("/products/$slug")({
   ssr: false,
@@ -127,17 +128,16 @@ function ProductPage() {
             aria-label="Open image"
           >
             <AnimatePresence mode="wait">
-              <motion.img
+              <motion.div
                 key={gallery[active]}
-                src={resolveImage(gallery[active])}
-                alt={`${product.brand?.name ?? ""} ${product.name}`}
                 className="aspect-[4/5] w-full object-cover"
                 initial={{ opacity: 0, scale: 1.02 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.4 }}
-                onError={(e) => { const el = e.currentTarget as HTMLImageElement; if (el.dataset.fb !== "1") { el.dataset.fb = "1"; el.src = resolveImage(null); } }}
-              />
+              >
+                <SafeImage src={gallery[active]} alt={`${product.brand?.name ?? ""} ${product.name}`} wrapperClassName="h-full w-full" className="h-full w-full object-cover" />
+              </motion.div>
             </AnimatePresence>
             {product.discount_percent > 0 && (
               <span className="absolute left-4 top-4 rounded-sm bg-[color:var(--gold)] px-2 py-1 text-[10px] track-luxury text-[color:var(--gold-foreground)]">
@@ -176,7 +176,7 @@ function ProductPage() {
                   className={`relative aspect-square overflow-hidden rounded-sm border bg-secondary transition-colors ${i === active ? "border-[color:var(--gold)]" : "border-border hover:border-foreground"}`}
                   aria-label={`Show image ${i + 1}`}
                 >
-                  <img src={resolveImage(url)} alt="" className="h-full w-full object-cover" loading="lazy" onError={(e) => { const el = e.currentTarget as HTMLImageElement; if (el.dataset.fb !== "1") { el.dataset.fb = "1"; el.src = resolveImage(null); } }} />
+                  <SafeImage src={url} alt="" wrapperClassName="h-full w-full" className="h-full w-full object-cover" loading="lazy" />
                 </button>
               ))}
             </div>
@@ -304,16 +304,16 @@ function ProductPage() {
             <button onClick={() => setLightbox(false)} className="absolute right-6 top-6 grid h-10 w-10 place-items-center rounded-full border border-border bg-background/80" aria-label="Close">
               <X className="h-4 w-4" />
             </button>
-            <motion.img
+            <motion.div
               key={gallery[active]}
-              src={resolveImage(gallery[active])}
-              alt=""
               initial={{ scale: 0.96, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.96, opacity: 0 }}
-              className="max-h-[88vh] max-w-[88vw] rounded-sm object-contain"
+              className="max-h-[88vh] max-w-[88vw] overflow-hidden rounded-sm"
               onClick={(e) => e.stopPropagation()}
-            />
+            >
+              <SafeImage src={gallery[active]} alt="" wrapperClassName="max-h-[88vh] max-w-[88vw] bg-transparent" className="max-h-[88vh] max-w-[88vw] object-contain" />
+            </motion.div>
             {gallery.length > 1 && (
               <>
                 <button onClick={(e) => { e.stopPropagation(); setActive((i) => (i - 1 + gallery.length) % gallery.length); }} className="absolute left-6 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full border border-border bg-background/80" aria-label="Previous"><ChevronLeft className="h-4 w-4" /></button>
@@ -380,12 +380,12 @@ function ReviewsSection({ productId }: { productId: string }) {
                 <div className="mt-2 flex flex-wrap gap-1.5">
                   {r.images.slice(0, 4).map((url, i) => (
                     <button key={i} type="button" onClick={() => setZoom({ images: r.images!, idx: i })} className="h-11 w-11 overflow-hidden rounded-sm border border-border hover:border-[color:var(--gold)]">
-                      <img
+                      <SafeImage
                         src={url}
                         alt=""
+                        wrapperClassName="h-full w-full"
                         className="h-full w-full object-cover"
                         loading="lazy"
-                        onError={(e) => { const el = e.currentTarget; if (el.dataset.fb !== "1") { el.dataset.fb = "1"; el.src = "data:image/svg+xml;utf8," + encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 44'><rect fill='#eee' width='44' height='44'/></svg>"); } }}
                       />
                     </button>
                   ))}
@@ -400,7 +400,9 @@ function ReviewsSection({ productId }: { productId: string }) {
         {zoom && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[100] grid place-items-center bg-background/95 p-4 backdrop-blur" onClick={() => setZoom(null)}>
             <button onClick={() => setZoom(null)} className="absolute right-6 top-6 grid h-10 w-10 place-items-center rounded-full border border-border bg-background/80" aria-label="Close"><X className="h-4 w-4" /></button>
-            <motion.img key={zoom.images[zoom.idx]} src={zoom.images[zoom.idx]} initial={{ scale: 0.96, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.96, opacity: 0 }} alt="" className="max-h-[88vh] max-w-[88vw] rounded-sm object-contain" onClick={(e) => e.stopPropagation()} />
+            <motion.div key={zoom.images[zoom.idx]} initial={{ scale: 0.96, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.96, opacity: 0 }} className="max-h-[88vh] max-w-[88vw] overflow-hidden rounded-sm" onClick={(e) => e.stopPropagation()}>
+              <SafeImage src={zoom.images[zoom.idx]} alt="" wrapperClassName="max-h-[88vh] max-w-[88vw] bg-transparent" className="max-h-[88vh] max-w-[88vw] object-contain" />
+            </motion.div>
             {zoom.images.length > 1 && (
               <>
                 <button onClick={(e) => { e.stopPropagation(); setZoom({ ...zoom, idx: (zoom.idx - 1 + zoom.images.length) % zoom.images.length }); }} className="absolute left-6 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full border border-border bg-background/80" aria-label="Previous"><ChevronLeft className="h-4 w-4" /></button>

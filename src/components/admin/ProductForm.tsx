@@ -3,6 +3,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { normalizeStorageImageUrl, validateImageUrl } from "@/lib/catalog";
 import { ImageUploader, type UploadedImage } from "./ImageUploader";
 import { VariantBuilder, type VariantDraft } from "./VariantBuilder";
 
@@ -85,6 +86,10 @@ export function ProductForm({ mode, initial }: { mode: Mode; initial?: ProductFo
 
     setSaving(true);
     try {
+      const normalizedImages = images.map((img, idx) => ({ ...img, url: normalizeStorageImageUrl(img.url), sort_order: idx }));
+      for (const img of normalizedImages) await validateImageUrl(img.url);
+      const normalizedPrimary = primary ? normalizeStorageImageUrl(primary) : null;
+      const validPrimary = normalizedPrimary && normalizedImages.some((img) => img.url === normalizedPrimary) ? normalizedPrimary : normalizedImages[0]?.url ?? null;
       const payload = {
         name: name.trim(),
         slug: slugify(slug),
@@ -95,7 +100,7 @@ export function ProductForm({ mode, initial }: { mode: Mode; initial?: ProductFo
         notes_top: notesTop || null,
         notes_heart: notesHeart || null,
         notes_base: notesBase || null,
-        image_url: primary || images[0]?.url || null,
+        image_url: validPrimary,
         base_price: priceNum,
         discount_percent: Math.min(100, Math.max(0, Number(discount) || 0)),
         is_new: isNew,
@@ -117,8 +122,8 @@ export function ProductForm({ mode, initial }: { mode: Mode; initial?: ProductFo
 
       // Replace images & variants atomically (delete + insert)
       await supabase.from("product_images").delete().eq("product_id", productId);
-      if (images.length) {
-        const rows = images.map((img, idx) => ({
+      if (normalizedImages.length) {
+        const rows = normalizedImages.map((img, idx) => ({
           product_id: productId,
           image_url: img.url,
           alt_text: name,

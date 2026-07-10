@@ -4,6 +4,7 @@ import { Search, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { fetchProducts, type Product, resolveImage } from "@/lib/catalog";
 import { formatBDT, discountedPrice } from "@/lib/format";
+import { SafeImage } from "@/components/SafeImage";
 
 export function SearchModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [q, setQ] = useState("");
@@ -86,7 +87,7 @@ export function SearchModal({ open, onClose }: { open: boolean; onClose: () => v
                     onClick={onClose}
                     className="flex items-center gap-4 border-b border-border/40 p-4 transition-colors last:border-0 hover:bg-secondary/40"
                   >
-                    <img src={resolveImage(p.image_url)} alt={p.name} className="h-14 w-14 shrink-0 rounded-sm object-cover" loading="lazy" />
+                    <SafeImage src={resolveImage(p.image_url)} alt={p.name} wrapperClassName="h-14 w-14 shrink-0 rounded-sm" className="h-14 w-14 object-cover" loading="lazy" />
                     <div className="min-w-0 flex-1">
                       <div className="truncate text-[10px] track-luxury text-muted-foreground">{p.brand?.name}</div>
                       <div className="truncate font-display text-base text-foreground">{p.name}</div>

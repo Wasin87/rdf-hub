@@ -31,6 +31,7 @@ import { Route as AdminBannersRouteImport } from './routes/admin.banners'
 import { Route as AdminAddProductRouteImport } from './routes/admin.add-product'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard.index'
+import { Route as ApiPublicImageRouteImport } from './routes/api.public.image'
 import { Route as AdminEditProductIdRouteImport } from './routes/admin.edit-product.$id'
 import { Route as AuthenticatedDashboardWishlistRouteImport } from './routes/_authenticated/dashboard.wishlist'
 import { Route as AuthenticatedDashboardSettingsRouteImport } from './routes/_authenticated/dashboard.settings'
@@ -149,6 +150,11 @@ const AuthenticatedDashboardIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
+const ApiPublicImageRoute = ApiPublicImageRouteImport.update({
+  id: '/api/public/image',
+  path: '/api/public/image',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminEditProductIdRoute = AdminEditProductIdRouteImport.update({
   id: '/edit-product/$id',
   path: '/edit-product/$id',
@@ -219,6 +225,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
   '/dashboard/wishlist': typeof AuthenticatedDashboardWishlistRoute
   '/admin/edit-product/$id': typeof AdminEditProductIdRoute
+  '/api/public/image': typeof ApiPublicImageRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
 }
 export interface FileRoutesByTo {
@@ -247,6 +254,7 @@ export interface FileRoutesByTo {
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
   '/dashboard/wishlist': typeof AuthenticatedDashboardWishlistRoute
   '/admin/edit-product/$id': typeof AdminEditProductIdRoute
+  '/api/public/image': typeof ApiPublicImageRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
 }
 export interface FileRoutesById {
@@ -279,6 +287,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
   '/_authenticated/dashboard/wishlist': typeof AuthenticatedDashboardWishlistRoute
   '/admin/edit-product/$id': typeof AdminEditProductIdRoute
+  '/api/public/image': typeof ApiPublicImageRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
 }
 export interface FileRouteTypes {
@@ -311,6 +320,7 @@ export interface FileRouteTypes {
     | '/dashboard/settings'
     | '/dashboard/wishlist'
     | '/admin/edit-product/$id'
+    | '/api/public/image'
     | '/dashboard/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -339,6 +349,7 @@ export interface FileRouteTypes {
     | '/dashboard/settings'
     | '/dashboard/wishlist'
     | '/admin/edit-product/$id'
+    | '/api/public/image'
     | '/dashboard'
   id:
     | '__root__'
@@ -370,6 +381,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/settings'
     | '/_authenticated/dashboard/wishlist'
     | '/admin/edit-product/$id'
+    | '/api/public/image'
     | '/_authenticated/dashboard/'
   fileRoutesById: FileRoutesById
 }
@@ -385,6 +397,7 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   ShopRoute: typeof ShopRoute
   ProductsSlugRoute: typeof ProductsSlugRoute
+  ApiPublicImageRoute: typeof ApiPublicImageRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -543,6 +556,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardIndexRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
+    '/api/public/image': {
+      id: '/api/public/image'
+      path: '/api/public/image'
+      fullPath: '/api/public/image'
+      preLoaderRoute: typeof ApiPublicImageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/edit-product/$id': {
       id: '/admin/edit-product/$id'
       path: '/edit-product/$id'
@@ -673,6 +693,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   ShopRoute: ShopRoute,
   ProductsSlugRoute: ProductsSlugRoute,
+  ApiPublicImageRoute: ApiPublicImageRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

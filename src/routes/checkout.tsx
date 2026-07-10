@@ -10,6 +10,8 @@ import { useCart } from "@/stores/cart";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { formatBDT } from "@/lib/format";
+import { normalizeStorageImageUrl } from "@/lib/catalog";
+import { SafeImage } from "@/components/SafeImage";
 
 export const Route = createFileRoute("/checkout")({
   head: () => ({ meta: [{ title: "Checkout — FRAG AVENUE" }] }),
@@ -103,7 +105,7 @@ function CheckoutPage() {
         size_ml: i.sizeMl,
         unit_price: i.price,
         quantity: i.quantity,
-        image_url: i.imageUrl,
+        image_url: normalizeStorageImageUrl(i.imageUrl),
       })));
       if (itemsErr) throw itemsErr;
 
@@ -204,7 +206,7 @@ function CheckoutPage() {
           <div className="space-y-3">
             {items.map((i) => (
               <div key={i.variantId} className="flex gap-3">
-                <img src={i.imageUrl} alt={i.productName} className="h-14 w-14 rounded-sm object-cover" />
+                <SafeImage src={i.imageUrl} alt={i.productName} wrapperClassName="h-14 w-14 rounded-sm" className="h-14 w-14 object-cover" />
                 <div className="min-w-0 flex-1">
                   <div className="text-[10px] track-luxury text-muted-foreground">{i.brandName}</div>
                   <div className="truncate text-sm">{i.productName}</div>

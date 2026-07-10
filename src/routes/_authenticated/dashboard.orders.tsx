@@ -8,6 +8,7 @@ import { formatBDT } from "@/lib/format";
 import { Package, Check, Clock, Truck, X, Sparkles, RefreshCw, Star } from "lucide-react";
 import { ReviewForm } from "@/components/ReviewForm";
 import { LuxuryLoader } from "@/components/Loader";
+import { SafeImage } from "@/components/SafeImage";
 
 export const Route = createFileRoute("/_authenticated/dashboard/orders")({
   head: () => ({ meta: [{ title: "Orders — FRAG AVENUE" }] }),
@@ -124,14 +125,11 @@ function OrdersPage() {
                     return (
                       <div key={it.id} className="flex flex-wrap items-center gap-4 py-3">
                         {it.image_url && (
-                          <img
+                          <SafeImage
                             src={it.image_url}
                             alt={it.product_name}
+                            wrapperClassName="h-14 w-14 rounded-sm"
                             className="h-14 w-14 rounded-sm object-cover"
-                            onError={(e) => {
-                              const el = e.currentTarget;
-                              if (el.dataset.fb !== "1") { el.dataset.fb = "1"; el.src = "data:image/svg+xml;utf8," + encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'><rect fill='#eee' width='60' height='60'/></svg>"); }
-                            }}
                           />
                         )}
                         <div className="min-w-0 flex-1">

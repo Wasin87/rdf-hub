@@ -38,6 +38,82 @@ export type Collection = { id: string; name: string; slug: string; description: 
 export type Banner = { id: string; title: string; subtitle: string | null; image_url: string; cta_text: string | null; cta_link: string | null };
 export type Review = { id: string; author_name: string; email?: string | null; rating: number; title: string | null; body: string; images?: string[]; created_at?: string };
 
+export const IMAGE_BUCKETS = {
+  products: "product-images",
+  reviews: "review-images",
+} as const;
+
+export const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+
+export function isAcceptedImage(file: File) {
+  return ACCEPTED_IMAGE_TYPES.includes(file.type.toLowerCase());
+}
+
+export function appStorageImageUrl(bucket: string, path: string) {
+  return `/api/public/image?bucket=${encodeURIComponent(bucket)}&path=${encodeURIComponent(path)}`;
+}
+
+export function getStoragePathFromAppUrl(url: string) {
+  try {
+    const parsed = new URL(url, typeof window !== "undefined" ? window.location.origin : "http://localhost");
+    if (parsed.pathname !== "/api/public/image") return null;
+    const bucket = parsed.searchParams.get("bucket");
+    const path = parsed.searchParams.get("path");
+    return bucket && path ? { bucket, path } : null;
+  } catch {
+    return null;
+  }
+}
+
+export function normalizeStorageImageUrl(url: string) {
+  const trimmed = url.trim();
+  const appImage = getStoragePathFromAppUrl(trimmed);
+  if (appImage) return appStorageImageUrl(appImage.bucket, appImage.path);
+
+  try {
+    const parsed = new URL(trimmed, typeof window !== "undefined" ? window.location.origin : "http://localhost");
+    const marker = "/storage/v1/object/public/";
+    const idx = parsed.pathname.indexOf(marker);
+    if (idx === -1) return trimmed;
+    const rest = parsed.pathname.slice(idx + marker.length);
+    const slash = rest.indexOf("/");
+    if (slash <= 0) return trimmed;
+    const bucket = decodeURIComponent(rest.slice(0, slash));
+    const path = decodeURIComponent(rest.slice(slash + 1));
+    if (bucket === IMAGE_BUCKETS.products || bucket === IMAGE_BUCKETS.reviews) {
+      return appStorageImageUrl(bucket, path);
+    }
+  } catch {
+    return trimmed;
+  }
+
+  return trimmed;
+}
+
+export function validateImageUrl(url: string) {
+  return new Promise<void>((resolve, reject) => {
+    if (!url.trim()) {
+      reject(new Error("Image URL is required"));
+      return;
+    }
+    const img = new Image();
+    const timeout = window.setTimeout(() => {
+      img.onload = null;
+      img.onerror = null;
+      reject(new Error("Image did not load in time"));
+    }, 12000);
+    img.onload = () => {
+      window.clearTimeout(timeout);
+      resolve();
+    };
+    img.onerror = () => {
+      window.clearTimeout(timeout);
+      reject(new Error("Image is not accessible"));
+    };
+    img.src = normalizeStorageImageUrl(url);
+  });
+}
+
 const PRODUCT_SELECT = `
   id, name, slug, description, notes_top, notes_heart, notes_base, image_url,
   base_price, discount_percent, is_new, is_featured, is_limited, view_count, created_at,
@@ -187,5 +263,5 @@ const ASSET_MAP: Record<string, string> = {
 
 export function resolveImage(url: string | null | undefined): string {
   if (!url) return perfume1;
-  return ASSET_MAP[url] ?? url;
+  return ASSET_MAP[url] ?? normalizeStorageImageUrl(url);
 }
