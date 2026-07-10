@@ -8,6 +8,7 @@ import { resolveImage } from "@/lib/catalog";
 import { formatBDT, discountedPrice } from "@/lib/format";
 import { useCart } from "@/stores/cart";
 import { useWishlist } from "@/stores/wishlist";
+import { SafeImage } from "@/components/SafeImage";
 
 export function ProductCard({ product }: { product: Product }) {
   const variants = useMemo(() => [...product.variants].sort((a, b) => a.size_ml - b.size_ml), [product.variants]);
@@ -146,23 +147,15 @@ function ProductCardImage({ product }: { product: Product }) {
   return (
     <div className="relative aspect-[4/5] overflow-hidden bg-secondary" onMouseEnter={onEnter} onMouseLeave={onLeave}>
       {images.map((url, i) => (
-        <motion.img
+        <motion.div
           key={`${url}-${i}`}
-          src={resolveImage(url)}
-          alt={`${product.brand?.name ?? ""} ${product.name}`}
-          loading="lazy"
-          onError={(e) => {
-            const img = e.currentTarget;
-            if (img.dataset.fallback !== "1") {
-              img.dataset.fallback = "1";
-              img.src = resolveImage(null);
-            }
-          }}
           className="absolute inset-0 h-full w-full object-cover"
           initial={false}
           animate={{ opacity: i === idx ? 1 : 0, scale: i === idx ? 1.02 : 1 }}
           transition={{ duration: 0.6, ease: [0.2, 0.8, 0.2, 1] }}
-        />
+        >
+          <SafeImage src={url} alt={`${product.brand?.name ?? ""} ${product.name}`} wrapperClassName="h-full w-full" className="h-full w-full object-cover" loading="lazy" />
+        </motion.div>
       ))}
       {hasMany && (
         <div className="absolute bottom-2 left-1/2 z-10 flex -translate-x-1/2 gap-1">
