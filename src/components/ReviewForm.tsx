@@ -3,7 +3,7 @@ import { Star, X, Upload, Loader2, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { appStorageImageUrl, IMAGE_BUCKETS, isAcceptedImage, validateImageUrl } from "@/lib/catalog";
+import { appStorageImageUrl, IMAGE_BUCKETS, isAcceptedImage, normalizeStorageImageUrl, validateImageUrl } from "@/lib/catalog";
 import { SafeImage } from "@/components/SafeImage";
 
 type Props = {
@@ -87,7 +87,7 @@ export function ReviewForm({ productId, productName, orderId, reviewId: reviewId
         uploaded.push(imageUrl);
       }
 
-      const images = [...existing, ...uploaded];
+      const images = [...existing.map(normalizeStorageImageUrl), ...uploaded];
 
       if (isEdit && reviewId) {
         const { error } = await supabase.from("reviews").update({
