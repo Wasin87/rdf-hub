@@ -145,7 +145,7 @@ function ProductCardImage({ product }: { product: Product }) {
   useEffect(() => () => { if (timer.current) clearInterval(timer.current); }, []);
 
   return (
-    <div className="relative aspect-[4/5] overflow-hidden bg-secondary" onMouseEnter={onEnter} onMouseLeave={onLeave}>
+    <div className="relative aspect-[1/1] overflow-hidden bg-secondary" onMouseEnter={onEnter} onMouseLeave={onLeave}>
       {images.map((url, i) => (
         <motion.div
           key={`${url}-${i}`}
