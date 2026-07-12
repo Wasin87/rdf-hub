@@ -1,5 +1,5 @@
 import { createFileRoute, Link, Outlet, redirect, useNavigate, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, Package, ShoppingBag, Megaphone, Image as ImageIcon, Users, LogOut, Tag, Star, Home as HomeIcon } from "lucide-react";
+import { LayoutDashboard, Package, ShoppingBag, Megaphone, Image as ImageIcon, Users, LogOut, Tag, Star, Home as HomeIcon, Ticket } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Logo } from "@/components/Logo";
 
@@ -31,6 +31,7 @@ const items = [
   { to: "/admin/banners", label: "Hero Banners", icon: ImageIcon },
   { to: "/admin/brands", label: "Brands", icon: Tag },
   { to: "/admin/reviews", label: "Reviews", icon: Star },
+  { to: "/admin/coupons", label: "Coupons", icon: Ticket },
   { to: "/admin/users", label: "Users", icon: Users },
 ];
 

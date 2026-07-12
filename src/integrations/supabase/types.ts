@@ -221,6 +221,57 @@ export type Database = {
         }
         Relationships: []
       }
+      coupons: {
+        Row: {
+          code: string
+          created_at: string
+          description: string | null
+          discount_type: string
+          discount_value: number
+          expires_at: string | null
+          id: string
+          is_active: boolean
+          max_discount: number | null
+          min_order: number
+          starts_at: string | null
+          updated_at: string
+          usage_count: number
+          usage_limit: number | null
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          description?: string | null
+          discount_type?: string
+          discount_value: number
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          max_discount?: number | null
+          min_order?: number
+          starts_at?: string | null
+          updated_at?: string
+          usage_count?: number
+          usage_limit?: number | null
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          description?: string | null
+          discount_type?: string
+          discount_value?: number
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          max_discount?: number | null
+          min_order?: number
+          starts_at?: string | null
+          updated_at?: string
+          usage_count?: number
+          usage_limit?: number | null
+        }
+        Relationships: []
+      }
       notice_banners: {
         Row: {
           created_at: string
