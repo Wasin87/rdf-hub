@@ -14,50 +14,67 @@ function initials(name: string) {
 
 export function ReviewsSlider({ reviews }: { reviews: Review[] }) {
   const trackRef = useRef<HTMLDivElement>(null);
+  const offsetRef = useRef(0);
+  const halfRef = useRef(0);
   const [paused, setPaused] = useState(false);
 
-  if (!reviews.length) return null;
+  // Hooks first — guard rendering at the bottom instead of returning early.
+  const hasReviews = reviews.length > 0;
+  const list = hasReviews ? [...reviews, ...reviews, ...reviews, ...reviews] : [];
 
-  // Duplicate enough times so the seamless loop never visibly snaps,
-  // regardless of viewport width.
-  const list = [...reviews, ...reviews, ...reviews, ...reviews];
-
-  // Smooth auto-scroll via transform on RAF — avoids the jitter of scrollLeft.
+  // Smooth auto-scroll via transform on RAF.
   useEffect(() => {
+    if (!hasReviews) return;
     const el = trackRef.current;
     if (!el) return;
     let raf = 0;
     let last = performance.now();
     const speed = 36; // px/s
-    let offset = 0;
+
+    const apply = () => {
+      const half = el.scrollWidth / 2;
+      halfRef.current = half;
+      if (half > 0) {
+        if (offsetRef.current >= half) offsetRef.current -= half;
+        if (offsetRef.current < 0) offsetRef.current += half;
+      }
+      el.style.transform = `translate3d(${-offsetRef.current}px, 0, 0)`;
+    };
 
     const step = (now: number) => {
       const dt = (now - last) / 1000;
       last = now;
       if (!paused) {
-        offset += speed * dt;
-        const half = el.scrollWidth / 2;
-        if (half > 0 && offset >= half) offset -= half;
-        el.style.transform = `translate3d(${-offset}px, 0, 0)`;
+        offsetRef.current += speed * dt;
+        apply();
+      } else {
+        last = now;
       }
       raf = requestAnimationFrame(step);
     };
     raf = requestAnimationFrame(step);
     return () => cancelAnimationFrame(raf);
-  }, [paused, reviews.length]);
+  }, [paused, hasReviews]);
 
   const nudge = (dir: 1 | -1) => {
     const el = trackRef.current;
     if (!el) return;
     const card = el.querySelector<HTMLElement>("[data-review-card]");
-    const delta = (card?.offsetWidth ?? 280) + 16;
-    // Animate via transform: jump the offset by delta in the chosen direction.
-    const cur = new DOMMatrixReadOnly(getComputedStyle(el).transform).m41;
-    const target = cur - delta * dir;
-    el.style.transition = "transform 0.5s cubic-bezier(0.2,0.8,0.2,1)";
-    el.style.transform = `translate3d(${target}px, 0, 0)`;
-    window.setTimeout(() => { el.style.transition = ""; }, 520);
+    const delta = (card?.offsetWidth ?? 300) + 16;
+    // Update the shared offset so RAF stays in sync — no fight with auto-scroll.
+    const half = halfRef.current || el.scrollWidth / 2;
+    let next = offsetRef.current + delta * dir;
+    if (half > 0) {
+      if (next >= half) next -= half;
+      if (next < 0) next += half;
+    }
+    offsetRef.current = next;
+    el.style.transition = "transform 0.55s cubic-bezier(0.22,0.9,0.28,1)";
+    el.style.transform = `translate3d(${-next}px, 0, 0)`;
+    window.setTimeout(() => { el.style.transition = ""; }, 580);
   };
+
+  if (!hasReviews) return null;
 
   return (
     <section className="bg-section py-12 md:py-20">
@@ -71,16 +88,18 @@ export function ReviewsSlider({ reviews }: { reviews: Review[] }) {
           </div>
           <div className="flex shrink-0 gap-2">
             <button
+              type="button"
               onClick={() => nudge(-1)}
               aria-label="Previous reviews"
-              className="grid h-9 w-9 place-items-center rounded-full border border-border bg-background text-foreground transition hover:scale-105 hover:bg-foreground hover:text-background md:h-11 md:w-11"
+              className="grid h-9 w-9 place-items-center rounded-full border border-border bg-background text-foreground shadow-xl transition hover:scale-105 hover:bg-foreground hover:text-background md:h-11 md:w-11"
             >
               <ChevronLeft className="h-4 w-4 md:h-5 md:w-5" />
             </button>
             <button
+              type="button"
               onClick={() => nudge(1)}
               aria-label="Next reviews"
-              className="grid h-9 w-9 place-items-center rounded-full border border-border bg-background text-foreground transition hover:scale-105 hover:bg-foreground hover:text-background md:h-11 md:w-11"
+              className="grid h-9 w-9 place-items-center rounded-full border border-border bg-background text-foreground shadow-xl transition hover:scale-105 hover:bg-foreground hover:text-background md:h-11 md:w-11"
             >
               <ChevronRight className="h-4 w-4 md:h-5 md:w-5" />
             </button>
@@ -102,7 +121,7 @@ export function ReviewsSlider({ reviews }: { reviews: Review[] }) {
               <article
                 key={`${r.id}-${i}`}
                 data-review-card
-                className="flex w-[78vw] shrink-0 flex-col gap-3 rounded-2xl border border-border bg-card p-4 shadow-sm sm:w-[300px] md:w-[320px] md:p-5 lg:w-[300px]"
+                className="flex w-[78vw] shrink-0 flex-col gap-3 rounded-2xl border border-border bg-card p-4 shadow-xl sm:w-[300px] md:w-[320px] md:p-5 lg:w-[300px]"
               >
                 <header className="flex items-center gap-3">
                   <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-foreground font-display text-sm text-background">
