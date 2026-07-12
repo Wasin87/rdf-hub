@@ -385,7 +385,7 @@ function AdminOrders() {
 /* ---------- helpers ---------- */
 
 function Th({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return <th className={`px-4 py-3 text-left font-semibold ${className}`}>{children}</th>;
+  return <th className={`px-2 py-3 text-left font-semibold ${className}`}>{children}</th>;
 }
 
 function LabeledSelect({ label, value, onChange, options }: {
