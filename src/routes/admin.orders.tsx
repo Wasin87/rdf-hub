@@ -164,8 +164,8 @@ function AdminOrders() {
   return (
     <div className="p-4 sm:p-6 lg:p-8">
       {/* Toolbar */}
-      <div className="mb-6 rounded-xl border border-border bg-card p-4 shadow-sm">
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+      <div className="mb-6 rounded-xl border border-border bg-card p-4 shadow-xl">
+        <div className="flex flex-col gap-3">
           <div className="flex items-center gap-3">
             <h1 className="font-display text-2xl font-bold sm:text-3xl">
               Orders <span className="text-[color:var(--gold)]">({(data ?? []).length})</span>
@@ -173,7 +173,7 @@ function AdminOrders() {
             <button
               onClick={() => refetch()}
               disabled={isFetching}
-              className="grid h-9 w-9 place-items-center rounded-lg border border-border text-muted-foreground transition hover:border-[color:var(--gold)] hover:text-[color:var(--gold)] disabled:opacity-50"
+              className="grid h-9 w-9 place-items-center rounded-xl border border-border text-muted-foreground transition hover:border-[color:var(--gold)] hover:text-[color:var(--gold)] disabled:opacity-50"
               aria-label="Refresh orders"
               title="Refresh"
             >
@@ -183,7 +183,7 @@ function AdminOrders() {
           <div className="flex flex-wrap items-center gap-2">
             <button
               onClick={generateOtp}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-[color:var(--gold)] bg-[color:var(--gold)]/10 px-3 py-2 text-xs font-semibold text-[color:var(--gold)] transition hover:bg-[color:var(--gold)] hover:text-[color:var(--gold-foreground)]"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-[color:var(--gold)] bg-[color:var(--gold)]/10 px-3 py-2 text-xs font-semibold text-[color:var(--gold)] shadow-xl transition hover:bg-[color:var(--gold)] hover:text-[color:var(--gold-foreground)]"
             >
               <KeyRound className="h-3.5 w-3.5" /> Generate OTP
               {generatedOtp && <span className="ml-1 rounded bg-background/60 px-1.5 py-0.5 font-mono text-[11px]">{generatedOtp}</span>}
@@ -191,11 +191,11 @@ function AdminOrders() {
             <input
               value={otpOrderId} onChange={(e) => setOtpOrderId(e.target.value)}
               placeholder="Order ID"
-              className="h-9 w-32 rounded-lg border border-border bg-background px-3 text-xs focus:border-[color:var(--gold)] focus:outline-none sm:w-40"
+              className="h-9 w-32 rounded-xl border border-border bg-background px-3 text-xs focus:border-[color:var(--gold)] focus:outline-none sm:w-40"
             />
             <button
               onClick={setOtp}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-foreground px-3 py-2 text-xs font-semibold text-background transition hover:bg-[color:var(--gold)] hover:text-[color:var(--gold-foreground)]"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-foreground px-3 py-2 text-xs font-semibold text-background shadow-xl transition hover:bg-[color:var(--gold)] hover:text-[color:var(--gold-foreground)]"
             >
               Set OTP
             </button>
@@ -204,12 +204,12 @@ function AdminOrders() {
               <input
                 value={search} onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search orders…"
-                className="h-9 w-full min-w-[180px] rounded-lg border border-border bg-background pl-8 pr-3 text-xs focus:border-[color:var(--gold)] focus:outline-none sm:w-56"
+                className="h-9 w-full min-w-[180px] rounded-xl border border-border bg-background pl-8 pr-3 text-xs focus:border-[color:var(--gold)] focus:outline-none sm:w-56"
               />
             </div>
             <button
               onClick={() => setShowFilters((s) => !s)}
-              className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-semibold transition ${showFilters ? "border-[color:var(--gold)] bg-[color:var(--gold)]/10 text-[color:var(--gold)]" : "border-border text-foreground hover:border-[color:var(--gold)]"}`}
+              className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-semibold transition ${showFilters ? "border-[color:var(--gold)] bg-[color:var(--gold)]/10 text-[color:var(--gold)]" : "border-border text-foreground hover:border-[color:var(--gold)]"}`}
             >
               <Filter className="h-3.5 w-3.5" /> Filters
             </button>
