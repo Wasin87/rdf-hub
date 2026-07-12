@@ -164,8 +164,8 @@ function AdminOrders() {
   return (
     <div className="p-4 sm:p-6 lg:p-8">
       {/* Toolbar */}
-      <div className="mb-6 rounded-xl border border-border bg-card p-4 shadow-sm">
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+      <div className="mb-6 rounded-xl border border-border bg-card p-4 shadow-xl">
+        <div className="flex flex-col gap-3">
           <div className="flex items-center gap-3">
             <h1 className="font-display text-2xl font-bold sm:text-3xl">
               Orders <span className="text-[color:var(--gold)]">({(data ?? []).length})</span>
@@ -173,7 +173,7 @@ function AdminOrders() {
             <button
               onClick={() => refetch()}
               disabled={isFetching}
-              className="grid h-9 w-9 place-items-center rounded-lg border border-border text-muted-foreground transition hover:border-[color:var(--gold)] hover:text-[color:var(--gold)] disabled:opacity-50"
+              className="grid h-9 w-9 place-items-center rounded-xl border border-border text-muted-foreground transition hover:border-[color:var(--gold)] hover:text-[color:var(--gold)] disabled:opacity-50"
               aria-label="Refresh orders"
               title="Refresh"
             >
@@ -183,7 +183,7 @@ function AdminOrders() {
           <div className="flex flex-wrap items-center gap-2">
             <button
               onClick={generateOtp}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-[color:var(--gold)] bg-[color:var(--gold)]/10 px-3 py-2 text-xs font-semibold text-[color:var(--gold)] transition hover:bg-[color:var(--gold)] hover:text-[color:var(--gold-foreground)]"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-[color:var(--gold)] bg-[color:var(--gold)]/10 px-3 py-2 text-xs font-semibold text-[color:var(--gold)] shadow-xl transition hover:bg-[color:var(--gold)] hover:text-[color:var(--gold-foreground)]"
             >
               <KeyRound className="h-3.5 w-3.5" /> Generate OTP
               {generatedOtp && <span className="ml-1 rounded bg-background/60 px-1.5 py-0.5 font-mono text-[11px]">{generatedOtp}</span>}
@@ -191,11 +191,11 @@ function AdminOrders() {
             <input
               value={otpOrderId} onChange={(e) => setOtpOrderId(e.target.value)}
               placeholder="Order ID"
-              className="h-9 w-32 rounded-lg border border-border bg-background px-3 text-xs focus:border-[color:var(--gold)] focus:outline-none sm:w-40"
+              className="h-9 w-32 rounded-xl border border-border bg-background px-3 text-xs focus:border-[color:var(--gold)] focus:outline-none sm:w-40"
             />
             <button
               onClick={setOtp}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-foreground px-3 py-2 text-xs font-semibold text-background transition hover:bg-[color:var(--gold)] hover:text-[color:var(--gold-foreground)]"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-foreground px-3 py-2 text-xs font-semibold text-background shadow-xl transition hover:bg-[color:var(--gold)] hover:text-[color:var(--gold-foreground)]"
             >
               Set OTP
             </button>
@@ -204,12 +204,12 @@ function AdminOrders() {
               <input
                 value={search} onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search orders…"
-                className="h-9 w-full min-w-[180px] rounded-lg border border-border bg-background pl-8 pr-3 text-xs focus:border-[color:var(--gold)] focus:outline-none sm:w-56"
+                className="h-9 w-full min-w-[180px] rounded-xl border border-border bg-background pl-8 pr-3 text-xs focus:border-[color:var(--gold)] focus:outline-none sm:w-56"
               />
             </div>
             <button
               onClick={() => setShowFilters((s) => !s)}
-              className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-semibold transition ${showFilters ? "border-[color:var(--gold)] bg-[color:var(--gold)]/10 text-[color:var(--gold)]" : "border-border text-foreground hover:border-[color:var(--gold)]"}`}
+              className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-semibold transition ${showFilters ? "border-[color:var(--gold)] bg-[color:var(--gold)]/10 text-[color:var(--gold)]" : "border-border text-foreground hover:border-[color:var(--gold)]"}`}
             >
               <Filter className="h-3.5 w-3.5" /> Filters
             </button>
@@ -249,14 +249,14 @@ function AdminOrders() {
         <EmptyState onRefresh={() => refetch()} />
       ) : (
         <>
-          <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+          <div className="overflow-hidden rounded-xl border border-border bg-card shadow-xl">
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[1100px] text-sm">
+              <table className="w-full min-w-[900px] text-sm lg:min-w-0">
                 <thead className="sticky top-0 z-10 bg-secondary/70 backdrop-blur">
                   <tr className="text-[10px] uppercase tracking-wider text-muted-foreground">
                     <Th>Order ID</Th><Th>Customer</Th><Th>Product</Th>
                     <Th className="text-center">Qty</Th><Th>Total</Th><Th>Payment</Th>
-                    <Th>Order Date</Th><Th className="text-center">Info</Th>
+                    <Th className="text-center">Info</Th>
                     <Th>OTP</Th><Th>Status</Th><Th className="text-center">Actions</Th>
                   </tr>
                 </thead>
@@ -265,11 +265,10 @@ function AdminOrders() {
                     const addr = (o.address_snapshot ?? {}) as Record<string, string>;
                     const firstItem = o.order_items[0];
                     const moreCount = o.order_items.length - 1;
-                    const created = new Date(o.created_at);
                     const pm = (o.payment_method ?? "").toLowerCase();
                     return (
                       <tr key={o.id} className={`border-t border-border transition-colors hover:bg-secondary/40 ${i % 2 ? "bg-background" : "bg-card"}`}>
-                        <td className="px-4 py-3">
+                        <td className="px-3 py-3">
                           <div className="flex items-center gap-1.5">
                             <span className="font-mono text-xs font-semibold">{o.order_number}</span>
                             <button onClick={() => { navigator.clipboard?.writeText(o.order_number); toast.success("Order ID copied"); }}
@@ -278,62 +277,54 @@ function AdminOrders() {
                             </button>
                           </div>
                         </td>
-                        <td className="px-4 py-3">
+                        <td className="px-3 py-3">
                           <div className="font-semibold text-foreground">{addr.full_name || "—"}</div>
                           <div className="text-[11px] text-muted-foreground">{addr.email || addr.phone || ""}</div>
                         </td>
-                        <td className="px-4 py-3">
+                        <td className="px-2 py-3">
                           <div className="flex items-center gap-2">
                             {firstItem?.image_url ? (
                               <SafeImage src={firstItem.image_url} alt={firstItem.product_name}
-                                wrapperClassName="h-12 w-12 shrink-0 rounded-md" className="h-12 w-12 rounded-md object-cover" />
+                                wrapperClassName="h-10 w-10 shrink-0 rounded-xl" className="h-10 w-10 rounded-xl object-cover" />
                             ) : (
-                              <div className="grid h-12 w-12 shrink-0 place-items-center rounded-md bg-secondary text-muted-foreground">
+                              <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-secondary text-muted-foreground">
                                 <PackageX className="h-4 w-4" />
                               </div>
                             )}
-                            <div className="min-w-0">
+                            <div className="min-w-0 max-w-[160px]">
                               <div className="truncate text-xs font-medium">{firstItem?.product_name || "—"}</div>
                               {moreCount > 0 && <div className="text-[10px] text-muted-foreground">+{moreCount} more</div>}
                             </div>
                           </div>
                         </td>
-                        <td className="px-4 py-3 text-center font-semibold">{o.order_items.reduce((s, it) => s + it.quantity, 0)}</td>
-                        <td className="px-4 py-3 font-bold text-[color:var(--gold)]">{formatBDT(Number(o.total))}</td>
-                        <td className="px-4 py-3">
+                        <td className="px-1 py-3 text-center font-semibold">{o.order_items.reduce((s, it) => s + it.quantity, 0)}</td>
+                        <td className="px-2 py-3 font-bold text-[color:var(--gold)] whitespace-nowrap">{formatBDT(Number(o.total))}</td>
+                        <td className="px-2 py-3">
                           <span className={`inline-flex rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase ${PAYMENT_STYLES[pm] ?? "bg-secondary text-muted-foreground border-border"}`}>
                             {o.payment_method || "—"}
                           </span>
                         </td>
-                        <td className="px-4 py-3">
-                          <div className="text-xs">{created.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}</div>
-                          <div className="text-[11px] text-muted-foreground">{created.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</div>
-                        </td>
-                        <td className="px-4 py-3 text-center">
+                        <td className="px-2 py-3 text-center">
                           <button onClick={() => setViewing(o)} title="View details"
-                            className="inline-grid h-8 w-8 place-items-center rounded-lg border border-border text-muted-foreground transition hover:border-[color:var(--gold)] hover:text-[color:var(--gold)]">
+                            className="inline-grid h-8 w-8 place-items-center rounded-xl border border-border text-muted-foreground transition hover:border-[color:var(--gold)] hover:text-[color:var(--gold)]">
                             <Eye className="h-4 w-4" />
                           </button>
                         </td>
-                        <td className="px-4 py-3">
+                        <td className="px-2 py-3">
                           {o.otp ? (
-                            <span className="rounded-md bg-[color:var(--gold)]/10 px-2 py-1 font-mono text-xs font-bold text-[color:var(--gold)]">{o.otp}</span>
+                            <span className="rounded-xl bg-[color:var(--gold)]/10 px-2 py-1 font-mono text-xs font-bold text-[color:var(--gold)]">{o.otp}</span>
                           ) : <span className="text-muted-foreground">—</span>}
                         </td>
-                        <td className="px-4 py-3">
+                        <td className="px-2 py-3">
                           <select value={o.status} onChange={(e) => updateStatus(o.id, e.target.value as Status)}
-                            className={`w-full min-w-[130px] rounded-lg border px-2 py-1.5 text-[11px] font-semibold uppercase focus:outline-none ${STATUS_STYLES[o.status] ?? ""}`}>
+                            className={`w-full min-w-[92px] rounded-xl border px-1.5 py-1 text-[10px] font-semibold uppercase focus:outline-none ${STATUS_STYLES[o.status] ?? ""}`}>
                             {ALL_STATUSES.map((s) => <option key={s} value={s} className="bg-background text-foreground">{s.replace("_", " ")}</option>)}
                           </select>
                         </td>
-                        <td className="px-4 py-3">
-                          <div className="flex items-center justify-center gap-1">
-                            <button onClick={() => setViewing(o)} title="Edit / View"
-                              className="grid h-8 w-8 place-items-center rounded-lg text-muted-foreground transition hover:bg-secondary hover:text-foreground">
-                              <Eye className="h-4 w-4" />
-                            </button>
+                        <td className="px-2 py-3">
+                          <div className="flex items-center justify-center">
                             <button onClick={() => setDeleting(o)} title="Cancel order"
-                              className="grid h-8 w-8 place-items-center rounded-lg text-muted-foreground transition hover:bg-rose-500/10 hover:text-rose-600">
+                              className="grid h-8 w-8 place-items-center rounded-xl text-muted-foreground transition hover:bg-rose-500/10 hover:text-rose-600">
                               <Trash2 className="h-4 w-4" />
                             </button>
                           </div>
@@ -394,7 +385,7 @@ function AdminOrders() {
 /* ---------- helpers ---------- */
 
 function Th({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return <th className={`px-4 py-3 text-left font-semibold ${className}`}>{children}</th>;
+  return <th className={`px-2 py-3 text-left font-semibold ${className}`}>{children}</th>;
 }
 
 function LabeledSelect({ label, value, onChange, options }: {
