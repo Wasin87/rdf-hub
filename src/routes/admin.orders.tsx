@@ -249,14 +249,14 @@ function AdminOrders() {
         <EmptyState onRefresh={() => refetch()} />
       ) : (
         <>
-          <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+          <div className="overflow-hidden rounded-xl border border-border bg-card shadow-xl">
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[1100px] text-sm">
+              <table className="w-full min-w-[900px] text-sm lg:min-w-0">
                 <thead className="sticky top-0 z-10 bg-secondary/70 backdrop-blur">
                   <tr className="text-[10px] uppercase tracking-wider text-muted-foreground">
                     <Th>Order ID</Th><Th>Customer</Th><Th>Product</Th>
                     <Th className="text-center">Qty</Th><Th>Total</Th><Th>Payment</Th>
-                    <Th>Order Date</Th><Th className="text-center">Info</Th>
+                    <Th className="text-center">Info</Th>
                     <Th>OTP</Th><Th>Status</Th><Th className="text-center">Actions</Th>
                   </tr>
                 </thead>
@@ -265,11 +265,10 @@ function AdminOrders() {
                     const addr = (o.address_snapshot ?? {}) as Record<string, string>;
                     const firstItem = o.order_items[0];
                     const moreCount = o.order_items.length - 1;
-                    const created = new Date(o.created_at);
                     const pm = (o.payment_method ?? "").toLowerCase();
                     return (
                       <tr key={o.id} className={`border-t border-border transition-colors hover:bg-secondary/40 ${i % 2 ? "bg-background" : "bg-card"}`}>
-                        <td className="px-4 py-3">
+                        <td className="px-3 py-3">
                           <div className="flex items-center gap-1.5">
                             <span className="font-mono text-xs font-semibold">{o.order_number}</span>
                             <button onClick={() => { navigator.clipboard?.writeText(o.order_number); toast.success("Order ID copied"); }}
@@ -278,62 +277,54 @@ function AdminOrders() {
                             </button>
                           </div>
                         </td>
-                        <td className="px-4 py-3">
+                        <td className="px-3 py-3">
                           <div className="font-semibold text-foreground">{addr.full_name || "—"}</div>
                           <div className="text-[11px] text-muted-foreground">{addr.email || addr.phone || ""}</div>
                         </td>
-                        <td className="px-4 py-3">
+                        <td className="px-2 py-3">
                           <div className="flex items-center gap-2">
                             {firstItem?.image_url ? (
                               <SafeImage src={firstItem.image_url} alt={firstItem.product_name}
-                                wrapperClassName="h-12 w-12 shrink-0 rounded-md" className="h-12 w-12 rounded-md object-cover" />
+                                wrapperClassName="h-10 w-10 shrink-0 rounded-xl" className="h-10 w-10 rounded-xl object-cover" />
                             ) : (
-                              <div className="grid h-12 w-12 shrink-0 place-items-center rounded-md bg-secondary text-muted-foreground">
+                              <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-secondary text-muted-foreground">
                                 <PackageX className="h-4 w-4" />
                               </div>
                             )}
-                            <div className="min-w-0">
+                            <div className="min-w-0 max-w-[160px]">
                               <div className="truncate text-xs font-medium">{firstItem?.product_name || "—"}</div>
                               {moreCount > 0 && <div className="text-[10px] text-muted-foreground">+{moreCount} more</div>}
                             </div>
                           </div>
                         </td>
-                        <td className="px-4 py-3 text-center font-semibold">{o.order_items.reduce((s, it) => s + it.quantity, 0)}</td>
-                        <td className="px-4 py-3 font-bold text-[color:var(--gold)]">{formatBDT(Number(o.total))}</td>
-                        <td className="px-4 py-3">
+                        <td className="px-1 py-3 text-center font-semibold">{o.order_items.reduce((s, it) => s + it.quantity, 0)}</td>
+                        <td className="px-2 py-3 font-bold text-[color:var(--gold)] whitespace-nowrap">{formatBDT(Number(o.total))}</td>
+                        <td className="px-2 py-3">
                           <span className={`inline-flex rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase ${PAYMENT_STYLES[pm] ?? "bg-secondary text-muted-foreground border-border"}`}>
                             {o.payment_method || "—"}
                           </span>
                         </td>
-                        <td className="px-4 py-3">
-                          <div className="text-xs">{created.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}</div>
-                          <div className="text-[11px] text-muted-foreground">{created.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</div>
-                        </td>
-                        <td className="px-4 py-3 text-center">
+                        <td className="px-2 py-3 text-center">
                           <button onClick={() => setViewing(o)} title="View details"
-                            className="inline-grid h-8 w-8 place-items-center rounded-lg border border-border text-muted-foreground transition hover:border-[color:var(--gold)] hover:text-[color:var(--gold)]">
+                            className="inline-grid h-8 w-8 place-items-center rounded-xl border border-border text-muted-foreground transition hover:border-[color:var(--gold)] hover:text-[color:var(--gold)]">
                             <Eye className="h-4 w-4" />
                           </button>
                         </td>
-                        <td className="px-4 py-3">
+                        <td className="px-2 py-3">
                           {o.otp ? (
-                            <span className="rounded-md bg-[color:var(--gold)]/10 px-2 py-1 font-mono text-xs font-bold text-[color:var(--gold)]">{o.otp}</span>
+                            <span className="rounded-xl bg-[color:var(--gold)]/10 px-2 py-1 font-mono text-xs font-bold text-[color:var(--gold)]">{o.otp}</span>
                           ) : <span className="text-muted-foreground">—</span>}
                         </td>
-                        <td className="px-4 py-3">
+                        <td className="px-2 py-3">
                           <select value={o.status} onChange={(e) => updateStatus(o.id, e.target.value as Status)}
-                            className={`w-full min-w-[130px] rounded-lg border px-2 py-1.5 text-[11px] font-semibold uppercase focus:outline-none ${STATUS_STYLES[o.status] ?? ""}`}>
+                            className={`w-full min-w-[92px] rounded-xl border px-1.5 py-1 text-[10px] font-semibold uppercase focus:outline-none ${STATUS_STYLES[o.status] ?? ""}`}>
                             {ALL_STATUSES.map((s) => <option key={s} value={s} className="bg-background text-foreground">{s.replace("_", " ")}</option>)}
                           </select>
                         </td>
-                        <td className="px-4 py-3">
-                          <div className="flex items-center justify-center gap-1">
-                            <button onClick={() => setViewing(o)} title="Edit / View"
-                              className="grid h-8 w-8 place-items-center rounded-lg text-muted-foreground transition hover:bg-secondary hover:text-foreground">
-                              <Eye className="h-4 w-4" />
-                            </button>
+                        <td className="px-2 py-3">
+                          <div className="flex items-center justify-center">
                             <button onClick={() => setDeleting(o)} title="Cancel order"
-                              className="grid h-8 w-8 place-items-center rounded-lg text-muted-foreground transition hover:bg-rose-500/10 hover:text-rose-600">
+                              className="grid h-8 w-8 place-items-center rounded-xl text-muted-foreground transition hover:bg-rose-500/10 hover:text-rose-600">
                               <Trash2 className="h-4 w-4" />
                             </button>
                           </div>
