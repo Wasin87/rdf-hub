@@ -9,6 +9,7 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { formatBDT } from "@/lib/format";
 import { SafeImage } from "@/components/SafeImage";
+import { ProductImageStack } from "@/components/admin/ProductImageStack";
 
 const ALL_STATUSES = [
   "pending", "confirmed", "processing", "in_progress", "shipped",
@@ -291,28 +292,11 @@ function AdminOrders() {
                         </td>
                         <td className="px-2 py-3">
                           <div className="flex items-center gap-2">
-                            <div className="flex -space-x-2 shrink-0">
-                              {o.order_items.slice(0, 3).map((it) => (
-                                it.image_url ? (
-                                  <SafeImage
-                                    key={it.id}
-                                    src={it.image_url}
-                                    alt={it.product_name}
-                                    wrapperClassName="h-10 w-10 shrink-0 rounded-xl border-2 border-card shadow-sm"
-                                    className="h-full w-full rounded-xl object-cover"
-                                  />
-                                ) : (
-                                  <div key={it.id} className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border-2 border-card bg-secondary text-muted-foreground shadow-sm">
-                                    <PackageX className="h-4 w-4" />
-                                  </div>
-                                )
-                              ))}
-                              {o.order_items.length > 3 && (
-                                <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border-2 border-card bg-[color:var(--gold)]/10 text-[10px] font-bold text-[color:var(--gold)] shadow-sm">
-                                  +{o.order_items.length - 3}
-                                </div>
-                              )}
-                            </div>
+                            <ProductImageStack
+                              items={o.order_items.map((it) => ({ id: it.id, image_url: it.image_url, product_name: it.product_name }))}
+                              max={3}
+                              size="md"
+                            />
                             <div className="min-w-0 max-w-[160px]">
                               <div className="truncate text-xs font-medium">{firstItem?.product_name || "—"}</div>
                               {moreCount > 0 && <div className="text-[10px] text-muted-foreground">+{moreCount} more item{moreCount > 1 ? "s" : ""}</div>}
