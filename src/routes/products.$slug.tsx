@@ -117,7 +117,7 @@ function ProductPage() {
 
       <div className="grid gap-12 lg:grid-cols-2">
         {/* Gallery */}
-        <div className="flex flex-col gap-3">
+        <div className="mx-auto flex w-full max-w-[320px] flex-col gap-3 sm:max-w-sm lg:mx-0 lg:max-w-none">
           <motion.button
             type="button"
             onClick={() => setLightbox(true)}
