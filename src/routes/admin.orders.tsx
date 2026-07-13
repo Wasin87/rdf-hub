@@ -42,11 +42,19 @@ type OrderItem = {
 type Order = {
   id: string; order_number: string; status: Status; subtotal: number | null;
   shipping: number | null; total: number; payment_method: string | null;
-  txn_id: string | null; payment_phone: string | null; otp: string | null;
+  txn_id: string | null; payment_phone: string | null;
   address_snapshot: Record<string, unknown> | null; notes: string | null;
-  admin_notes: string | null; created_at: string; updated_at: string | null;
+  created_at: string; updated_at: string | null;
   order_items: OrderItem[];
+  order_admin_meta: { otp: string | null; admin_notes: string | null } | { otp: string | null; admin_notes: string | null }[] | null;
 };
+
+function getMeta(o: Order): { otp: string | null; admin_notes: string | null } {
+  const m = o.order_admin_meta;
+  if (!m) return { otp: null, admin_notes: null };
+  if (Array.isArray(m)) return m[0] ?? { otp: null, admin_notes: null };
+  return m;
+}
 
 export const Route = createFileRoute("/admin/orders")({
   head: () => ({ meta: [{ title: "Orders — Admin FRAG AVENUE" }] }),
@@ -76,7 +84,7 @@ function AdminOrders() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("orders")
-        .select("id, order_number, status, subtotal, shipping, total, payment_method, txn_id, payment_phone, otp, address_snapshot, notes, admin_notes, created_at, updated_at, order_items(id, product_id, product_name, brand_name, size_ml, quantity, unit_price, image_url)")
+        .select("id, order_number, status, subtotal, shipping, total, payment_method, txn_id, payment_phone, address_snapshot, notes, created_at, updated_at, order_items(id, product_id, product_name, brand_name, size_ml, quantity, unit_price, image_url), order_admin_meta(otp, admin_notes)")
         .order("created_at", { ascending: false });
       if (error) throw error;
       return (data ?? []) as unknown as Order[];
@@ -140,7 +148,7 @@ function AdminOrders() {
       (o) => o.order_number.toLowerCase() === idOrNumber.toLowerCase() || o.id === idOrNumber,
     );
     if (!match) return toast.error("Order not found.");
-    const { error } = await supabase.from("orders").update({ otp: generatedOtp }).eq("id", match.id);
+    const { error } = await supabase.from("order_admin_meta").upsert({ order_id: match.id, otp: generatedOtp }, { onConflict: "order_id" });
     if (error) return toast.error(error.message);
     toast.success(`OTP set for ${match.order_number}`);
     setOtpOrderId(""); setGeneratedOtp("");
@@ -325,9 +333,9 @@ function AdminOrders() {
                           </button>
                         </td>
                         <td className="px-2 py-3">
-                          {o.otp ? (
-                            <span className="rounded-xl bg-[color:var(--gold)]/10 px-2 py-1 font-mono text-xs font-bold text-[color:var(--gold)]">{o.otp}</span>
-                          ) : <span className="text-muted-foreground">—</span>}
+                          {(() => { const otp = getMeta(o).otp; return otp ? (
+                            <span className="rounded-xl bg-[color:var(--gold)]/10 px-2 py-1 font-mono text-xs font-bold text-[color:var(--gold)]">{otp}</span>
+                          ) : <span className="text-muted-foreground">—</span>; })()}
                         </td>
                         <td className="px-2 py-3">
                           <select value={o.status} onChange={(e) => updateStatus(o.id, e.target.value as Status)}
@@ -547,7 +555,7 @@ function OrderDetailsModal({ order, onClose }: { order: Order; onClose: () => vo
               ["Order Status", order.status.replace("_", " ")],
               ["Payment Method", order.payment_method ?? "—"],
               ["Transaction ID", order.txn_id ?? "—"],
-              ["OTP", order.otp ?? "—"],
+              ["OTP", getMeta(order).otp ?? "—"],
               ["Payment Phone", order.payment_phone ?? "—"],
               ["Subtotal", formatBDT(subtotal)],
               ["Delivery Charge", formatBDT(shipping)],

@@ -341,6 +341,38 @@ export type Database = {
         }
         Relationships: []
       }
+      order_admin_meta: {
+        Row: {
+          admin_notes: string | null
+          created_at: string
+          order_id: string
+          otp: string | null
+          updated_at: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          created_at?: string
+          order_id: string
+          otp?: string | null
+          updated_at?: string
+        }
+        Update: {
+          admin_notes?: string | null
+          created_at?: string
+          order_id?: string
+          otp?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_admin_meta_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: true
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       order_items: {
         Row: {
           brand_name: string | null
@@ -405,12 +437,10 @@ export type Database = {
       orders: {
         Row: {
           address_snapshot: Json
-          admin_notes: string | null
           created_at: string
           id: string
           notes: string | null
           order_number: string
-          otp: string | null
           payment_method: string
           payment_phone: string | null
           shipping: number
@@ -423,12 +453,10 @@ export type Database = {
         }
         Insert: {
           address_snapshot: Json
-          admin_notes?: string | null
           created_at?: string
           id?: string
           notes?: string | null
           order_number?: string
-          otp?: string | null
           payment_method?: string
           payment_phone?: string | null
           shipping?: number
@@ -441,12 +469,10 @@ export type Database = {
         }
         Update: {
           address_snapshot?: Json
-          admin_notes?: string | null
           created_at?: string
           id?: string
           notes?: string | null
           order_number?: string
-          otp?: string | null
           payment_method?: string
           payment_phone?: string | null
           shipping?: number
