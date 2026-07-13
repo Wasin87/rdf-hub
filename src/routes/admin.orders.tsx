@@ -42,11 +42,19 @@ type OrderItem = {
 type Order = {
   id: string; order_number: string; status: Status; subtotal: number | null;
   shipping: number | null; total: number; payment_method: string | null;
-  txn_id: string | null; payment_phone: string | null; otp: string | null;
+  txn_id: string | null; payment_phone: string | null;
   address_snapshot: Record<string, unknown> | null; notes: string | null;
-  admin_notes: string | null; created_at: string; updated_at: string | null;
+  created_at: string; updated_at: string | null;
   order_items: OrderItem[];
+  order_admin_meta: { otp: string | null; admin_notes: string | null } | { otp: string | null; admin_notes: string | null }[] | null;
 };
+
+function getMeta(o: Order): { otp: string | null; admin_notes: string | null } {
+  const m = o.order_admin_meta;
+  if (!m) return { otp: null, admin_notes: null };
+  if (Array.isArray(m)) return m[0] ?? { otp: null, admin_notes: null };
+  return m;
+}
 
 export const Route = createFileRoute("/admin/orders")({
   head: () => ({ meta: [{ title: "Orders — Admin FRAG AVENUE" }] }),
