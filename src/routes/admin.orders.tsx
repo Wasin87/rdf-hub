@@ -9,6 +9,7 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { formatBDT } from "@/lib/format";
 import { SafeImage } from "@/components/SafeImage";
+import { ProductImageStack } from "@/components/admin/ProductImageStack";
 
 const ALL_STATUSES = [
   "pending", "confirmed", "processing", "in_progress", "shipped",
