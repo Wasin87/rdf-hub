@@ -333,9 +333,9 @@ function AdminOrders() {
                           </button>
                         </td>
                         <td className="px-2 py-3">
-                          {o.otp ? (
-                            <span className="rounded-xl bg-[color:var(--gold)]/10 px-2 py-1 font-mono text-xs font-bold text-[color:var(--gold)]">{o.otp}</span>
-                          ) : <span className="text-muted-foreground">—</span>}
+                          {(() => { const otp = getMeta(o).otp; return otp ? (
+                            <span className="rounded-xl bg-[color:var(--gold)]/10 px-2 py-1 font-mono text-xs font-bold text-[color:var(--gold)]">{otp}</span>
+                          ) : <span className="text-muted-foreground">—</span>; })()}
                         </td>
                         <td className="px-2 py-3">
                           <select value={o.status} onChange={(e) => updateStatus(o.id, e.target.value as Status)}
