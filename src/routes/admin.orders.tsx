@@ -555,7 +555,7 @@ function OrderDetailsModal({ order, onClose }: { order: Order; onClose: () => vo
               ["Order Status", order.status.replace("_", " ")],
               ["Payment Method", order.payment_method ?? "—"],
               ["Transaction ID", order.txn_id ?? "—"],
-              ["OTP", order.otp ?? "—"],
+              ["OTP", getMeta(order).otp ?? "—"],
               ["Payment Phone", order.payment_phone ?? "—"],
               ["Subtotal", formatBDT(subtotal)],
               ["Delivery Charge", formatBDT(shipping)],
