@@ -148,7 +148,7 @@ function AdminOrders() {
       (o) => o.order_number.toLowerCase() === idOrNumber.toLowerCase() || o.id === idOrNumber,
     );
     if (!match) return toast.error("Order not found.");
-    const { error } = await supabase.from("orders").update({ otp: generatedOtp }).eq("id", match.id);
+    const { error } = await supabase.from("order_admin_meta").upsert({ order_id: match.id, otp: generatedOtp }, { onConflict: "order_id" });
     if (error) return toast.error(error.message);
     toast.success(`OTP set for ${match.order_number}`);
     setOtpOrderId(""); setGeneratedOtp("");
