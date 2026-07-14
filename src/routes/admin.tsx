@@ -39,46 +39,44 @@ function AdminLayout() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const navigate = useNavigate();
   return (
-    <div className="grid min-h-[calc(100dvh-100px)] grid-cols-1 lg:grid-cols-[260px_1fr]">
-      <aside className="border-r border-[color:var(--gold)]/15 bg-section">
-        <div className="sticky top-24 p-6">
-          <div className="mb-6"><Logo /></div>
-          <p className="mb-4 text-[10px] track-luxury text-[color:var(--gold)]">Boutique Admin</p>
-          <nav className="space-y-1">
-            {items.map((it) => {
-              const active = it.exact ? pathname === it.to : pathname.startsWith(it.to);
-              const Icon = it.icon;
-              return (
-                <Link
-                  key={it.to}
-                  to={it.to as never}
-                  onClick={() => {
-                    requestAnimationFrame(() => {
-                      window.scrollTo({ top: 0, behavior: "smooth" });
-                      document.querySelector("main")?.scrollTo?.({ top: 0, behavior: "smooth" });
-                    });
-                  }}
-                  className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm shadow-xl transition-colors ${active ? "bg-[color:var(--gold)]/10 text-[color:var(--gold)]" : "text-muted-foreground hover:bg-secondary hover:text-foreground"}`}
-                >
-                  <Icon className="h-4 w-4" /> {it.label}
-                </Link>
-              );
-            })}
+    <div className="flex h-[calc(100dvh-100px)] flex-col">
+      {/* Fixed horizontal top nav */}
+      <div className="sticky top-0 z-30 border-b border-[color:var(--gold)]/15 bg-section/95 backdrop-blur supports-[backdrop-filter]:bg-section/80">
+        <div className="flex items-center gap-3 px-3 py-3 sm:px-4 lg:px-6">
+          <div className="hidden shrink-0 sm:block"><Logo /></div>
+          <nav className="min-w-0 flex-1">
+            <div className="flex items-center gap-2 overflow-x-auto scrollbar-none [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden rounded-lg border border-border bg-background/60 p-1.5 shadow-xl">
+              {items.map((it) => {
+                const active = it.exact ? pathname === it.to : pathname.startsWith(it.to);
+                const Icon = it.icon;
+                return (
+                  <Link
+                    key={it.to}
+                    to={it.to as never}
+                    className={`inline-flex shrink-0 items-center gap-2 rounded-lg border px-3 py-2 text-xs whitespace-nowrap shadow-xl transition-colors ${active ? "border-[color:var(--gold)]/60 bg-[color:var(--gold)]/10 text-[color:var(--gold)]" : "border-border/60 bg-background/40 text-muted-foreground hover:border-[color:var(--gold)]/40 hover:text-foreground"}`}
+                  >
+                    <Icon className="h-3.5 w-3.5" /> {it.label}
+                  </Link>
+                );
+              })}
+            </div>
           </nav>
-          <div className="mt-6 space-y-1 border-t border-border pt-4">
-            <Link to="/" className="flex items-center gap-3 rounded-sm px-3 py-2.5 text-sm text-muted-foreground hover:text-foreground">
-              <HomeIcon className="h-4 w-4" /> View Storefront
+          <div className="hidden shrink-0 items-center gap-2 md:flex">
+            <Link to="/" className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-3 py-2 text-xs text-muted-foreground shadow-xl transition hover:border-[color:var(--gold)]/40 hover:text-foreground">
+              <HomeIcon className="h-3.5 w-3.5" /> Storefront
             </Link>
             <button
               onClick={async () => { await supabase.auth.signOut(); navigate({ to: "/auth", search: { mode: "login" } as never, replace: true }); }}
-              className="flex w-full items-center gap-3 rounded-sm px-3 py-2.5 text-sm text-muted-foreground hover:text-destructive"
+              className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-3 py-2 text-xs text-muted-foreground shadow-xl transition hover:border-destructive hover:text-destructive"
             >
-              <LogOut className="h-4 w-4" /> Sign Out
+              <LogOut className="h-3.5 w-3.5" /> Sign Out
             </button>
           </div>
         </div>
-      </aside>
-      <main className="bg-background">
+      </div>
+
+      {/* Scrollable page content */}
+      <main className="min-h-0 flex-1 overflow-y-auto bg-background">
         <Outlet />
       </main>
     </div>
