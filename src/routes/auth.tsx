@@ -53,11 +53,7 @@ function AuthPage() {
   };
 
   const goTo = (dest: string) => {
-    if (isSafeRelative(search.redirect) && dest === search.redirect) {
-      window.location.href = dest;
-    } else {
-      navigate({ to: dest });
-    }
+    window.location.href = dest;
   };
 
   const onSubmit = form.handleSubmit(async (data) => {
