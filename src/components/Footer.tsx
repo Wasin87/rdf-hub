@@ -6,7 +6,7 @@ export function Footer() {
   return (
     <footer className="mt-24 border-t border-[color:var(--gold)]/30 bg-black text-white">
       <div className="container-luxury py-16">
-        <div className="grid grid-cols-1 gap-10 sm:gap-12 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-8 sm:gap-10 lg:grid-cols-4">
           <div className="lg:col-span-1 [&_.font-display]:!text-white [&_.uppercase]:!text-white/80">
             <Logo />
             <p className="mt-5 max-w-xs text-sm leading-relaxed text-white/70">
