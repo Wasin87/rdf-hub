@@ -524,11 +524,41 @@ function OrderDetailsModal({ order, onClose }: { order: Order; onClose: () => vo
       th{background:#f7f7f7} .gold{color:#b8860b}</style></head><body>${html}</body></html>`);
     w.document.close(); w.focus(); w.print();
   };
-  const doDownload = () => {
-    const blob = new Blob([`<html><body>${printRef.current?.innerHTML ?? ""}</body></html>`], { type: "text/html" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a"); a.href = url; a.download = `invoice-${order.order_number}.html`; a.click();
-    URL.revokeObjectURL(url);
+  const doDownload = async () => {
+    if (!printRef.current) return;
+    const t = toast.loading("Generating PDF…");
+    try {
+      const [{ default: jsPDF }, { default: html2canvas }] = await Promise.all([
+        import("jspdf"),
+        import("html2canvas"),
+      ]);
+      const canvas = await html2canvas(printRef.current, {
+        backgroundColor: "#ffffff",
+        scale: 2,
+        useCORS: true,
+        windowWidth: printRef.current.scrollWidth,
+      });
+      const imgData = canvas.toDataURL("image/jpeg", 0.95);
+      const pdf = new jsPDF({ unit: "pt", format: "a4" });
+      const pageW = pdf.internal.pageSize.getWidth();
+      const pageH = pdf.internal.pageSize.getHeight();
+      const imgW = pageW - 40;
+      const imgH = (canvas.height * imgW) / canvas.width;
+      let heightLeft = imgH;
+      let position = 20;
+      pdf.addImage(imgData, "JPEG", 20, position, imgW, imgH);
+      heightLeft -= pageH - 40;
+      while (heightLeft > 0) {
+        pdf.addPage();
+        position = 20 - (imgH - heightLeft);
+        pdf.addImage(imgData, "JPEG", 20, position, imgW, imgH);
+        heightLeft -= pageH - 40;
+      }
+      pdf.save(`invoice-${order.order_number}.pdf`);
+      toast.success("Invoice downloaded", { id: t });
+    } catch (e) {
+      toast.error("Failed to generate PDF", { id: t, description: (e as Error).message });
+    }
   };
 
   return (
