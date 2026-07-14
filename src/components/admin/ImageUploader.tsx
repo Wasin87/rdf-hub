@@ -137,7 +137,7 @@ export function ImageUploader({
                   >
                     {isPrimary ? <Star className="h-3.5 w-3.5 fill-current" /> : <StarOff className="h-3.5 w-3.5" />}
                   </button>
-                  <span className="rounded-lg border border-white/20 bg-black/70 p-1.5 text-white shadow-lg backdrop-blur-sm"><GripVertical className="h-3.5 w-3.5" /></span>
+                  <span className="flex-1" />
                   <button
                     type="button"
                     onClick={() => removeAt(i)}
