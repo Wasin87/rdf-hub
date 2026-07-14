@@ -127,20 +127,21 @@ export function ImageUploader({
                   wrapperClassName="h-full w-full"
                   className="h-full w-full object-cover"
                 />
-                <div className="absolute inset-0 flex items-end justify-between gap-1 bg-gradient-to-t from-black/70 to-transparent p-2 opacity-0 transition-opacity group-hover:opacity-100">
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-black/70 to-transparent" />
+                <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-1 p-2">
                   <button
                     type="button"
                     onClick={() => onPrimaryChange(img.url)}
-                    className="rounded-sm bg-black/60 p-1 text-white hover:text-[color:var(--gold)]"
+                    className="rounded-lg border border-white/20 bg-black/70 p-1.5 text-white shadow-lg backdrop-blur-sm transition hover:text-[color:var(--gold)]"
                     title={isPrimary ? "Primary" : "Set as primary"}
                   >
                     {isPrimary ? <Star className="h-3.5 w-3.5 fill-current" /> : <StarOff className="h-3.5 w-3.5" />}
                   </button>
-                  <span className="rounded-sm bg-black/60 p-1 text-white"><GripVertical className="h-3.5 w-3.5" /></span>
+                  <span className="rounded-lg border border-white/20 bg-black/70 p-1.5 text-white shadow-lg backdrop-blur-sm"><GripVertical className="h-3.5 w-3.5" /></span>
                   <button
                     type="button"
                     onClick={() => removeAt(i)}
-                    className="rounded-sm bg-black/60 p-1 text-white hover:text-destructive"
+                    className="rounded-lg border border-white/20 bg-black/70 p-1.5 text-white shadow-lg backdrop-blur-sm transition hover:text-destructive"
                     title="Remove"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
