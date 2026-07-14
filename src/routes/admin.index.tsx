@@ -68,10 +68,10 @@ function AdminDashboard() {
   });
 
   return (
-    <div className="p-6 lg:p-10">
+    <div className="p-4 sm:p-6 lg:p-10">
       <header className="mb-8">
         <p className="text-[11px] track-luxury text-[color:var(--gold)]">Overview</p>
-        <h1 className="mt-1 font-display text-4xl"><span className="gold-text">Dashboard</span></h1>
+        <h1 className="mt-1 font-display text-3xl sm:text-4xl"><span className="gold-text">Dashboard</span></h1>
       </header>
 
       {isLoading ? <p className="text-sm text-muted-foreground">Loading analytics…</p> : data && (
