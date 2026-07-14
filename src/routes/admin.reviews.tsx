@@ -38,14 +38,14 @@ function AdminReviews() {
   };
 
   return (
-    <div className="p-6 lg:p-10">
+    <div className="p-4 sm:p-6 lg:p-10">
       <header className="mb-6">
         <p className="text-[11px] track-luxury text-[color:var(--gold)]">Community</p>
-        <h1 className="mt-1 font-display text-3xl">Reviews</h1>
+        <h1 className="mt-1 font-display text-2xl sm:text-3xl">Reviews ({(q.data ?? []).length})</h1>
       </header>
       <div className="space-y-3">
         {(q.data ?? []).map((r) => (
-          <div key={r.id} className="rounded-sm border border-border bg-card p-4">
+          <div key={r.id} className="rounded-lg border border-border bg-card shadow-xl p-4">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <div className="flex items-center gap-2 text-[10px] track-luxury text-muted-foreground">
@@ -60,10 +60,10 @@ function AdminReviews() {
                 <p className="mt-1 text-sm text-muted-foreground">{r.body}</p>
               </div>
               <div className="flex flex-col gap-2">
-                <button onClick={() => update(r.id, { is_approved: !r.is_approved })} className={`flex items-center gap-1 rounded-sm border px-2 py-1 text-[10px] track-luxury ${r.is_approved ? "border-green-500 text-green-500" : "border-border text-muted-foreground"}`}>
+                <button onClick={() => update(r.id, { is_approved: !r.is_approved })} className={`flex items-center gap-1 rounded-lg border px-2 py-1 shadow-xl text-[10px] track-luxury ${r.is_approved ? "border-green-500 text-green-500" : "border-border text-muted-foreground"}`}>
                   <Check className="h-3 w-3" /> {r.is_approved ? "Approved" : "Approve"}
                 </button>
-                <button onClick={() => update(r.id, { is_featured: !r.is_featured })} className={`flex items-center gap-1 rounded-sm border px-2 py-1 text-[10px] track-luxury ${r.is_featured ? "border-[color:var(--gold)] bg-[color:var(--gold)]/10 text-[color:var(--gold)]" : "border-border text-muted-foreground"}`}>
+                <button onClick={() => update(r.id, { is_featured: !r.is_featured })} className={`flex items-center gap-1 rounded-lg border px-2 py-1 shadow-xl text-[10px] track-luxury ${r.is_featured ? "border-[color:var(--gold)] bg-[color:var(--gold)]/10 text-[color:var(--gold)]" : "border-border text-muted-foreground"}`}>
                   <Star className="h-3 w-3" /> {r.is_featured ? "Featured" : "Feature"}
                 </button>
                 <button onClick={() => remove(r.id)} className="flex items-center gap-1 rounded-sm border border-border px-2 py-1 text-[10px] track-luxury text-muted-foreground hover:border-destructive hover:text-destructive">

@@ -73,18 +73,18 @@ function AdminNotices() {
   };
 
   return (
-    <div className="p-6 lg:p-10">
+    <div className="p-4 sm:p-6 lg:p-10">
       <header className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="text-[11px] track-luxury text-[color:var(--gold)]">Marketing</p>
-          <h1 className="mt-1 font-display text-3xl">Notice Banners</h1>
+          <h1 className="mt-1 font-display text-2xl sm:text-3xl">Notice Banners ({(q.data ?? []).length})</h1>
           <p className="mt-1 text-sm text-muted-foreground">Sliding announcements shown beneath the navbar.</p>
         </div>
-        <button onClick={() => setCreating(true)} className="btn-liquid"><Plus className="h-3.5 w-3.5" /> Add Notice</button>
+        <button onClick={() => setCreating(true)} className="inline-flex items-center gap-2 rounded-lg border border-[color:var(--gold)] bg-[color:var(--gold)] px-4 py-2 text-[11px] track-luxury text-[color:var(--gold-foreground)] shadow-xl transition hover:-translate-y-0.5"><Plus className="h-3.5 w-3.5" /> Add Notice</button>
       </header>
 
       {creating && (
-        <div className="mb-6 rounded-sm border border-[color:var(--gold)]/30 bg-card p-5">
+        <div className="mb-6 rounded-lg border border-[color:var(--gold)]/30 bg-card shadow-xl p-5">
           <h3 className="mb-3 font-display text-lg">New Notice</h3>
           <div className="grid gap-3 sm:grid-cols-[60px_1fr_120px_120px_auto]">
             <Input label="Icon" value={draft.icon ?? ""} onChange={(v) => setDraft({ ...draft, icon: v })} />
@@ -105,14 +105,14 @@ function AdminNotices() {
           editing === n.id ? (
             <NoticeEditRow key={n.id} notice={n} onSave={save} onCancel={() => setEditing(null)} />
           ) : (
-            <div key={n.id} className="flex items-center gap-4 rounded-sm border border-border bg-card p-4">
+            <div key={n.id} className="flex items-center gap-4 rounded-lg border border-border bg-card shadow-xl p-4">
               <span className="text-lg text-[color:var(--gold)]">{n.icon ?? "✦"}</span>
               <div className="flex-1">
                 <div className="text-sm">{n.message}</div>
                 {n.link_url && <a href={n.link_url} className="text-[10px] text-[color:var(--gold)]">{n.link_url}</a>}
               </div>
               <div className="text-[10px] track-luxury text-muted-foreground">#{n.order_index}</div>
-              <button onClick={() => toggle(n)} className={`rounded-sm border px-3 py-1 text-[10px] track-luxury ${n.is_active ? "border-[color:var(--gold)] bg-[color:var(--gold)]/10 text-[color:var(--gold)]" : "border-border text-muted-foreground"}`}>
+              <button onClick={() => toggle(n)} className={`rounded-lg border px-3 py-1 shadow-xl text-[10px] track-luxury ${n.is_active ? "border-[color:var(--gold)] bg-[color:var(--gold)]/10 text-[color:var(--gold)]" : "border-border text-muted-foreground"}`}>
                 {n.is_active ? "Active" : "Inactive"}
               </button>
               <button onClick={() => setEditing(n.id)} className="text-muted-foreground hover:text-[color:var(--gold)]"><Edit3 className="h-4 w-4" /></button>
@@ -129,7 +129,7 @@ function AdminNotices() {
 function NoticeEditRow({ notice, onSave, onCancel }: { notice: Notice; onSave: (n: Partial<Notice>) => void; onCancel: () => void }) {
   const [d, setD] = useState<Notice>(notice);
   return (
-    <div className="rounded-sm border border-[color:var(--gold)]/30 bg-card p-4">
+    <div className="rounded-lg border border-[color:var(--gold)]/30 bg-card shadow-xl p-4">
       <div className="grid gap-3 sm:grid-cols-[60px_1fr_120px_100px_auto]">
         <Input label="Icon" value={d.icon ?? ""} onChange={(v) => setD({ ...d, icon: v })} />
         <Input label="Message" value={d.message} onChange={(v) => setD({ ...d, message: v })} />
@@ -149,7 +149,7 @@ function Input({ label, value, onChange, type = "text" }: { label: string; value
     <div>
       <label className="mb-1 block text-[10px] track-luxury text-muted-foreground">{label}</label>
       <input type={type} value={value} onChange={(e) => onChange(e.target.value)}
-        className="h-10 w-full rounded-sm border border-border bg-background px-3 text-sm focus:border-[color:var(--gold)] focus:outline-none" />
+        className="h-10 w-full rounded-lg border border-border bg-background shadow-xl px-3 text-sm focus:border-[color:var(--gold)] focus:outline-none" />
     </div>
   );
 }
