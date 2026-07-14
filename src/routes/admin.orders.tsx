@@ -709,24 +709,26 @@ function ShippingTimeline({ status, createdAt }: { status: Status; createdAt: st
     return <p className="rounded-lg border border-rose-500/30 bg-rose-500/5 p-3 text-xs text-rose-600">This order was cancelled.</p>;
   }
   return (
-    <div className="rounded-lg border border-border p-4">
-      <div className="relative flex items-center justify-between">
-        <div className="absolute left-0 right-0 top-4 h-px bg-border" />
-        <div className="absolute left-0 top-4 h-px bg-[color:var(--gold)] transition-all"
-          style={{ width: `${currentIdx >= 0 ? (currentIdx / (steps.length - 1)) * 100 : 0}%` }} />
-        {steps.map((s, i) => {
-          const done = currentIdx >= i;
-          const Icon = s.icon;
-          return (
-            <div key={s.key} className="relative z-10 flex flex-col items-center gap-1">
-              <div className={`grid h-8 w-8 place-items-center rounded-full border-2 ${done ? "border-[color:var(--gold)] bg-[color:var(--gold)] text-[color:var(--gold-foreground)]" : "border-border bg-card text-muted-foreground"}`}>
-                <Icon className="h-3.5 w-3.5" />
+    <div className="rounded-xl border border-border p-4">
+      <div className="-mx-2 overflow-x-auto px-2 pb-1">
+        <div className="relative flex min-w-[520px] items-start justify-between gap-2">
+          <div className="absolute left-4 right-4 top-4 h-px bg-border" />
+          <div className="absolute left-4 top-4 h-px bg-[color:var(--gold)] transition-all"
+            style={{ width: `calc((100% - 2rem) * ${currentIdx >= 0 ? currentIdx / (steps.length - 1) : 0})` }} />
+          {steps.map((s, i) => {
+            const done = currentIdx >= i;
+            const Icon = s.icon;
+            return (
+              <div key={s.key} className="relative z-10 flex min-w-[70px] flex-1 flex-col items-center gap-1">
+                <div className={`grid h-8 w-8 shrink-0 place-items-center rounded-full border-2 ${done ? "border-[color:var(--gold)] bg-[color:var(--gold)] text-[color:var(--gold-foreground)]" : "border-border bg-card text-muted-foreground"}`}>
+                  <Icon className="h-3.5 w-3.5" />
+                </div>
+                <span className={`whitespace-nowrap text-[9px] uppercase tracking-wider ${done ? "text-[color:var(--gold)]" : "text-muted-foreground"}`}>{s.label}</span>
+                {i === 0 && <span className="whitespace-nowrap text-[9px] text-muted-foreground">{new Date(createdAt).toLocaleDateString()}</span>}
               </div>
-              <span className={`text-[9px] uppercase tracking-wider ${done ? "text-[color:var(--gold)]" : "text-muted-foreground"}`}>{s.label}</span>
-              {i === 0 && <span className="text-[9px] text-muted-foreground">{new Date(createdAt).toLocaleDateString()}</span>}
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     </div>
   );
