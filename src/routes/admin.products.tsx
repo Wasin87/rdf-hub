@@ -23,9 +23,12 @@ type Row = {
 
 const LOW_STOCK = 5;
 
+type SortKey = "newest" | "oldest" | "name_asc" | "name_desc" | "price_asc" | "price_desc" | "stock_asc" | "stock_desc";
+
 function AdminProducts() {
   const qc = useQueryClient();
   const [search, setSearch] = useState("");
+  const [sort, setSort] = useState<SortKey>("newest");
   const [selected, setSelected] = useState<Set<string>>(new Set());
 
   const q = useQuery({
@@ -42,7 +45,21 @@ function AdminProducts() {
     },
   });
 
-  const rows = q.data ?? [];
+  const rawRows = q.data ?? [];
+  const rows = [...rawRows].sort((a, b) => {
+    const stockA = (a.variants ?? []).reduce((s, v) => s + (v.stock || 0), 0);
+    const stockB = (b.variants ?? []).reduce((s, v) => s + (v.stock || 0), 0);
+    switch (sort) {
+      case "name_asc": return a.name.localeCompare(b.name);
+      case "name_desc": return b.name.localeCompare(a.name);
+      case "price_asc": return a.base_price - b.base_price;
+      case "price_desc": return b.base_price - a.base_price;
+      case "stock_asc": return stockA - stockB;
+      case "stock_desc": return stockB - stockA;
+      case "oldest": return 0;
+      default: return 0;
+    }
+  });
   const allSelected = rows.length > 0 && rows.every((r) => selected.has(r.id));
 
   const toggle = async (id: string, field: "is_active" | "is_featured" | "is_new", value: boolean) => {
