@@ -85,29 +85,17 @@ function CheckoutPage() {
     }
     setSubmitting(true);
     try {
-      const { data: order, error } = await supabase.from("orders").insert({
-        user_id: user.id,
-        address_snapshot: data,
-        subtotal, shipping, total,
-        payment_method: method,
-        txn_id: isMobilePayment ? txnId.trim() : null,
-        payment_phone: isMobilePayment ? paymentPhone.trim() : null,
-        notes: data.notes ?? null,
-      }).select("id, order_number").single();
+      const { data: rows, error } = await supabase.rpc("place_order", {
+        _address: data,
+        _items: items.map((i) => ({ variant_id: i.variantId, quantity: i.quantity })),
+        _payment_method: method,
+        _txn_id: isMobilePayment ? txnId.trim() : "",
+        _payment_phone: isMobilePayment ? paymentPhone.trim() : "",
+        _notes: data.notes ?? "",
+      });
       if (error) throw error;
-
-      const { error: itemsErr } = await supabase.from("order_items").insert(items.map((i) => ({
-        order_id: order.id,
-        product_id: i.productId,
-        variant_id: i.variantId,
-        product_name: i.productName,
-        brand_name: i.brandName,
-        size_ml: i.sizeMl,
-        unit_price: i.price,
-        quantity: i.quantity,
-        image_url: normalizeStorageImageUrl(i.imageUrl),
-      })));
-      if (itemsErr) throw itemsErr;
+      const order = Array.isArray(rows) ? rows[0] : rows;
+      if (!order?.id) throw new Error("Order could not be created");
 
       clear();
       toast.success("Order placed", { description: `Order ${order.order_number} confirmed.` });
