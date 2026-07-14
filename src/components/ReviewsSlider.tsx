@@ -77,7 +77,7 @@ export function ReviewsSlider({ reviews }: { reviews: Review[] }) {
   if (!hasReviews) return null;
 
   return (
-    <section className="bg-section py-12 md:py-20">
+    <section className="bg-section pt-12 pb-8 md:pt-20 md:pb-10">
       <div className="container-luxury">
         <div className="mb-6 flex items-end justify-between gap-3 md:mb-10">
           <div className="min-w-0">
