@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { ImgHTMLAttributes } from "react";
 import { ImageOff } from "lucide-react";
 import { resolveImage } from "@/lib/catalog";
@@ -10,15 +10,35 @@ type SafeImageProps = Omit<ImgHTMLAttributes<HTMLImageElement>, "src"> & {
 };
 
 export function SafeImage({ src, alt = "", className = "", wrapperClassName = "", showLoader = true, onLoad, onError, ...props }: SafeImageProps) {
-  const [currentSrc, setCurrentSrc] = useState(resolveImage(src));
+  const resolved = resolveImage(src);
+  const [currentSrc, setCurrentSrc] = useState(resolved);
   const [loaded, setLoaded] = useState(false);
   const [failed, setFailed] = useState(false);
+  const imgRef = useRef<HTMLImageElement | null>(null);
 
+  // Only reset state when the resolved src actually changes — otherwise
+  // a re-render would flip loaded=false and, for cached images that fire
+  // no fresh onLoad, leave the <img> stuck at opacity 0 (rendering as a
+  // black tile over the bg-secondary wrapper).
   useEffect(() => {
-    setCurrentSrc(resolveImage(src));
-    setLoaded(false);
-    setFailed(false);
-  }, [src]);
+    if (resolved !== currentSrc) {
+      setCurrentSrc(resolved);
+      setLoaded(false);
+      setFailed(false);
+    }
+  }, [resolved, currentSrc]);
+
+  // Handle browser-cached images that finish loading before React attaches
+  // its onLoad handler (common when navigating between routes that share
+  // the same image URL, e.g. cart sheet -> checkout summary).
+  useEffect(() => {
+    const el = imgRef.current;
+    if (!el) return;
+    if (el.complete) {
+      if (el.naturalWidth > 0) setLoaded(true);
+      else if (el.src) setFailed(true);
+    }
+  }, [currentSrc]);
 
   return (
     <span className={`relative block overflow-hidden bg-secondary ${wrapperClassName}`}>
@@ -33,11 +53,13 @@ export function SafeImage({ src, alt = "", className = "", wrapperClassName = ""
       )}
       <img
         {...props}
+        ref={imgRef}
         src={currentSrc}
         alt={alt}
         className={`${className} transition-opacity duration-300 ${loaded && !failed ? "opacity-100" : "opacity-0"}`}
         onLoad={(event) => {
           setLoaded(true);
+          setFailed(false);
           onLoad?.(event);
         }}
         onError={(event) => {
