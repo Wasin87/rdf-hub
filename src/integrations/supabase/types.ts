@@ -853,6 +853,30 @@ export type Database = {
       }
     }
     Functions: {
+      admin_list_reviews: {
+        Args: never
+        Returns: {
+          author_name: string
+          body: string
+          created_at: string
+          email: string | null
+          id: string
+          images: Json
+          is_approved: boolean
+          is_featured: boolean
+          order_id: string | null
+          product_id: string | null
+          rating: number
+          title: string | null
+          user_id: string | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "reviews"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
