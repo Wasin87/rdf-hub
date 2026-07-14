@@ -492,12 +492,12 @@ function ConfirmModal({ title, description, confirmLabel, onConfirm, onClose }: 
   useEscClose(onClose);
   return (
     <div className="fixed inset-0 z-50 grid place-items-center bg-black/60 p-4 animate-in fade-in" onClick={onClose}>
-      <div className="w-full max-w-md rounded-xl border border-border bg-card p-6 shadow-2xl animate-in zoom-in-95" onClick={(e) => e.stopPropagation()}>
+      <div className="w-full max-w-md rounded-lg border border-border bg-card p-6 shadow-xl animate-in zoom-in-95" onClick={(e) => e.stopPropagation()}>
         <h3 className="font-display text-lg font-bold">{title}</h3>
         <p className="mt-2 text-sm text-muted-foreground">{description}</p>
         <div className="mt-5 flex justify-end gap-2">
-          <button onClick={onClose} className="rounded-lg border border-border px-4 py-2 text-xs font-semibold hover:bg-secondary">Cancel</button>
-          <button onClick={onConfirm} className="rounded-lg bg-rose-600 px-4 py-2 text-xs font-semibold text-white hover:bg-rose-700">{confirmLabel}</button>
+          <button onClick={onClose} className="rounded-lg border border-border bg-background px-4 py-2 text-xs font-semibold shadow-xl transition hover:-translate-y-0.5 hover:border-[color:var(--gold)]">Cancel</button>
+          <button onClick={onConfirm} className="rounded-lg border border-destructive/60 bg-destructive px-4 py-2 text-xs font-semibold text-destructive-foreground shadow-xl transition hover:-translate-y-0.5">{confirmLabel}</button>
         </div>
       </div>
     </div>
@@ -563,7 +563,7 @@ function OrderDetailsModal({ order, onClose }: { order: Order; onClose: () => vo
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/60 p-4 animate-in fade-in" onClick={onClose}>
-      <div className="my-8 w-full max-w-4xl rounded-2xl border border-border bg-card shadow-2xl animate-in zoom-in-95" onClick={(e) => e.stopPropagation()}>
+      <div className="my-8 w-full max-w-4xl rounded-lg border border-border bg-card shadow-xl animate-in zoom-in-95" onClick={(e) => e.stopPropagation()}>
         {/* Header */}
         <div className="flex items-center justify-between border-b border-border p-5">
           <div>
