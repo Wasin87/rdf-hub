@@ -32,8 +32,49 @@ type PasswordForm = z.infer<typeof passwordSchema>;
 
 function ProfilePage() {
   const { user } = useAuth();
+  const { isAdmin } = useRole();
   const qc = useQueryClient();
   const [savingPwd, setSavingPwd] = useState(false);
+  const [payment, setPayment] = useState({ bkash: "", nagad: "", rocket: "" });
+  const [savingPayment, setSavingPayment] = useState(false);
+
+  const paymentQ = useQuery({
+    queryKey: ["payment_settings"],
+    enabled: isAdmin,
+    queryFn: async () => (await supabase.from("payment_settings").select("*").eq("id", "global").maybeSingle()).data,
+  });
+  useEffect(() => {
+    if (paymentQ.data) setPayment({
+      bkash: paymentQ.data.bkash_number ?? "",
+      nagad: paymentQ.data.nagad_number ?? "",
+      rocket: paymentQ.data.rocket_number ?? "",
+    });
+  }, [paymentQ.data]);
+
+  const savePayment = async () => {
+    setSavingPayment(true);
+    const { error } = await supabase.from("payment_settings").upsert({
+      id: "global",
+      bkash_number: payment.bkash.trim() || null,
+      nagad_number: payment.nagad.trim() || null,
+      rocket_number: payment.rocket.trim() || null,
+      updated_by: user?.id ?? null,
+    });
+    setSavingPayment(false);
+    if (error) return toast.error(error.message);
+    toast.success("Payment numbers updated");
+    qc.invalidateQueries({ queryKey: ["payment_settings"] });
+  };
+
+  const clearPaymentField = async (field: "bkash" | "nagad" | "rocket") => {
+    const col = `${field}_number` as const;
+    const { error } = await supabase.from("payment_settings").update({ [col]: null, updated_by: user?.id ?? null }).eq("id", "global");
+    if (error) return toast.error(error.message);
+    setPayment((p) => ({ ...p, [field]: "" }));
+    toast.success(`${field} number removed`);
+    qc.invalidateQueries({ queryKey: ["payment_settings"] });
+  };
+
 
   const profileQ = useQuery({
     queryKey: ["profile", user?.id],
