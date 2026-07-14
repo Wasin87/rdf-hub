@@ -10,6 +10,8 @@ import { useCart } from "@/stores/cart";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { formatBDT } from "@/lib/format";
+import { useQuery } from "@tanstack/react-query";
+
 
 import { SafeImage } from "@/components/SafeImage";
 
