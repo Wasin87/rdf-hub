@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
-import { Plus, Trash2, UploadCloud, Link2, Loader2, ImageOff } from "lucide-react";
+import { Plus, Trash2, UploadCloud, Link2, Loader2, ImageOff, Edit3, CheckCircle2, XCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { appStorageImageUrl, IMAGE_BUCKETS, isAcceptedImage, normalizeStorageImageUrl, validateImageUrl } from "@/lib/catalog";
 import { SafeImage } from "@/components/SafeImage";
@@ -22,7 +22,8 @@ const EMPTY: Draft = { title: "", subtitle: "", image_url: "", cta_text: "Shop N
 
 function AdminBanners() {
   const qc = useQueryClient();
-  const [creating, setCreating] = useState(false);
+  const [formOpen, setFormOpen] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [draft, setDraft] = useState<Draft>(EMPTY);
   const [mode, setMode] = useState<Mode>("upload");
   const [uploading, setUploading] = useState(false);
@@ -37,6 +38,31 @@ function AdminBanners() {
       return (data ?? []) as Banner[];
     },
   });
+
+  const openCreate = () => {
+    setEditingId(null);
+    setDraft(EMPTY);
+    setMode("upload");
+    setFormOpen(true);
+  };
+
+  const openEdit = (b: Banner) => {
+    setEditingId(b.id);
+    setDraft({
+      title: b.title,
+      subtitle: b.subtitle ?? "",
+      image_url: b.image_url,
+      cta_text: b.cta_text ?? "",
+      cta_link: b.cta_link ?? "",
+      is_active: b.is_active,
+      order_index: b.order_index,
+    });
+    setMode("url");
+    setFormOpen(true);
+    requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "smooth" }));
+  };
+
+  const closeForm = () => { setFormOpen(false); setEditingId(null); setDraft(EMPTY); };
 
   const handleFile = async (file: File | null | undefined) => {
     if (!file) return;
@@ -60,14 +86,14 @@ function AdminBanners() {
     }
   };
 
-  const create = async () => {
+  const save = async () => {
     if (!draft.title.trim()) return toast.error("Title is required");
-    if (!draft.image_url.trim()) return toast.error(mode === "upload" ? "Upload a banner image first" : "Enter an image URL");
+    if (!draft.image_url.trim()) return toast.error("Banner image is required");
     setSaving(true);
     try {
       const imageUrl = normalizeStorageImageUrl(draft.image_url);
       await validateImageUrl(imageUrl);
-      const { error } = await supabase.from("banners").insert({
+      const payload = {
         title: draft.title.trim(),
         subtitle: draft.subtitle.trim() || null,
         image_url: imageUrl,
@@ -75,11 +101,17 @@ function AdminBanners() {
         cta_link: draft.cta_link.trim() || null,
         is_active: draft.is_active,
         order_index: draft.order_index ?? 0,
-      });
-      if (error) throw error;
-      toast.success("Banner added");
-      setCreating(false);
-      setDraft(EMPTY);
+      };
+      if (editingId) {
+        const { error } = await supabase.from("banners").update(payload).eq("id", editingId);
+        if (error) throw error;
+        toast.success("Banner updated");
+      } else {
+        const { error } = await supabase.from("banners").insert(payload);
+        if (error) throw error;
+        toast.success("Banner added");
+      }
+      closeForm();
       qc.invalidateQueries({ queryKey: ["admin-banners"] });
       qc.invalidateQueries({ queryKey: ["banners"] });
     } catch (e) {
@@ -106,18 +138,23 @@ function AdminBanners() {
   };
 
   return (
-    <div className="p-6 lg:p-10">
-      <header className="mb-6 flex flex-wrap items-center justify-between">
+    <div className="p-4 sm:p-6 lg:p-10">
+      <header className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="text-[11px] track-luxury text-[color:var(--gold)]">Storefront</p>
-          <h1 className="mt-1 font-display text-3xl">Hero Banners</h1>
+          <h1 className="mt-1 font-display text-2xl sm:text-3xl">Hero Banners ({(q.data ?? []).length})</h1>
         </div>
-        <button onClick={() => { setCreating(true); setDraft(EMPTY); setMode("upload"); }} className="btn-liquid"><Plus className="h-3.5 w-3.5" /> Add Banner</button>
+        <button onClick={openCreate} className="inline-flex items-center gap-2 rounded-lg border border-[color:var(--gold)] bg-[color:var(--gold)] px-4 py-2 text-[11px] track-luxury text-[color:var(--gold-foreground)] shadow-xl transition hover:-translate-y-0.5 hover:shadow-2xl">
+          <Plus className="h-3.5 w-3.5" /> Add Banner
+        </button>
       </header>
 
-      {creating && (
-        <div className="mb-6 grid gap-4 rounded-lg border border-[color:var(--gold)]/30 bg-card p-5 lg:grid-cols-2">
+      {formOpen && (
+        <div className="mb-6 grid gap-4 rounded-lg border border-[color:var(--gold)]/30 bg-card p-5 shadow-xl lg:grid-cols-2">
           <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <h3 className="font-display text-lg">{editingId ? "Edit Banner" : "New Banner"}</h3>
+            </div>
             <Field label="Title" value={draft.title} onChange={(v) => setDraft({ ...draft, title: v })} />
             <Field label="Subtitle" value={draft.subtitle} onChange={(v) => setDraft({ ...draft, subtitle: v })} />
             <div className="grid grid-cols-2 gap-3">
@@ -128,11 +165,11 @@ function AdminBanners() {
             <div>
               <div className="mb-2 flex items-center gap-2">
                 <label className="text-[10px] track-luxury text-muted-foreground">Banner Image</label>
-                <div className="ml-auto inline-flex overflow-hidden rounded-sm border border-border text-[10px] track-luxury">
-                  <button type="button" onClick={() => { setMode("upload"); setDraft((d) => ({ ...d, image_url: "" })); }} className={`inline-flex items-center gap-1 px-2.5 py-1 ${mode === "upload" ? "bg-foreground text-background" : "text-muted-foreground"}`}>
+                <div className="ml-auto inline-flex overflow-hidden rounded-lg border border-border text-[10px] track-luxury shadow-xl">
+                  <button type="button" onClick={() => setMode("upload")} className={`inline-flex items-center gap-1 px-2.5 py-1 ${mode === "upload" ? "bg-foreground text-background" : "text-muted-foreground"}`}>
                     <UploadCloud className="h-3 w-3" /> Upload
                   </button>
-                  <button type="button" onClick={() => { setMode("url"); setDraft((d) => ({ ...d, image_url: "" })); }} className={`inline-flex items-center gap-1 px-2.5 py-1 ${mode === "url" ? "bg-foreground text-background" : "text-muted-foreground"}`}>
+                  <button type="button" onClick={() => setMode("url")} className={`inline-flex items-center gap-1 px-2.5 py-1 ${mode === "url" ? "bg-foreground text-background" : "text-muted-foreground"}`}>
                     <Link2 className="h-3 w-3" /> URL
                   </button>
                 </div>
@@ -141,7 +178,7 @@ function AdminBanners() {
               {mode === "upload" ? (
                 <div
                   onClick={() => fileRef.current?.click()}
-                  className="flex cursor-pointer flex-col items-center justify-center gap-1.5 rounded-sm border border-dashed border-border bg-section px-4 py-6 text-center hover:border-[color:var(--gold)]/60"
+                  className="flex cursor-pointer flex-col items-center justify-center gap-1.5 rounded-lg border border-dashed border-border bg-section px-4 py-6 text-center shadow-xl hover:border-[color:var(--gold)]/60"
                 >
                   {uploading ? <Loader2 className="h-5 w-5 animate-spin text-[color:var(--gold)]" /> : <UploadCloud className="h-5 w-5 text-[color:var(--gold)]" />}
                   <div className="text-xs font-medium">{uploading ? "Uploading & validating…" : "Click to upload banner"}</div>
@@ -153,27 +190,24 @@ function AdminBanners() {
                   value={draft.image_url}
                   onChange={(e) => setDraft({ ...draft, image_url: e.target.value })}
                   placeholder="https://…"
-                  className="h-10 w-full rounded-sm border border-border bg-background px-3 text-sm focus:border-[color:var(--gold)] focus:outline-none"
+                  className="h-10 w-full rounded-lg border border-border bg-background px-3 text-sm shadow-xl focus:border-[color:var(--gold)] focus:outline-none"
                 />
               )}
             </div>
 
-            <div className="flex items-center gap-3 pt-2">
-              <button onClick={create} disabled={saving || uploading} className="btn-liquid disabled:opacity-50">{saving ? <Loader2 className="h-4 w-4 animate-spin" /> : null} Create</button>
-              <button onClick={() => { setCreating(false); setDraft(EMPTY); }} className="px-4 py-2 text-xs track-luxury text-muted-foreground">Cancel</button>
+            <div className="flex flex-wrap items-center gap-2 pt-2">
+              <button onClick={save} disabled={saving || uploading} className="inline-flex items-center gap-2 rounded-lg border border-[color:var(--gold)] bg-[color:var(--gold)] px-4 py-2 text-[11px] track-luxury text-[color:var(--gold-foreground)] shadow-xl transition hover:-translate-y-0.5 disabled:opacity-50">
+                {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : null} {editingId ? "Update" : "Create"}
+              </button>
+              <button onClick={closeForm} className="inline-flex items-center rounded-lg border border-border bg-background px-4 py-2 text-[11px] track-luxury text-muted-foreground shadow-xl hover:text-foreground">Cancel</button>
             </div>
           </div>
 
           <div>
             <div className="mb-2 text-[10px] track-luxury text-muted-foreground">Live Preview</div>
-            <div className="relative aspect-[16/9] overflow-hidden rounded-sm border border-border bg-secondary">
+            <div className="relative aspect-[16/9] overflow-hidden rounded-lg border border-border bg-secondary shadow-xl">
               {draft.image_url ? (
-                <SafeImage
-                  src={draft.image_url}
-                  alt="preview"
-                  wrapperClassName="h-full w-full"
-                  className="h-full w-full object-cover"
-                />
+                <SafeImage src={draft.image_url} alt="preview" wrapperClassName="h-full w-full" className="h-full w-full object-cover" />
               ) : (
                 <div className="grid h-full place-items-center text-muted-foreground">
                   <div className="flex flex-col items-center gap-1 text-xs"><ImageOff className="h-5 w-5" /> No image yet</div>
@@ -183,7 +217,7 @@ function AdminBanners() {
               <div className="absolute inset-0 flex flex-col justify-center p-5 text-white">
                 {draft.title && <div className="font-display text-xl md:text-2xl">{draft.title}</div>}
                 {draft.subtitle && <div className="mt-1 text-xs text-white/85">{draft.subtitle}</div>}
-                {draft.cta_text && <div className="mt-3 w-fit rounded-sm bg-[color:var(--gold)] px-3 py-1 text-[10px] track-luxury text-[color:var(--gold-foreground)]">{draft.cta_text}</div>}
+                {draft.cta_text && <div className="mt-3 w-fit rounded-lg bg-[color:var(--gold)] px-3 py-1 text-[10px] track-luxury text-[color:var(--gold-foreground)]">{draft.cta_text}</div>}
               </div>
             </div>
           </div>
@@ -192,35 +226,39 @@ function AdminBanners() {
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {(q.data ?? []).map((b) => (
-          <div key={b.id} className="group overflow-hidden rounded-lg border border-border bg-card p-2 shadow-xl transition hover:-translate-y-0.5 hover:border-[color:var(--gold)]/40 hover:shadow-2xl">
-            <div className="relative aspect-[16/10] overflow-hidden rounded-md bg-secondary">
-              <SafeImage
-                src={b.image_url}
-                alt={b.title}
-                wrapperClassName="h-full w-full"
-                className="h-full w-full object-cover"
-              />
-              <span className={`absolute left-2 top-2 rounded-md border px-2 py-0.5 text-[9px] track-luxury backdrop-blur-sm ${b.is_active ? "border-[color:var(--gold)]/60 bg-black/50 text-[color:var(--gold)]" : "border-white/20 bg-black/50 text-white/80"}`}>
+          <div key={b.id} className="group overflow-hidden rounded-lg border border-border bg-card p-3 shadow-xl transition hover:-translate-y-0.5 hover:border-[color:var(--gold)]/40 hover:shadow-2xl">
+            <div className="relative aspect-[16/10] overflow-hidden rounded-lg border border-border bg-secondary">
+              <SafeImage src={b.image_url} alt={b.title} wrapperClassName="h-full w-full" className="h-full w-full object-cover" />
+              <span className={`absolute left-2 top-2 rounded-lg border px-2 py-0.5 text-[9px] track-luxury shadow-xl backdrop-blur-sm ${b.is_active ? "border-[color:var(--gold)] bg-[color:var(--gold)]/90 text-[color:var(--gold-foreground)]" : "border-white/20 bg-black/60 text-white/80"}`}>
                 {b.is_active ? "Active" : "Inactive"}
               </span>
             </div>
-            <div className="px-2 pb-2 pt-3">
+            <div className="px-1 pb-1 pt-3">
               <div className="truncate font-display text-base">{b.title}</div>
               {b.subtitle && <p className="mt-0.5 line-clamp-1 text-[11px] text-muted-foreground">{b.subtitle}</p>}
               <div className="mt-3 flex items-center justify-between gap-2">
                 <button
                   onClick={() => toggle(b)}
-                  className={`inline-flex items-center rounded-lg border px-3 py-1.5 text-[10px] track-luxury shadow-xl transition hover:-translate-y-0.5 ${b.is_active ? "border-[color:var(--gold)]/60 bg-[color:var(--gold)]/10 text-[color:var(--gold)]" : "border-border bg-background text-muted-foreground hover:text-foreground"}`}
+                  className={`inline-flex items-center gap-1 rounded-lg border px-2.5 py-1.5 text-[10px] track-luxury shadow-xl transition hover:-translate-y-0.5 ${b.is_active ? "border-[color:var(--gold)] bg-[color:var(--gold)] text-[color:var(--gold-foreground)]" : "border-border bg-background text-muted-foreground hover:text-foreground"}`}
                 >
-                  {b.is_active ? "Deactivate" : "Activate"}
+                  {b.is_active ? <><CheckCircle2 className="h-3 w-3" /> Active</> : <><XCircle className="h-3 w-3" /> Inactive</>}
                 </button>
-                <button
-                  onClick={() => remove(b.id)}
-                  className="inline-flex items-center gap-1 rounded-lg border border-border bg-background px-2.5 py-1.5 text-[10px] track-luxury text-muted-foreground shadow-xl transition hover:-translate-y-0.5 hover:border-destructive/50 hover:text-destructive"
-                  title="Delete banner"
-                >
-                  <Trash2 className="h-3.5 w-3.5" />
-                </button>
+                <div className="flex items-center gap-1.5">
+                  <button
+                    onClick={() => openEdit(b)}
+                    className="inline-flex items-center gap-1 rounded-lg border border-border bg-background px-2.5 py-1.5 text-[10px] track-luxury text-muted-foreground shadow-xl transition hover:-translate-y-0.5 hover:border-[color:var(--gold)] hover:text-[color:var(--gold)]"
+                    title="Edit banner"
+                  >
+                    <Edit3 className="h-3.5 w-3.5" />
+                  </button>
+                  <button
+                    onClick={() => remove(b.id)}
+                    className="inline-flex items-center rounded-lg border border-border bg-background px-2.5 py-1.5 text-[10px] track-luxury text-muted-foreground shadow-xl transition hover:-translate-y-0.5 hover:border-destructive/50 hover:text-destructive"
+                    title="Delete banner"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -235,7 +273,7 @@ function Field({ label, value, onChange, className = "" }: { label: string; valu
   return (
     <div className={className}>
       <label className="mb-1 block text-[10px] track-luxury text-muted-foreground">{label}</label>
-      <input value={value} onChange={(e) => onChange(e.target.value)} className="h-10 w-full rounded-sm border border-border bg-background px-3 text-sm focus:border-[color:var(--gold)] focus:outline-none" />
+      <input value={value} onChange={(e) => onChange(e.target.value)} className="h-10 w-full rounded-lg border border-border bg-background px-3 text-sm shadow-xl focus:border-[color:var(--gold)] focus:outline-none" />
     </div>
   );
 }
