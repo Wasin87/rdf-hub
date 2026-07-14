@@ -192,6 +192,54 @@ function ProfilePage() {
           </div>
         </form>
 
+        {/* Admin-only: Payment method numbers */}
+        {isAdmin && (
+          <div className="space-y-5 rounded-lg border border-[color:var(--gold)]/40 bg-card p-6 shadow-xl">
+            <div className="flex items-center gap-2">
+              <Smartphone className="h-4 w-4 text-[color:var(--gold)]" />
+              <h2 className="font-display text-lg">Payment Method Numbers</h2>
+              <span className="ml-2 rounded-full border border-[color:var(--gold)]/50 bg-[color:var(--gold)]/10 px-2 py-0.5 text-[9px] font-semibold track-luxury text-[color:var(--gold)]">Admin only</span>
+            </div>
+            <p className="text-[11px] text-muted-foreground">
+              These numbers are shown to customers on the checkout page when they choose bKash, Nagad or Rocket. Leave a field empty to hide it.
+            </p>
+            <div className="grid gap-4 sm:grid-cols-3">
+              {(["bkash", "nagad", "rocket"] as const).map((k) => (
+                <div key={k}>
+                  <label className="mb-1.5 block text-[10px] track-luxury text-muted-foreground capitalize">{k} Number</label>
+                  <div className="flex gap-2">
+                    <input
+                      value={payment[k]}
+                      onChange={(e) => setPayment((p) => ({ ...p, [k]: e.target.value }))}
+                      placeholder="01XXXXXXXXX"
+                      className="h-11 w-full rounded-lg border border-border bg-background px-3 text-sm shadow-xl focus:border-[color:var(--gold)] focus:outline-none"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => clearPaymentField(k)}
+                      className="grid h-11 w-11 shrink-0 place-items-center rounded-lg border border-border bg-background text-muted-foreground shadow-xl transition hover:border-destructive hover:text-destructive"
+                      aria-label={`Remove ${k} number`}
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="flex justify-end">
+              <button
+                type="button"
+                onClick={savePayment}
+                disabled={savingPayment}
+                className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-4 py-2 text-xs font-semibold shadow-xl transition hover:-translate-y-0.5 hover:border-[color:var(--gold)] hover:text-[color:var(--gold)] disabled:opacity-60"
+              >
+                <Save className="h-3.5 w-3.5" /> {savingPayment ? "Saving…" : "Save Payment Numbers"}
+              </button>
+            </div>
+          </div>
+        )}
+
+
         {/* Security */}
         <form onSubmit={changePassword} className="space-y-5 rounded-lg border border-border bg-card p-6 shadow-xl">
           <div className="flex items-center gap-2">
