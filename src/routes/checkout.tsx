@@ -174,8 +174,9 @@ function CheckoutPage() {
                     <p className="text-xs text-muted-foreground">Send the total to the merchant number below, then enter the Transaction ID and the phone you paid from.</p>
                     <div className="mt-3 flex items-center gap-2 rounded-sm border border-[color:var(--gold)]/30 bg-card px-3 py-2">
                       <Smartphone className="h-4 w-4 text-[color:var(--gold)]" />
-                      <span className="font-display text-lg tracking-wider">{PAYMENT_NUMBER}</span>
-                      <button type="button" onClick={() => { navigator.clipboard.writeText(PAYMENT_NUMBER); toast.success("Number copied"); }} className="ml-auto text-muted-foreground hover:text-[color:var(--gold)]">
+                      <span className="font-display text-lg tracking-wider">{activePaymentNumber}</span>
+                      <button type="button" onClick={() => { navigator.clipboard.writeText(activePaymentNumber); toast.success("Number copied"); }} className="ml-auto text-muted-foreground hover:text-[color:var(--gold)]">
+
                         <Copy className="h-3.5 w-3.5" />
                       </button>
                     </div>
