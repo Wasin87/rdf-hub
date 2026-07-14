@@ -245,7 +245,7 @@ function AdminProducts() {
 
 function Flag({ label, on, onClick }: { label: string; on: boolean; onClick: () => void }) {
   return (
-    <button onClick={onClick} className={`flex items-center gap-1 rounded-sm border px-1.5 py-0.5 text-[9px] track-luxury ${on ? "border-[color:var(--gold)] bg-[color:var(--gold)]/10 text-[color:var(--gold)]" : "border-border text-muted-foreground"}`}>
+    <button onClick={onClick} className={`flex items-center gap-1 rounded-lg border px-1.5 py-0.5 text-[9px] track-luxury shadow-xl ${on ? "border-[color:var(--gold)] bg-[color:var(--gold)]/10 text-[color:var(--gold)]" : "border-border bg-background text-muted-foreground"}`}>
       {on ? <Eye className="h-3 w-3" /> : <EyeOff className="h-3 w-3" />} {label}
     </button>
   );
