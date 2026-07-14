@@ -124,32 +124,46 @@ function AdminProducts() {
   };
 
   return (
-    <div className="p-6 lg:p-10">
+    <div className="p-4 sm:p-6 lg:p-10">
       <header className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="text-[11px] track-luxury text-[color:var(--gold)]">Catalog</p>
-          <h1 className="mt-1 font-display text-3xl">Products</h1>
+          <h1 className="mt-1 font-display text-2xl sm:text-3xl">Products ({rawRows.length})</h1>
         </div>
         <div className="flex flex-wrap items-center gap-2">
+          <select
+            value={sort}
+            onChange={(e) => setSort(e.target.value as SortKey)}
+            className="h-10 rounded-lg border border-border bg-background px-3 text-xs shadow-xl focus:border-[color:var(--gold)] focus:outline-none"
+            aria-label="Sort products"
+          >
+            <option value="newest">Newest</option>
+            <option value="name_asc">Name A–Z</option>
+            <option value="name_desc">Name Z–A</option>
+            <option value="price_asc">Price: Low to High</option>
+            <option value="price_desc">Price: High to Low</option>
+            <option value="stock_asc">Stock: Low to High</option>
+            <option value="stock_desc">Stock: High to Low</option>
+          </select>
           <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search products…"
-            className="h-10 w-full max-w-xs rounded-sm border border-border bg-background px-3 text-sm focus:border-[color:var(--gold)] focus:outline-none sm:w-64" />
-          <Link to="/admin/add-product" className="inline-flex items-center gap-2 rounded-sm bg-[color:var(--gold)] px-4 py-2.5 text-[11px] track-luxury text-[color:var(--gold-foreground)] shadow-sm transition-transform hover:scale-[1.02]">
+            className="h-10 w-full max-w-xs rounded-lg border border-border bg-background px-3 text-sm shadow-xl focus:border-[color:var(--gold)] focus:outline-none sm:w-64" />
+          <Link to="/admin/add-product" className="inline-flex items-center gap-2 rounded-lg border border-[color:var(--gold)] bg-[color:var(--gold)] px-4 py-2 text-[11px] track-luxury text-[color:var(--gold-foreground)] shadow-xl transition hover:-translate-y-0.5 hover:shadow-2xl">
             <Plus className="h-3.5 w-3.5" /> Add Product
           </Link>
         </div>
       </header>
 
       {selected.size > 0 && (
-        <div className="mb-4 flex flex-wrap items-center gap-2 rounded-sm border border-[color:var(--gold)]/30 bg-[color:var(--gold)]/5 px-3 py-2 text-sm">
+        <div className="mb-4 flex flex-wrap items-center gap-2 rounded-lg border border-[color:var(--gold)]/30 bg-[color:var(--gold)]/5 px-3 py-2 text-sm shadow-xl">
           <span className="text-[color:var(--gold)]">{selected.size} selected</span>
-          <button onClick={() => bulkSetActive(true)} className="rounded-sm border border-border px-2 py-1 text-[10px] track-luxury hover:border-[color:var(--gold)]">Activate</button>
-          <button onClick={() => bulkSetActive(false)} className="rounded-sm border border-border px-2 py-1 text-[10px] track-luxury hover:border-[color:var(--gold)]">Deactivate</button>
-          <button onClick={bulkDelete} className="rounded-sm border border-destructive/40 px-2 py-1 text-[10px] track-luxury text-destructive hover:bg-destructive/10">Delete</button>
+          <button onClick={() => bulkSetActive(true)} className="rounded-lg border border-border bg-background px-2.5 py-1 text-[10px] track-luxury shadow-xl hover:border-[color:var(--gold)]">Activate</button>
+          <button onClick={() => bulkSetActive(false)} className="rounded-lg border border-border bg-background px-2.5 py-1 text-[10px] track-luxury shadow-xl hover:border-[color:var(--gold)]">Deactivate</button>
+          <button onClick={bulkDelete} className="rounded-lg border border-destructive/40 bg-background px-2.5 py-1 text-[10px] track-luxury text-destructive shadow-xl hover:bg-destructive/10">Delete</button>
           <button onClick={() => setSelected(new Set())} className="ml-auto text-[10px] track-luxury text-muted-foreground hover:text-foreground">Clear</button>
         </div>
       )}
 
-      <div className="overflow-x-auto rounded-sm border border-border bg-card">
+      <div className="overflow-x-auto rounded-lg border border-border bg-card shadow-xl">
         <table className="w-full text-sm">
           <thead className="border-b border-border bg-section text-left text-[10px] track-luxury text-muted-foreground">
             <tr>
