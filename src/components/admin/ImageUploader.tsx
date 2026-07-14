@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from "react";
-import { GripVertical, Trash2, UploadCloud, Star, StarOff } from "lucide-react";
+import { Trash2, UploadCloud, Star, StarOff } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { appStorageImageUrl, IMAGE_BUCKETS, isAcceptedImage, validateImageUrl } from "@/lib/catalog";
