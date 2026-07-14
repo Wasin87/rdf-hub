@@ -19,7 +19,7 @@ function AdminReviews() {
   const q = useQuery({
     queryKey: ["admin-reviews"],
     queryFn: async () => {
-      const { data, error } = await supabase.rpc("admin_list_reviews");
+      const { data, error } = await supabase.from("reviews").select("*").order("created_at", { ascending: false });
       if (error) throw error;
       return (data ?? []) as Review[];
     },
