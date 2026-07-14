@@ -195,7 +195,7 @@ function AdminProducts() {
                       setSelected(next);
                     }} />
                   </td>
-                  <td className="p-3"><SafeImage src={resolveImage(p.image_url)} alt="" wrapperClassName="h-12 w-12 rounded-sm" className="h-12 w-12 object-cover" /></td>
+                  <td className="p-3"><SafeImage src={resolveImage(p.image_url)} alt="" wrapperClassName="h-12 w-12 rounded-lg" className="h-12 w-12 object-cover" /></td>
                   <td className="p-3">
                     <Link to="/products/$slug" params={{ slug: p.slug }} className="font-medium hover:text-[color:var(--gold)]">{p.name}</Link>
                     <div className="text-[10px] text-muted-foreground">{p.slug}</div>
