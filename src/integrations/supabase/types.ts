@@ -485,6 +485,33 @@ export type Database = {
         }
         Relationships: []
       }
+      payment_settings: {
+        Row: {
+          bkash_number: string | null
+          id: string
+          nagad_number: string | null
+          rocket_number: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          bkash_number?: string | null
+          id?: string
+          nagad_number?: string | null
+          rocket_number?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          bkash_number?: string | null
+          id?: string
+          nagad_number?: string | null
+          rocket_number?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       product_images: {
         Row: {
           alt_text: string | null
