@@ -289,6 +289,90 @@
   }
 }
 
+/* ===== Unified Admin Design System ===== */
+@utility admin-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 12px 32px -18px rgba(0,0,0,0.12);
+  transition: transform 0.3s cubic-bezier(0.2,0.8,0.2,1), box-shadow 0.3s ease, border-color 0.3s ease;
+  &:hover {
+    border-color: color-mix(in oklab, var(--gold) 32%, var(--border));
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05), 0 22px 48px -22px color-mix(in oklab, var(--gold) 28%, rgba(0,0,0,0.18));
+  }
+}
+.dark .admin-card {
+  box-shadow: 0 1px 2px rgba(0,0,0,0.5), 0 14px 36px -18px rgba(0,0,0,0.7);
+}
+
+@utility admin-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  height: 40px;
+  padding-inline: 1rem;
+  border-radius: 12px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  border: 1px solid transparent;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  cursor: pointer;
+  &:disabled { opacity: 0.55; cursor: not-allowed; }
+}
+
+@utility admin-btn-primary {
+  background: var(--gold);
+  color: var(--gold-foreground);
+  box-shadow: 0 8px 22px -12px color-mix(in oklab, var(--gold) 70%, transparent);
+  &:hover:not(:disabled) { transform: translateY(-1px); background: color-mix(in oklab, var(--gold) 90%, black); box-shadow: 0 12px 28px -12px color-mix(in oklab, var(--gold) 80%, transparent); }
+  &:active:not(:disabled) { transform: translateY(0); }
+}
+
+@utility admin-btn-secondary {
+  background: var(--card);
+  color: var(--foreground);
+  border-color: var(--border);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  &:hover:not(:disabled) { border-color: color-mix(in oklab, var(--gold) 45%, var(--border)); color: var(--gold); box-shadow: 0 6px 16px -8px rgba(0,0,0,0.15); }
+}
+
+@utility admin-btn-danger {
+  background: color-mix(in oklab, var(--destructive) 12%, transparent);
+  color: var(--destructive);
+  border-color: color-mix(in oklab, var(--destructive) 35%, transparent);
+  &:hover:not(:disabled) { background: color-mix(in oklab, var(--destructive) 22%, transparent); transform: translateY(-1px); }
+}
+
+@utility admin-icon-btn {
+  display: inline-grid;
+  place-items: center;
+  height: 40px;
+  width: 40px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--muted-foreground);
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+  &:hover:not(:disabled) { color: var(--gold); border-color: color-mix(in oklab, var(--gold) 40%, var(--border)); box-shadow: 0 6px 16px -8px rgba(0,0,0,0.18); }
+}
+
+@utility admin-input {
+  height: 40px;
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--background);
+  padding-inline: 0.85rem;
+  font-size: 0.82rem;
+  color: var(--foreground);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  &::placeholder { color: color-mix(in oklab, var(--muted-foreground) 80%, transparent); }
+  &:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px color-mix(in oklab, var(--gold) 22%, transparent); }
+}
+
+
 /* Scrollbar */
 @layer base {
   ::-webkit-scrollbar { width: 10px; height: 10px; }

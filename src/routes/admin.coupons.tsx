@@ -113,6 +113,18 @@ function AdminCoupons() {
     return list;
   }, [q.data, search, statusFilter]);
 
+  const stats = useMemo(() => {
+    const list = q.data ?? [];
+    return {
+      total: list.length,
+      active: list.filter((c) => c.is_active && !isExpired(c) && !isScheduled(c)).length,
+      expired: list.filter((c) => isExpired(c)).length,
+      used: list.reduce((s, c) => s + (c.usage_count ?? 0), 0),
+    };
+  }, [q.data]);
+
+
+
   const openNew = () => { setForm(emptyForm); setShowForm(true); };
   const openEdit = (c: Coupon) => {
     setForm({
@@ -204,6 +216,27 @@ function AdminCoupons() {
 
   return (
     <div className="p-4 sm:p-6 lg:p-8">
+      <div className="mb-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+        {[
+          { label: "Total", value: stats.total, icon: Ticket, tone: "text-foreground" },
+          { label: "Active", value: stats.active, icon: Check, tone: "text-emerald-600" },
+          { label: "Expired", value: stats.expired, icon: Calendar, tone: "text-rose-600" },
+          { label: "Redemptions", value: stats.used, icon: Percent, tone: "text-[color:var(--gold)]" },
+        ].map((s) => {
+          const Icon = s.icon;
+          return (
+            <div key={s.label} className="admin-card p-4">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] uppercase tracking-wider text-muted-foreground">{s.label}</span>
+                <Icon className={`h-4 w-4 ${s.tone}`} />
+              </div>
+              <div className={`mt-2 font-display text-2xl font-bold sm:text-3xl ${s.tone}`}>{s.value}</div>
+            </div>
+          );
+        })}
+      </div>
+
+
       <div className="mb-6 rounded-xl border border-border bg-card p-4 shadow-xl sm:p-5">
         <div className="flex flex-col gap-3">
           <div className="flex items-center gap-3">
