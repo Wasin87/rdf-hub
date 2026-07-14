@@ -45,7 +45,7 @@ function AdminReviews() {
       </header>
       <div className="space-y-3">
         {(q.data ?? []).map((r) => (
-          <div key={r.id} className="rounded-sm border border-border bg-card p-4">
+          <div key={r.id} className="rounded-lg border border-border bg-card shadow-xl p-4">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <div className="flex items-center gap-2 text-[10px] track-luxury text-muted-foreground">

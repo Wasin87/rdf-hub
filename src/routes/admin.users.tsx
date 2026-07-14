@@ -51,7 +51,7 @@ function AdminUsers() {
         <p className="text-[11px] track-luxury text-[color:var(--gold)]">Access</p>
         <h1 className="mt-1 font-display text-3xl">Users</h1>
       </header>
-      <div className="overflow-x-auto rounded-sm border border-border bg-card">
+      <div className="overflow-x-auto rounded-lg border border-border bg-card shadow-xl">
         <table className="w-full text-sm">
           <thead className="border-b border-border bg-section text-left text-[10px] track-luxury text-muted-foreground">
             <tr><th className="p-3">Name</th><th className="p-3">Phone</th><th className="p-3">Joined</th><th className="p-3">Roles</th><th className="p-3 text-right">Actions</th></tr>

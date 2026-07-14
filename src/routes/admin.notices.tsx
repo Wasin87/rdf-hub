@@ -84,7 +84,7 @@ function AdminNotices() {
       </header>
 
       {creating && (
-        <div className="mb-6 rounded-sm border border-[color:var(--gold)]/30 bg-card p-5">
+        <div className="mb-6 rounded-lg border border-[color:var(--gold)]/30 bg-card shadow-xl p-5">
           <h3 className="mb-3 font-display text-lg">New Notice</h3>
           <div className="grid gap-3 sm:grid-cols-[60px_1fr_120px_120px_auto]">
             <Input label="Icon" value={draft.icon ?? ""} onChange={(v) => setDraft({ ...draft, icon: v })} />
@@ -105,7 +105,7 @@ function AdminNotices() {
           editing === n.id ? (
             <NoticeEditRow key={n.id} notice={n} onSave={save} onCancel={() => setEditing(null)} />
           ) : (
-            <div key={n.id} className="flex items-center gap-4 rounded-sm border border-border bg-card p-4">
+            <div key={n.id} className="flex items-center gap-4 rounded-lg border border-border bg-card shadow-xl p-4">
               <span className="text-lg text-[color:var(--gold)]">{n.icon ?? "✦"}</span>
               <div className="flex-1">
                 <div className="text-sm">{n.message}</div>
@@ -129,7 +129,7 @@ function AdminNotices() {
 function NoticeEditRow({ notice, onSave, onCancel }: { notice: Notice; onSave: (n: Partial<Notice>) => void; onCancel: () => void }) {
   const [d, setD] = useState<Notice>(notice);
   return (
-    <div className="rounded-sm border border-[color:var(--gold)]/30 bg-card p-4">
+    <div className="rounded-lg border border-[color:var(--gold)]/30 bg-card shadow-xl p-4">
       <div className="grid gap-3 sm:grid-cols-[60px_1fr_120px_100px_auto]">
         <Input label="Icon" value={d.icon ?? ""} onChange={(v) => setD({ ...d, icon: v })} />
         <Input label="Message" value={d.message} onChange={(v) => setD({ ...d, message: v })} />

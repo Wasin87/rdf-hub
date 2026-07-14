@@ -53,7 +53,7 @@ function AdminBrands() {
         <h1 className="mt-1 font-display text-3xl">Brands</h1>
       </header>
 
-      <div className="mb-6 flex flex-wrap items-end gap-3 rounded-sm border border-[color:var(--gold)]/20 bg-card p-4">
+      <div className="mb-6 flex flex-wrap items-end gap-3 rounded-lg border border-[color:var(--gold)]/30 bg-card shadow-xl p-4">
         <div className="flex-1 min-w-48">
           <label className="mb-1 block text-[10px] track-luxury text-muted-foreground">Name</label>
           <input value={name} onChange={(e) => setName(e.target.value)} className="h-10 w-full rounded-sm border border-border bg-background px-3 text-sm" />
@@ -67,7 +67,7 @@ function AdminBrands() {
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {(q.data ?? []).map((b) => (
-          <div key={b.id} className="flex items-start justify-between gap-3 rounded-sm border border-border bg-card p-4">
+          <div key={b.id} className="flex items-start justify-between gap-3 rounded-lg border border-border bg-card shadow-xl p-4">
             <div>
               <div className="font-display text-lg">{b.name}</div>
               <div className="text-[10px] track-luxury text-muted-foreground">{b.slug}</div>

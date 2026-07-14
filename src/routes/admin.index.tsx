@@ -85,7 +85,7 @@ function AdminDashboard() {
           </div>
 
           <div className="mt-8 grid gap-6 lg:grid-cols-3">
-            <div className="rounded-sm border border-border bg-card p-5 lg:col-span-2">
+            <div className="rounded-lg border border-border bg-card shadow-xl p-5 lg:col-span-2">
               <h3 className="mb-4 font-display text-lg">Revenue — Last 12 Months</h3>
               <div className="h-72">
                 <ResponsiveContainer>
@@ -99,7 +99,7 @@ function AdminDashboard() {
                 </ResponsiveContainer>
               </div>
             </div>
-            <div className="rounded-sm border border-border bg-card p-5">
+            <div className="rounded-lg border border-border bg-card shadow-xl p-5">
               <h3 className="mb-4 font-display text-lg">Order Status</h3>
               <div className="h-72">
                 <ResponsiveContainer>
@@ -115,7 +115,7 @@ function AdminDashboard() {
           </div>
 
           <div className="mt-6 grid gap-6 lg:grid-cols-2">
-            <div className="rounded-sm border border-border bg-card p-5">
+            <div className="rounded-lg border border-border bg-card shadow-xl p-5">
               <h3 className="mb-4 font-display text-lg">Top Brands by Revenue</h3>
               <div className="h-64">
                 <ResponsiveContainer>
@@ -129,7 +129,7 @@ function AdminDashboard() {
                 </ResponsiveContainer>
               </div>
             </div>
-            <div className="rounded-sm border border-border bg-card p-5">
+            <div className="rounded-lg border border-border bg-card shadow-xl p-5">
               <h3 className="mb-4 font-display text-lg">Recent Orders</h3>
               <div className="space-y-2">
                 {data.recentOrders.map((o) => (
@@ -154,7 +154,7 @@ function AdminDashboard() {
 
 function Stat({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
-    <div className="rounded-sm border border-border bg-card p-5">
+    <div className="rounded-lg border border-border bg-card shadow-xl p-5">
       <div className="flex items-center gap-2 text-[10px] track-luxury text-muted-foreground">
         <span className="text-[color:var(--gold)]">{icon}</span> {label}
       </div>
