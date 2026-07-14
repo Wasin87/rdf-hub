@@ -1,7 +1,6 @@
-import { createFileRoute, Link, Outlet, redirect, useNavigate, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, Package, ShoppingBag, Megaphone, Image as ImageIcon, Users, LogOut, Tag, Star, Home as HomeIcon, Ticket } from "lucide-react";
+import { createFileRoute, Link, Outlet, redirect, useRouterState } from "@tanstack/react-router";
+import { LayoutDashboard, Package, ShoppingBag, Megaphone, Image as ImageIcon, Users, Tag, Star, Ticket } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { Logo } from "@/components/Logo";
 
 export const Route = createFileRoute("/admin")({
   ssr: false,
