@@ -530,7 +530,7 @@ function OrderDetailsModal({ order, onClose }: { order: Order; onClose: () => vo
     try {
       const [{ default: jsPDF }, { default: html2canvas }] = await Promise.all([
         import("jspdf"),
-        import("html2canvas"),
+        import("html2canvas-pro"),
       ]);
       const canvas = await html2canvas(printRef.current, {
         backgroundColor: "#ffffff",
