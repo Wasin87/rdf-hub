@@ -123,10 +123,11 @@ export function Navbar() {
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-60">
-                <div className="px-3 py-2.5">
+                <Link to="/profile" className="block px-3 py-2.5 transition-colors hover:bg-secondary">
                   <div className="truncate text-sm font-medium">{user.user_metadata?.full_name || user.email?.split("@")[0]}</div>
                   <div className="truncate text-[11px] text-muted-foreground">{user.email}</div>
-                </div>
+                  <div className="mt-1 text-[10px] track-luxury text-[color:var(--gold)]">View profile →</div>
+                </Link>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild><Link to="/dashboard"><LayoutDashboard className="mr-2 h-3.5 w-3.5" /> Dashboard</Link></DropdownMenuItem>
                 {isAdmin && (

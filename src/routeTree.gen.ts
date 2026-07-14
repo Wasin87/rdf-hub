@@ -29,6 +29,7 @@ import { Route as AdminCouponsRouteImport } from './routes/admin.coupons'
 import { Route as AdminBrandsRouteImport } from './routes/admin.brands'
 import { Route as AdminBannersRouteImport } from './routes/admin.banners'
 import { Route as AdminAddProductRouteImport } from './routes/admin.add-product'
+import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard.index'
 import { Route as ApiPublicImageRouteImport } from './routes/api.public.image'
@@ -139,6 +140,11 @@ const AdminAddProductRoute = AdminAddProductRouteImport.update({
   path: '/add-product',
   getParentRoute: () => AdminRoute,
 } as any)
+const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -207,6 +213,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/shop': typeof ShopRoute
   '/dashboard': typeof AuthenticatedDashboardRouteWithChildren
+  '/profile': typeof AuthenticatedProfileRoute
   '/admin/add-product': typeof AdminAddProductRoute
   '/admin/banners': typeof AdminBannersRoute
   '/admin/brands': typeof AdminBrandsRoute
@@ -236,6 +243,7 @@ export interface FileRoutesByTo {
   '/our-story': typeof OurStoryRoute
   '/reset-password': typeof ResetPasswordRoute
   '/shop': typeof ShopRoute
+  '/profile': typeof AuthenticatedProfileRoute
   '/admin/add-product': typeof AdminAddProductRoute
   '/admin/banners': typeof AdminBannersRoute
   '/admin/brands': typeof AdminBrandsRoute
@@ -269,6 +277,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/shop': typeof ShopRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteWithChildren
+  '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/admin/add-product': typeof AdminAddProductRoute
   '/admin/banners': typeof AdminBannersRoute
   '/admin/brands': typeof AdminBrandsRoute
@@ -302,6 +311,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/shop'
     | '/dashboard'
+    | '/profile'
     | '/admin/add-product'
     | '/admin/banners'
     | '/admin/brands'
@@ -331,6 +341,7 @@ export interface FileRouteTypes {
     | '/our-story'
     | '/reset-password'
     | '/shop'
+    | '/profile'
     | '/admin/add-product'
     | '/admin/banners'
     | '/admin/brands'
@@ -363,6 +374,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/shop'
     | '/_authenticated/dashboard'
+    | '/_authenticated/profile'
     | '/admin/add-product'
     | '/admin/banners'
     | '/admin/brands'
@@ -541,6 +553,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAddProductRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/_authenticated/profile': {
+      id: '/_authenticated/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AuthenticatedProfileRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -643,10 +662,12 @@ const AuthenticatedDashboardRouteWithChildren =
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRouteWithChildren
+  AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRouteWithChildren,
+  AuthenticatedProfileRoute: AuthenticatedProfileRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
