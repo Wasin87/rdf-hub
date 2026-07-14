@@ -73,14 +73,14 @@ function AdminNotices() {
   };
 
   return (
-    <div className="p-6 lg:p-10">
+    <div className="p-4 sm:p-6 lg:p-10">
       <header className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="text-[11px] track-luxury text-[color:var(--gold)]">Marketing</p>
-          <h1 className="mt-1 font-display text-3xl">Notice Banners</h1>
+          <h1 className="mt-1 font-display text-2xl sm:text-3xl">Notice Banners ({(q.data ?? []).length})</h1>
           <p className="mt-1 text-sm text-muted-foreground">Sliding announcements shown beneath the navbar.</p>
         </div>
-        <button onClick={() => setCreating(true)} className="btn-liquid"><Plus className="h-3.5 w-3.5" /> Add Notice</button>
+        <button onClick={() => setCreating(true)} className="inline-flex items-center gap-2 rounded-lg border border-[color:var(--gold)] bg-[color:var(--gold)] px-4 py-2 text-[11px] track-luxury text-[color:var(--gold-foreground)] shadow-xl transition hover:-translate-y-0.5"><Plus className="h-3.5 w-3.5" /> Add Notice</button>
       </header>
 
       {creating && (
