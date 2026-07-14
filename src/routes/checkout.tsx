@@ -10,6 +10,8 @@ import { useCart } from "@/stores/cart";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { formatBDT } from "@/lib/format";
+import { useQuery } from "@tanstack/react-query";
+
 
 import { SafeImage } from "@/components/SafeImage";
 
@@ -18,15 +20,10 @@ export const Route = createFileRoute("/checkout")({
   component: CheckoutPage,
 });
 
-const PAYMENT_NUMBER = "01774178772";
+const DEFAULT_PAYMENT_NUMBER = "Not set";
 
-const PAYMENT_METHODS = [
-  { id: "cod", label: "Cash on Delivery", icon: Truck, description: "Pay when your fragrance arrives." },
-  { id: "bkash", label: "bKash", icon: Smartphone, description: `Send Money to ${PAYMENT_NUMBER}` },
-  { id: "nagad", label: "Nagad", icon: Smartphone, description: `Send Money to ${PAYMENT_NUMBER}` },
-  { id: "rocket", label: "Rocket", icon: Smartphone, description: `Send Money to ${PAYMENT_NUMBER}` },
-] as const;
-type PaymentMethod = typeof PAYMENT_METHODS[number]["id"];
+type PaymentMethod = "cod" | "bkash" | "nagad" | "rocket";
+
 
 const baseSchema = z.object({
   full_name: z.string().trim().min(2).max(80),
@@ -54,6 +51,28 @@ function CheckoutPage() {
   const shipping = subtotal >= 5000 ? 0 : 120;
   const total = subtotal + shipping;
   const isMobilePayment = method !== "cod";
+
+  const paymentSettingsQ = useQuery({
+    queryKey: ["payment_settings"],
+    queryFn: async () => (await supabase.from("payment_settings").select("*").eq("id", "global").maybeSingle()).data,
+  });
+
+  const paymentNumberFor = (m: PaymentMethod): string => {
+    const s = paymentSettingsQ.data;
+    if (m === "bkash") return s?.bkash_number || DEFAULT_PAYMENT_NUMBER;
+    if (m === "nagad") return s?.nagad_number || DEFAULT_PAYMENT_NUMBER;
+    if (m === "rocket") return s?.rocket_number || DEFAULT_PAYMENT_NUMBER;
+    return "";
+  };
+
+  const PAYMENT_METHODS: { id: PaymentMethod; label: string; icon: typeof Truck; description: string }[] = [
+    { id: "cod", label: "Cash on Delivery", icon: Truck, description: "Pay when your fragrance arrives." },
+    { id: "bkash", label: "bKash", icon: Smartphone, description: `Send Money to ${paymentNumberFor("bkash")}` },
+    { id: "nagad", label: "Nagad", icon: Smartphone, description: `Send Money to ${paymentNumberFor("nagad")}` },
+    { id: "rocket", label: "Rocket", icon: Smartphone, description: `Send Money to ${paymentNumberFor("rocket")}` },
+  ];
+  const activePaymentNumber = isMobilePayment ? paymentNumberFor(method) : "";
+
 
   const form = useForm<z.infer<typeof baseSchema>>({
     resolver: zodResolver(baseSchema),
@@ -155,8 +174,9 @@ function CheckoutPage() {
                     <p className="text-xs text-muted-foreground">Send the total to the merchant number below, then enter the Transaction ID and the phone you paid from.</p>
                     <div className="mt-3 flex items-center gap-2 rounded-sm border border-[color:var(--gold)]/30 bg-card px-3 py-2">
                       <Smartphone className="h-4 w-4 text-[color:var(--gold)]" />
-                      <span className="font-display text-lg tracking-wider">{PAYMENT_NUMBER}</span>
-                      <button type="button" onClick={() => { navigator.clipboard.writeText(PAYMENT_NUMBER); toast.success("Number copied"); }} className="ml-auto text-muted-foreground hover:text-[color:var(--gold)]">
+                      <span className="font-display text-lg tracking-wider">{activePaymentNumber}</span>
+                      <button type="button" onClick={() => { navigator.clipboard.writeText(activePaymentNumber); toast.success("Number copied"); }} className="ml-auto text-muted-foreground hover:text-[color:var(--gold)]">
+
                         <Copy className="h-3.5 w-3.5" />
                       </button>
                     </div>

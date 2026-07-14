@@ -5,10 +5,12 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { Camera, Mail, Phone, User as UserIcon, Lock, Save, ShieldCheck } from "lucide-react";
+import { Camera, Mail, Phone, User as UserIcon, Lock, Save, ShieldCheck, Shield, Smartphone, Trash2 } from "lucide-react";
 import { DashboardShell } from "@/components/DashboardShell";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useRole } from "@/hooks/useRole";
+
 
 export const Route = createFileRoute("/_authenticated/profile")({
   head: () => ({ meta: [{ title: "My Profile — FRAG AVENUE" }, { name: "description", content: "Manage your personal information, avatar and password." }] }),
@@ -30,8 +32,50 @@ type PasswordForm = z.infer<typeof passwordSchema>;
 
 function ProfilePage() {
   const { user } = useAuth();
+  const { isAdmin } = useRole();
   const qc = useQueryClient();
   const [savingPwd, setSavingPwd] = useState(false);
+  const [payment, setPayment] = useState({ bkash: "", nagad: "", rocket: "" });
+  const [savingPayment, setSavingPayment] = useState(false);
+
+  const paymentQ = useQuery({
+    queryKey: ["payment_settings"],
+    enabled: isAdmin,
+    queryFn: async () => (await supabase.from("payment_settings").select("*").eq("id", "global").maybeSingle()).data,
+  });
+  useEffect(() => {
+    if (paymentQ.data) setPayment({
+      bkash: paymentQ.data.bkash_number ?? "",
+      nagad: paymentQ.data.nagad_number ?? "",
+      rocket: paymentQ.data.rocket_number ?? "",
+    });
+  }, [paymentQ.data]);
+
+  const savePayment = async () => {
+    setSavingPayment(true);
+    const { error } = await supabase.from("payment_settings").upsert({
+      id: "global",
+      bkash_number: payment.bkash.trim() || null,
+      nagad_number: payment.nagad.trim() || null,
+      rocket_number: payment.rocket.trim() || null,
+      updated_by: user?.id ?? null,
+    });
+    setSavingPayment(false);
+    if (error) return toast.error(error.message);
+    toast.success("Payment numbers updated");
+    qc.invalidateQueries({ queryKey: ["payment_settings"] });
+  };
+
+  const clearPaymentField = async (field: "bkash" | "nagad" | "rocket") => {
+    const patch = field === "bkash" ? { bkash_number: null } : field === "nagad" ? { nagad_number: null } : { rocket_number: null };
+    const { error } = await supabase.from("payment_settings").update({ ...patch, updated_by: user?.id ?? null }).eq("id", "global");
+
+    if (error) return toast.error(error.message);
+    setPayment((p) => ({ ...p, [field]: "" }));
+    toast.success(`${field} number removed`);
+    qc.invalidateQueries({ queryKey: ["payment_settings"] });
+  };
+
 
   const profileQ = useQuery({
     queryKey: ["profile", user?.id],
@@ -93,7 +137,18 @@ function ProfilePage() {
               </span>
             </div>
             <div className="text-center sm:text-left">
-              <div className="font-display text-xl">{fullName || "Your name"}</div>
+              <div className="flex flex-wrap items-center justify-center gap-2 sm:justify-start">
+                <div className="font-display text-xl">{fullName || "Your name"}</div>
+                {isAdmin ? (
+                  <span className="inline-flex items-center gap-1 rounded-full border border-[color:var(--gold)]/50 bg-[color:var(--gold)]/10 px-2 py-0.5 text-[10px] font-semibold track-luxury text-[color:var(--gold)]">
+                    <Shield className="h-3 w-3" /> Admin
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1 rounded-full border border-border bg-background px-2 py-0.5 text-[10px] font-semibold track-luxury text-muted-foreground">
+                    <UserIcon className="h-3 w-3" /> Customer
+                  </span>
+                )}
+              </div>
               <div className="mt-1 flex flex-wrap justify-center gap-2 text-xs text-muted-foreground sm:justify-start">
                 <span className="inline-flex items-center gap-1 rounded-lg border border-border bg-background px-2.5 py-1 shadow-xl"><Mail className="h-3 w-3" /> {user?.email}</span>
                 {profileQ.data?.phone && (
@@ -136,6 +191,54 @@ function ProfilePage() {
             </button>
           </div>
         </form>
+
+        {/* Admin-only: Payment method numbers */}
+        {isAdmin && (
+          <div className="space-y-5 rounded-lg border border-[color:var(--gold)]/40 bg-card p-6 shadow-xl">
+            <div className="flex items-center gap-2">
+              <Smartphone className="h-4 w-4 text-[color:var(--gold)]" />
+              <h2 className="font-display text-lg">Payment Method Numbers</h2>
+              <span className="ml-2 rounded-full border border-[color:var(--gold)]/50 bg-[color:var(--gold)]/10 px-2 py-0.5 text-[9px] font-semibold track-luxury text-[color:var(--gold)]">Admin only</span>
+            </div>
+            <p className="text-[11px] text-muted-foreground">
+              These numbers are shown to customers on the checkout page when they choose bKash, Nagad or Rocket. Leave a field empty to hide it.
+            </p>
+            <div className="grid gap-4 sm:grid-cols-3">
+              {(["bkash", "nagad", "rocket"] as const).map((k) => (
+                <div key={k}>
+                  <label className="mb-1.5 block text-[10px] track-luxury text-muted-foreground capitalize">{k} Number</label>
+                  <div className="flex gap-2">
+                    <input
+                      value={payment[k]}
+                      onChange={(e) => setPayment((p) => ({ ...p, [k]: e.target.value }))}
+                      placeholder="01XXXXXXXXX"
+                      className="h-11 w-full rounded-lg border border-border bg-background px-3 text-sm shadow-xl focus:border-[color:var(--gold)] focus:outline-none"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => clearPaymentField(k)}
+                      className="grid h-11 w-11 shrink-0 place-items-center rounded-lg border border-border bg-background text-muted-foreground shadow-xl transition hover:border-destructive hover:text-destructive"
+                      aria-label={`Remove ${k} number`}
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="flex justify-end">
+              <button
+                type="button"
+                onClick={savePayment}
+                disabled={savingPayment}
+                className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-4 py-2 text-xs font-semibold shadow-xl transition hover:-translate-y-0.5 hover:border-[color:var(--gold)] hover:text-[color:var(--gold)] disabled:opacity-60"
+              >
+                <Save className="h-3.5 w-3.5" /> {savingPayment ? "Saving…" : "Save Payment Numbers"}
+              </button>
+            </div>
+          </div>
+        )}
+
 
         {/* Security */}
         <form onSubmit={changePassword} className="space-y-5 rounded-lg border border-border bg-card p-6 shadow-xl">
