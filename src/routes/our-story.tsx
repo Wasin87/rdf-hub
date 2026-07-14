@@ -37,10 +37,7 @@ function OurStoryPage() {
       <section className="relative overflow-hidden border-b border-border bg-foreground py-24 text-background md:py-32">
         <div className="absolute inset-0 opacity-20 gold-gradient" aria-hidden />
         <div className="container-luxury relative text-center">
-          <motion.span initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="text-[11px] track-luxury text-[color:var(--gold-soft)]">
-            The Maison — Est. 2022
-          </motion.span>
-          <motion.h1 initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="mt-4 font-display text-5xl leading-tight md:text-7xl">
+          <motion.h1 initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="font-display text-5xl leading-tight md:text-7xl">
             <span className="gold-text">Our Story</span>
           </motion.h1>
           <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-background/75 md:text-lg">
@@ -51,19 +48,16 @@ function OurStoryPage() {
 
       {/* Chapter 1 — Origin */}
       <section className="container-luxury py-20 md:py-28">
-        <div className="grid gap-12 md:grid-cols-2 md:items-center">
-          <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
-            <span className="text-[11px] track-luxury text-[color:var(--gold)]">Chapter I — The Origin</span>
-            <h2 className="mt-3 font-display text-3xl md:text-4xl">A House Born of Obsession</h2>
-            <p className="mt-5 leading-relaxed text-muted-foreground">
-              FRAG AVENUE began with a single bottle of Creed Aventus, a private collection that quietly grew into hundreds, and an unshakable conviction: the most exquisite fragrances in the world should not be locked behind impossible price tags or unreachable borders.
-            </p>
-            <p className="mt-4 leading-relaxed text-muted-foreground">
-              In a country where a single 100ml bottle of niche perfume can cost more than a month's rent, we saw an entire generation of scent-lovers priced out of the art form they adored. So we built the maison we ourselves had always wanted — one that let you experience Dior, Tom Ford, Creed, Parfums de Marly and Lattafa on your skin, at your terms.
-            </p>
-          </motion.div>
-          <motion.div initial={{ opacity: 0, scale: 0.96 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} className="aspect-[4/3] rounded-sm border border-[color:var(--gold)]/20 gold-gradient shadow-card" />
-        </div>
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mx-auto max-w-3xl text-center">
+          <span className="text-[11px] track-luxury text-[color:var(--gold)]">Chapter I — The Origin</span>
+          <h2 className="mt-3 font-display text-3xl md:text-4xl">A House Born of Obsession</h2>
+          <p className="mt-5 leading-relaxed text-muted-foreground">
+            FRAG AVENUE began with a single bottle of Creed Aventus, a private collection that quietly grew into hundreds, and an unshakable conviction: the most exquisite fragrances in the world should not be locked behind impossible price tags or unreachable borders.
+          </p>
+          <p className="mt-4 leading-relaxed text-muted-foreground">
+            In a country where a single 100ml bottle of niche perfume can cost more than a month's rent, we saw an entire generation of scent-lovers priced out of the art form they adored. So we built the maison we ourselves had always wanted — one that let you experience Dior, Tom Ford, Creed, Parfums de Marly and Lattafa on your skin, at your terms.
+          </p>
+        </motion.div>
       </section>
 
       {/* Mission */}
