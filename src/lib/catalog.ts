@@ -261,7 +261,30 @@ const ASSET_MAP: Record<string, string> = {
   "/src/assets/hero-3.jpg": hero3,
 };
 
+// Legacy Vite-hashed asset URLs (e.g. "/assets/perfume-1-B7GN7VfJ.jpg") persisted
+// in old order_items rows point to stale build hashes and 404. Map by base name
+// back to the currently bundled asset so historical orders still render.
+const LEGACY_ASSET_MAP: Record<string, string> = {
+  "perfume-1": perfume1,
+  "perfume-2": perfume2,
+  "perfume-3": perfume3,
+  "perfume-4": perfume4,
+  "hero-1": hero1,
+  "hero-2": hero2,
+  "hero-3": hero3,
+};
+
+function resolveLegacyBundledAsset(url: string): string | null {
+  const m = url.match(/^\/assets\/(perfume-\d+|hero-\d+)(?:-[A-Za-z0-9_-]+)?\.(?:jpe?g|png|webp)$/i);
+  if (!m) return null;
+  return LEGACY_ASSET_MAP[m[1].toLowerCase()] ?? null;
+}
+
 export function resolveImage(url: string | null | undefined): string {
   if (!url) return perfume1;
-  return ASSET_MAP[url] ?? normalizeStorageImageUrl(url);
+  if (ASSET_MAP[url]) return ASSET_MAP[url];
+  const legacy = resolveLegacyBundledAsset(url);
+  if (legacy) return legacy;
+  return normalizeStorageImageUrl(url);
 }
+
