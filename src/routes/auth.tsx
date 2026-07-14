@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { z } from "zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -28,13 +28,15 @@ export const Route = createFileRoute("/auth")({
 
 function AuthPage() {
   const search = Route.useSearch();
-  const navigate = useNavigate();
+  
   const [mode, setMode] = useState<"login" | "register">(search.mode ?? "login");
   const [submitting, setSubmitting] = useState(false);
 
   const form = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(mode === "login" ? loginSchema : registerSchema) as never,
   });
+
+  const isSafeRelative = (p?: string) => !!p && p.startsWith("/") && !p.startsWith("//");
 
   const resolvePostAuthDest = async (): Promise<string> => {
     const { data: u } = await supabase.auth.getUser();
@@ -44,9 +46,14 @@ function AuthPage() {
       supabase.from("profiles").select("must_change_password").eq("id", u.user.id).maybeSingle(),
     ]);
     if (profileRes.data?.must_change_password) return "/reset-password";
+    if (isSafeRelative(search.redirect)) return search.redirect!;
     const isAdmin = (rolesRes.data ?? []).some((r) => r.role === "admin");
     if (isAdmin) return "/admin";
-    return search.redirect ?? "/dashboard";
+    return "/dashboard";
+  };
+
+  const goTo = (dest: string) => {
+    window.location.href = dest;
   };
 
   const onSubmit = form.handleSubmit(async (data) => {
@@ -64,7 +71,7 @@ function AuthPage() {
         if (error) throw error;
         toast.success("Account created");
       }
-      navigate({ to: await resolvePostAuthDest() });
+      goTo(await resolvePostAuthDest());
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : "Something went wrong";
       toast.error(msg);
@@ -79,7 +86,7 @@ function AuthPage() {
       const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
       if (result.error) throw result.error;
       if (result.redirected) return;
-      navigate({ to: await resolvePostAuthDest() });
+      goTo(await resolvePostAuthDest());
     } catch (e: unknown) {
       toast.error(e instanceof Error ? e.message : "Google sign-in failed");
     } finally { setSubmitting(false); }
