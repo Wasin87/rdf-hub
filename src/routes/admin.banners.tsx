@@ -190,25 +190,37 @@ function AdminBanners() {
         </div>
       )}
 
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {(q.data ?? []).map((b) => (
-          <div key={b.id} className="overflow-hidden rounded-sm border border-border bg-card">
-            <div className="relative aspect-[16/9] bg-secondary">
+          <div key={b.id} className="group overflow-hidden rounded-lg border border-border bg-card p-2 shadow-xl transition hover:-translate-y-0.5 hover:border-[color:var(--gold)]/40 hover:shadow-2xl">
+            <div className="relative aspect-[16/10] overflow-hidden rounded-md bg-secondary">
               <SafeImage
                 src={b.image_url}
                 alt={b.title}
                 wrapperClassName="h-full w-full"
                 className="h-full w-full object-cover"
               />
+              <span className={`absolute left-2 top-2 rounded-md border px-2 py-0.5 text-[9px] track-luxury backdrop-blur-sm ${b.is_active ? "border-[color:var(--gold)]/60 bg-black/50 text-[color:var(--gold)]" : "border-white/20 bg-black/50 text-white/80"}`}>
+                {b.is_active ? "Active" : "Inactive"}
+              </span>
             </div>
-            <div className="p-4">
-              <div className="font-display text-lg">{b.title}</div>
-              {b.subtitle && <p className="text-xs text-muted-foreground">{b.subtitle}</p>}
+            <div className="px-2 pb-2 pt-3">
+              <div className="truncate font-display text-base">{b.title}</div>
+              {b.subtitle && <p className="mt-0.5 line-clamp-1 text-[11px] text-muted-foreground">{b.subtitle}</p>}
               <div className="mt-3 flex items-center justify-between gap-2">
-                <button onClick={() => toggle(b)} className={`rounded-sm border px-2 py-1 text-[10px] track-luxury ${b.is_active ? "border-[color:var(--gold)] text-[color:var(--gold)]" : "border-border text-muted-foreground"}`}>
-                  {b.is_active ? "Active" : "Inactive"}
+                <button
+                  onClick={() => toggle(b)}
+                  className={`inline-flex items-center rounded-lg border px-3 py-1.5 text-[10px] track-luxury shadow-xl transition hover:-translate-y-0.5 ${b.is_active ? "border-[color:var(--gold)]/60 bg-[color:var(--gold)]/10 text-[color:var(--gold)]" : "border-border bg-background text-muted-foreground hover:text-foreground"}`}
+                >
+                  {b.is_active ? "Deactivate" : "Activate"}
                 </button>
-                <button onClick={() => remove(b.id)} className="text-muted-foreground hover:text-destructive"><Trash2 className="h-4 w-4" /></button>
+                <button
+                  onClick={() => remove(b.id)}
+                  className="inline-flex items-center gap-1 rounded-lg border border-border bg-background px-2.5 py-1.5 text-[10px] track-luxury text-muted-foreground shadow-xl transition hover:-translate-y-0.5 hover:border-destructive/50 hover:text-destructive"
+                  title="Delete banner"
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                </button>
               </div>
             </div>
           </div>
