@@ -137,7 +137,18 @@ function ProfilePage() {
               </span>
             </div>
             <div className="text-center sm:text-left">
-              <div className="font-display text-xl">{fullName || "Your name"}</div>
+              <div className="flex flex-wrap items-center justify-center gap-2 sm:justify-start">
+                <div className="font-display text-xl">{fullName || "Your name"}</div>
+                {isAdmin ? (
+                  <span className="inline-flex items-center gap-1 rounded-full border border-[color:var(--gold)]/50 bg-[color:var(--gold)]/10 px-2 py-0.5 text-[10px] font-semibold track-luxury text-[color:var(--gold)]">
+                    <Shield className="h-3 w-3" /> Admin
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1 rounded-full border border-border bg-background px-2 py-0.5 text-[10px] font-semibold track-luxury text-muted-foreground">
+                    <UserIcon className="h-3 w-3" /> Customer
+                  </span>
+                )}
+              </div>
               <div className="mt-1 flex flex-wrap justify-center gap-2 text-xs text-muted-foreground sm:justify-start">
                 <span className="inline-flex items-center gap-1 rounded-lg border border-border bg-background px-2.5 py-1 shadow-xl"><Mail className="h-3 w-3" /> {user?.email}</span>
                 {profileQ.data?.phone && (
