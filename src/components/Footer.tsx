@@ -42,7 +42,8 @@ export function Footer() {
               <li><a href="#" className="hover:text-[color:var(--gold)]">Terms</a></li>
             </ul>
           </div>
-          <div>
+          <div className="col-span-2 lg:col-span-1">
+
             <h4 className="mb-4 text-[11px] track-luxury text-[color:var(--gold)]">Stay Connected</h4>
             <p className="mb-3 text-sm text-white/75">Receive private invitations and new releases.</p>
             <form className="flex gap-2" onSubmit={(e) => e.preventDefault()}>
