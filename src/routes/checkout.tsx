@@ -18,15 +18,10 @@ export const Route = createFileRoute("/checkout")({
   component: CheckoutPage,
 });
 
-const PAYMENT_NUMBER = "01774178772";
+const DEFAULT_PAYMENT_NUMBER = "Not set";
 
-const PAYMENT_METHODS = [
-  { id: "cod", label: "Cash on Delivery", icon: Truck, description: "Pay when your fragrance arrives." },
-  { id: "bkash", label: "bKash", icon: Smartphone, description: `Send Money to ${PAYMENT_NUMBER}` },
-  { id: "nagad", label: "Nagad", icon: Smartphone, description: `Send Money to ${PAYMENT_NUMBER}` },
-  { id: "rocket", label: "Rocket", icon: Smartphone, description: `Send Money to ${PAYMENT_NUMBER}` },
-] as const;
-type PaymentMethod = typeof PAYMENT_METHODS[number]["id"];
+type PaymentMethod = "cod" | "bkash" | "nagad" | "rocket";
+
 
 const baseSchema = z.object({
   full_name: z.string().trim().min(2).max(80),
