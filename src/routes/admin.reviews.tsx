@@ -38,10 +38,10 @@ function AdminReviews() {
   };
 
   return (
-    <div className="p-6 lg:p-10">
+    <div className="p-4 sm:p-6 lg:p-10">
       <header className="mb-6">
         <p className="text-[11px] track-luxury text-[color:var(--gold)]">Community</p>
-        <h1 className="mt-1 font-display text-3xl">Reviews</h1>
+        <h1 className="mt-1 font-display text-2xl sm:text-3xl">Reviews ({(q.data ?? []).length})</h1>
       </header>
       <div className="space-y-3">
         {(q.data ?? []).map((r) => (
