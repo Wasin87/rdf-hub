@@ -66,11 +66,11 @@ function AdminUsers() {
                   <td className="p-3 text-muted-foreground">{new Date(u.created_at).toLocaleDateString()}</td>
                   <td className="p-3">
                     <div className="flex gap-1">
-                      {u.roles.map((r) => <span key={r} className={`rounded-sm border px-2 py-0.5 text-[10px] track-luxury ${r === "admin" ? "border-[color:var(--gold)] bg-[color:var(--gold)]/10 text-[color:var(--gold)]" : "border-border text-muted-foreground"}`}>{r}</span>)}
+                      {u.roles.map((r) => <span key={r} className={`rounded-lg border px-2 py-0.5 shadow-xl text-[10px] track-luxury ${r === "admin" ? "border-[color:var(--gold)] bg-[color:var(--gold)]/10 text-[color:var(--gold)]" : "border-border text-muted-foreground"}`}>{r}</span>)}
                     </div>
                   </td>
                   <td className="p-3 text-right">
-                    <button onClick={() => toggleAdmin(u.id, isAdmin)} className="inline-flex items-center gap-1 rounded-sm border border-border px-3 py-1.5 text-[10px] track-luxury hover:border-[color:var(--gold)] hover:text-[color:var(--gold)]">
+                    <button onClick={() => toggleAdmin(u.id, isAdmin)} className="inline-flex items-center gap-1 rounded-lg border border-border bg-background px-3 py-1.5 shadow-xl text-[10px] track-luxury hover:border-[color:var(--gold)] hover:text-[color:var(--gold)]">
                       {isAdmin ? <><ShieldOff className="h-3 w-3" /> Revoke Admin</> : <><ShieldCheck className="h-3 w-3" /> Make Admin</>}
                     </button>
                   </td>

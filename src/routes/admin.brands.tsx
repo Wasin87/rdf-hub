@@ -56,11 +56,11 @@ function AdminBrands() {
       <div className="mb-6 flex flex-wrap items-end gap-3 rounded-lg border border-[color:var(--gold)]/30 bg-card shadow-xl p-4">
         <div className="flex-1 min-w-48">
           <label className="mb-1 block text-[10px] track-luxury text-muted-foreground">Name</label>
-          <input value={name} onChange={(e) => setName(e.target.value)} className="h-10 w-full rounded-sm border border-border bg-background px-3 text-sm" />
+          <input value={name} onChange={(e) => setName(e.target.value)} className="h-10 w-full rounded-lg border border-border bg-background shadow-xl px-3 text-sm" />
         </div>
         <div className="flex-1 min-w-48">
           <label className="mb-1 block text-[10px] track-luxury text-muted-foreground">Description (optional)</label>
-          <input value={description} onChange={(e) => setDescription(e.target.value)} className="h-10 w-full rounded-sm border border-border bg-background px-3 text-sm" />
+          <input value={description} onChange={(e) => setDescription(e.target.value)} className="h-10 w-full rounded-lg border border-border bg-background shadow-xl px-3 text-sm" />
         </div>
         <button onClick={add} className="btn-liquid h-10"><Plus className="h-3.5 w-3.5" /> Add</button>
       </div>

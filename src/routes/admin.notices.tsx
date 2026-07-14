@@ -112,7 +112,7 @@ function AdminNotices() {
                 {n.link_url && <a href={n.link_url} className="text-[10px] text-[color:var(--gold)]">{n.link_url}</a>}
               </div>
               <div className="text-[10px] track-luxury text-muted-foreground">#{n.order_index}</div>
-              <button onClick={() => toggle(n)} className={`rounded-sm border px-3 py-1 text-[10px] track-luxury ${n.is_active ? "border-[color:var(--gold)] bg-[color:var(--gold)]/10 text-[color:var(--gold)]" : "border-border text-muted-foreground"}`}>
+              <button onClick={() => toggle(n)} className={`rounded-lg border px-3 py-1 shadow-xl text-[10px] track-luxury ${n.is_active ? "border-[color:var(--gold)] bg-[color:var(--gold)]/10 text-[color:var(--gold)]" : "border-border text-muted-foreground"}`}>
                 {n.is_active ? "Active" : "Inactive"}
               </button>
               <button onClick={() => setEditing(n.id)} className="text-muted-foreground hover:text-[color:var(--gold)]"><Edit3 className="h-4 w-4" /></button>
@@ -149,7 +149,7 @@ function Input({ label, value, onChange, type = "text" }: { label: string; value
     <div>
       <label className="mb-1 block text-[10px] track-luxury text-muted-foreground">{label}</label>
       <input type={type} value={value} onChange={(e) => onChange(e.target.value)}
-        className="h-10 w-full rounded-sm border border-border bg-background px-3 text-sm focus:border-[color:var(--gold)] focus:outline-none" />
+        className="h-10 w-full rounded-lg border border-border bg-background shadow-xl px-3 text-sm focus:border-[color:var(--gold)] focus:outline-none" />
     </div>
   );
 }
