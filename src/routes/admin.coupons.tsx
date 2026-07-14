@@ -396,7 +396,7 @@ function AdminCoupons() {
           <form
             onClick={(e) => e.stopPropagation()}
             onSubmit={submit}
-            className="w-full max-w-lg overflow-hidden rounded-xl border border-border bg-card shadow-2xl"
+            className="w-full max-w-lg overflow-hidden rounded-lg border border-border bg-card shadow-xl"
           >
             <div className="flex items-center justify-between border-b border-border p-5">
               <div className="flex items-center gap-2">
@@ -536,7 +536,7 @@ function AdminCoupons() {
 
       {deleting && (
         <div className="fixed inset-0 z-50 grid place-items-center bg-background/70 p-4 backdrop-blur-sm" onClick={() => setDeleting(null)}>
-          <div onClick={(e) => e.stopPropagation()} className="w-full max-w-sm rounded-xl border border-border bg-card p-6 shadow-2xl">
+          <div onClick={(e) => e.stopPropagation()} className="w-full max-w-sm rounded-lg border border-border bg-card p-6 shadow-xl">
             <div className="flex items-center gap-3">
               <div className="grid h-10 w-10 place-items-center rounded-full bg-destructive/10 text-destructive">
                 <Trash2 className="h-4 w-4" />

@@ -239,9 +239,9 @@ function AdminBanners() {
               <div className="mt-3 flex items-center justify-between gap-2">
                 <button
                   onClick={() => toggle(b)}
-                  className={`inline-flex items-center gap-1 rounded-lg border px-2.5 py-1.5 text-[10px] track-luxury shadow-xl transition hover:-translate-y-0.5 ${b.is_active ? "border-[color:var(--gold)] bg-[color:var(--gold)] text-[color:var(--gold-foreground)]" : "border-border bg-background text-muted-foreground hover:text-foreground"}`}
+                  className={`inline-flex items-center gap-1 rounded-lg border px-2.5 py-1.5 text-[10px] track-luxury shadow-xl transition hover:-translate-y-0.5 ${b.is_active ? "border-destructive/40 bg-background text-destructive hover:bg-destructive/10" : "border-[color:var(--gold)] bg-[color:var(--gold)] text-[color:var(--gold-foreground)]"}`}
                 >
-                  {b.is_active ? <><CheckCircle2 className="h-3 w-3" /> Active</> : <><XCircle className="h-3 w-3" /> Inactive</>}
+                  {b.is_active ? <><XCircle className="h-3 w-3" /> Deactivate</> : <><CheckCircle2 className="h-3 w-3" /> Activate</>}
                 </button>
                 <div className="flex items-center gap-1.5">
                   <button

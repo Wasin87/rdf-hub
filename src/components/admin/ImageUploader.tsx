@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from "react";
-import { GripVertical, Trash2, UploadCloud, Star, StarOff } from "lucide-react";
+import { Trash2, UploadCloud, Star, StarOff } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { appStorageImageUrl, IMAGE_BUCKETS, isAcceptedImage, validateImageUrl } from "@/lib/catalog";
@@ -137,7 +137,7 @@ export function ImageUploader({
                   >
                     {isPrimary ? <Star className="h-3.5 w-3.5 fill-current" /> : <StarOff className="h-3.5 w-3.5" />}
                   </button>
-                  <span className="rounded-lg border border-white/20 bg-black/70 p-1.5 text-white shadow-lg backdrop-blur-sm"><GripVertical className="h-3.5 w-3.5" /></span>
+                  <span className="flex-1" />
                   <button
                     type="button"
                     onClick={() => removeAt(i)}
