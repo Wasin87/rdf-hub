@@ -67,8 +67,9 @@ function ProfilePage() {
   };
 
   const clearPaymentField = async (field: "bkash" | "nagad" | "rocket") => {
-    const col = `${field}_number` as const;
-    const { error } = await supabase.from("payment_settings").update({ [col]: null, updated_by: user?.id ?? null }).eq("id", "global");
+    const patch = field === "bkash" ? { bkash_number: null } : field === "nagad" ? { nagad_number: null } : { rocket_number: null };
+    const { error } = await supabase.from("payment_settings").update({ ...patch, updated_by: user?.id ?? null }).eq("id", "global");
+
     if (error) return toast.error(error.message);
     setPayment((p) => ({ ...p, [field]: "" }));
     toast.success(`${field} number removed`);
