@@ -52,6 +52,28 @@ function CheckoutPage() {
   const total = subtotal + shipping;
   const isMobilePayment = method !== "cod";
 
+  const paymentSettingsQ = useQuery({
+    queryKey: ["payment_settings"],
+    queryFn: async () => (await supabase.from("payment_settings").select("*").eq("id", "global").maybeSingle()).data,
+  });
+
+  const paymentNumberFor = (m: PaymentMethod): string => {
+    const s = paymentSettingsQ.data;
+    if (m === "bkash") return s?.bkash_number || DEFAULT_PAYMENT_NUMBER;
+    if (m === "nagad") return s?.nagad_number || DEFAULT_PAYMENT_NUMBER;
+    if (m === "rocket") return s?.rocket_number || DEFAULT_PAYMENT_NUMBER;
+    return "";
+  };
+
+  const PAYMENT_METHODS: { id: PaymentMethod; label: string; icon: typeof Truck; description: string }[] = [
+    { id: "cod", label: "Cash on Delivery", icon: Truck, description: "Pay when your fragrance arrives." },
+    { id: "bkash", label: "bKash", icon: Smartphone, description: `Send Money to ${paymentNumberFor("bkash")}` },
+    { id: "nagad", label: "Nagad", icon: Smartphone, description: `Send Money to ${paymentNumberFor("nagad")}` },
+    { id: "rocket", label: "Rocket", icon: Smartphone, description: `Send Money to ${paymentNumberFor("rocket")}` },
+  ];
+  const activePaymentNumber = isMobilePayment ? paymentNumberFor(method) : "";
+
+
   const form = useForm<z.infer<typeof baseSchema>>({
     resolver: zodResolver(baseSchema),
     defaultValues: { country: "Bangladesh" },
