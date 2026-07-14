@@ -113,6 +113,18 @@ function AdminCoupons() {
     return list;
   }, [q.data, search, statusFilter]);
 
+  const stats = useMemo(() => {
+    const list = q.data ?? [];
+    return {
+      total: list.length,
+      active: list.filter((c) => c.is_active && !isExpired(c) && !isScheduled(c)).length,
+      expired: list.filter((c) => isExpired(c)).length,
+      used: list.reduce((s, c) => s + (c.usage_count ?? 0), 0),
+    };
+  }, [q.data]);
+
+
+
   const openNew = () => { setForm(emptyForm); setShowForm(true); };
   const openEdit = (c: Coupon) => {
     setForm({
