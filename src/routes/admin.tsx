@@ -36,15 +36,13 @@ const items = [
 
 function AdminLayout() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const navigate = useNavigate();
   return (
     <div className="flex h-[calc(100dvh-100px)] flex-col">
       {/* Fixed horizontal top nav */}
       <div className="sticky top-0 z-30 border-b border-[color:var(--gold)]/15 bg-section/95 backdrop-blur supports-[backdrop-filter]:bg-section/80">
-        <div className="flex items-center gap-3 px-3 py-3 sm:px-4 lg:px-6">
-          <div className="hidden shrink-0 sm:block"><Logo /></div>
-          <nav className="min-w-0 flex-1">
-            <div className="flex items-center gap-2 overflow-x-auto scrollbar-none [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden rounded-lg border border-border bg-background/60 p-1.5 shadow-xl">
+        <div className="px-3 py-3 sm:px-4 lg:px-6">
+          <nav className="rounded-lg border border-border bg-background/60 p-1.5 shadow-xl">
+            <div className="flex items-center gap-2 overflow-x-auto scrollbar-none [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {items.map((it) => {
                 const active = it.exact ? pathname === it.to : pathname.startsWith(it.to);
                 const Icon = it.icon;
@@ -60,17 +58,6 @@ function AdminLayout() {
               })}
             </div>
           </nav>
-          <div className="hidden shrink-0 items-center gap-2 md:flex">
-            <Link to="/" className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-3 py-2 text-xs text-muted-foreground shadow-xl transition hover:border-[color:var(--gold)]/40 hover:text-foreground">
-              <HomeIcon className="h-3.5 w-3.5" /> Storefront
-            </Link>
-            <button
-              onClick={async () => { await supabase.auth.signOut(); navigate({ to: "/auth", search: { mode: "login" } as never, replace: true }); }}
-              className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-3 py-2 text-xs text-muted-foreground shadow-xl transition hover:border-destructive hover:text-destructive"
-            >
-              <LogOut className="h-3.5 w-3.5" /> Sign Out
-            </button>
-          </div>
         </div>
       </div>
 
