@@ -127,18 +127,16 @@ function ProductPage() {
             className="relative block overflow-hidden rounded-sm bg-secondary"
             aria-label="Open image"
           >
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={gallery[active]}
-                className="aspect-[4/5] w-full object-cover"
-                initial={{ opacity: 0, scale: 1.02 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.4 }}
-              >
-                <SafeImage src={gallery[active]} alt={`${product.brand?.name ?? ""} ${product.name}`} wrapperClassName="h-full w-full" className="h-full w-full object-cover" />
-              </motion.div>
-            </AnimatePresence>
+            <motion.div
+              key={gallery[active]}
+              className="aspect-[4/5] w-full"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              <SafeImage src={gallery[active]} alt={`${product.brand?.name ?? ""} ${product.name}`} wrapperClassName="h-full w-full" className="h-full w-full object-cover" />
+            </motion.div>
+
             {product.discount_percent > 0 && (
               <span className="absolute left-4 top-4 rounded-sm bg-[color:var(--gold)] px-2 py-1 text-[10px] track-luxury text-[color:var(--gold-foreground)]">
                 −{product.discount_percent}%

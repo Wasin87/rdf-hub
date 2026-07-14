@@ -6,9 +6,11 @@ export function Footer() {
   return (
     <footer className="mt-24 border-t border-[color:var(--gold)]/30 bg-black text-white">
       <div className="container-luxury py-16">
-        <div className="grid grid-cols-1 gap-10 sm:gap-12 lg:grid-cols-4">
-          <div className="lg:col-span-1 [&_.font-display]:!text-white [&_.uppercase]:!text-white/80">
+        <div className="grid grid-cols-2 gap-8 sm:gap-10 lg:grid-cols-4">
+          <div className="col-span-2 lg:col-span-1 [&_.font-display]:!text-white [&_.uppercase]:!text-white/80">
+
             <Logo />
+
             <p className="mt-5 max-w-xs text-sm leading-relaxed text-white/70">
               Curated luxury fragrance decants. Authentic, beautifully presented, delivered with discretion.
             </p>
@@ -40,7 +42,8 @@ export function Footer() {
               <li><a href="#" className="hover:text-[color:var(--gold)]">Terms</a></li>
             </ul>
           </div>
-          <div>
+          <div className="col-span-2 lg:col-span-1">
+
             <h4 className="mb-4 text-[11px] track-luxury text-[color:var(--gold)]">Stay Connected</h4>
             <p className="mb-3 text-sm text-white/75">Receive private invitations and new releases.</p>
             <form className="flex gap-2" onSubmit={(e) => e.preventDefault()}>
