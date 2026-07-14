@@ -5,10 +5,12 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { Camera, Mail, Phone, User as UserIcon, Lock, Save, ShieldCheck } from "lucide-react";
+import { Camera, Mail, Phone, User as UserIcon, Lock, Save, ShieldCheck, Shield, Smartphone, Trash2 } from "lucide-react";
 import { DashboardShell } from "@/components/DashboardShell";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useRole } from "@/hooks/useRole";
+
 
 export const Route = createFileRoute("/_authenticated/profile")({
   head: () => ({ meta: [{ title: "My Profile — FRAG AVENUE" }, { name: "description", content: "Manage your personal information, avatar and password." }] }),
