@@ -186,7 +186,7 @@ export function Navbar() {
         {/* RIGHT: icons */}
         <div className="flex items-center justify-end gap-1.5 sm:gap-2">
           <button onClick={() => setSearchOpen(true)} aria-label="Open search" className={iconBtn}>
-            <Search className="h-[18px] w-[18px]" />
+            <FaSearchengin className="h-5 w-5" />
           </button>
           <div className="hidden sm:block"><WishlistSheet /></div>
           <CartSheet />
