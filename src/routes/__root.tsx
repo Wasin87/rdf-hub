@@ -62,7 +62,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:title", content: "FRAG AVENUE — Luxury Perfume Decants" },
       { name: "twitter:description", content: "Authentic luxury perfume decants from Dior, Chanel, Tom Ford, Creed, Lattafa & more." },
     ],
-    links: [{ rel: "stylesheet", href: appCss }],
+    links: [
+      { rel: "stylesheet", href: appCss },
+      { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
+      { rel: "icon", type: "image/png", sizes: "32x32", href: "/favicon-32x32.png" },
+      { rel: "apple-touch-icon", sizes: "180x180", href: "/favicon-180x180.png" },
+    ],
   }),
   shellComponent: RootShell,
   component: RootComponent,
