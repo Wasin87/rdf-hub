@@ -29,7 +29,7 @@ export function CartSheet() {
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <button aria-label="Cart" className="relative grid h-9 w-9 place-items-center rounded-full text-foreground transition-all duration-300 hover:scale-110 hover:text-[color:var(--gold)]">
-          <ShoppingBag className="h-[18px] w-[18px]" />
+          <BiCartDownload className="h-[19px] w-[19px]" />
           <AnimatePresence>
             {count > 0 && (
               <motion.span
