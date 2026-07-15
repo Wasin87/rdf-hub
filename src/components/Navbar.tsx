@@ -55,7 +55,7 @@ export function Navbar() {
 
   return (
     <header className={`sticky top-0 z-40 transition-all duration-500 ${scrolled ? "glass-nav" : "bg-background"}`}>
-      <div className="container-luxury grid h-20 grid-cols-[auto_1fr_auto] items-center gap-4 lg:h-28 lg:grid-cols-3">
+      <div className="container-luxury grid h-16 grid-cols-[auto_1fr_auto] items-center gap-4 lg:h-20 lg:grid-cols-3">
         {/* LEFT: nav (desktop) / menu (mobile) */}
         <div className="flex items-center">
           <button onClick={() => setMobileOpen((o) => !o)} aria-label="Menu" className="grid h-9 w-9 place-items-center lg:hidden">
