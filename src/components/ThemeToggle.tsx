@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { Moon, Sun } from "lucide-react";
+import { Sun } from "lucide-react";
+import { MdOutlineDarkMode } from "react-icons/md";
 import { useTheme } from "@/stores/theme";
 
 export function ThemeToggle() {
@@ -17,7 +18,7 @@ export function ThemeToggle() {
           </motion.span>
         ) : (
           <motion.span key="moon" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.3 }}>
-            <Moon className="h-4 w-4" />
+            <MdOutlineDarkMode className="h-4 w-4" />
           </motion.span>
         )}
       </AnimatePresence>
