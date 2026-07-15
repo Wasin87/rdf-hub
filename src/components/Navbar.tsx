@@ -38,6 +38,7 @@ export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [mobileGroupOpen, setMobileGroupOpen] = useState<Record<string, boolean>>({});
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { user } = useAuth();
   const { isAdmin } = useRole();
@@ -58,9 +59,82 @@ export function Navbar() {
       <div className="container-luxury grid h-16 grid-cols-[auto_1fr_auto] items-center gap-4 lg:h-20 lg:grid-cols-3">
         {/* LEFT: nav (desktop) / menu (mobile) */}
         <div className="flex items-center">
-          <button onClick={() => setMobileOpen((o) => !o)} aria-label="Menu" className="grid h-9 w-9 place-items-center lg:hidden">
-            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </button>
+          <div className="relative lg:hidden">
+            <button onClick={() => setMobileOpen((o) => !o)} aria-label="Menu" aria-expanded={mobileOpen} className="grid h-9 w-9 place-items-center">
+              {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
+            <AnimatePresence>
+              {mobileOpen && (
+                <>
+                  <div className="fixed inset-0 z-40" onClick={() => setMobileOpen(false)} aria-hidden />
+                  <motion.div
+                    initial={{ opacity: 0, y: -8, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -8, scale: 0.98 }}
+                    transition={{ duration: 0.18 }}
+                    className="absolute left-0 top-[calc(100%+10px)] z-50 w-[86vw] max-w-[340px] overflow-hidden rounded-lg border border-[color:var(--gold)]/25 bg-popover shadow-2xl"
+                  >
+                    <div className="max-h-[70vh] overflow-y-auto overscroll-contain p-3">
+                      <button onClick={() => { setMobileOpen(false); setSearchOpen(true); }} className="mb-3 flex h-10 w-full items-center gap-2 rounded-md border border-border bg-card px-3 text-xs text-muted-foreground hover:border-[color:var(--gold)]/40">
+                        <Search className="h-3.5 w-3.5" /> Search fragrances...
+                      </button>
+                      <div className="flex flex-col">
+                        {navItems.map((item) => {
+                          if (item.dropdown) {
+                            const open = !!mobileGroupOpen[item.label];
+                            return (
+                              <div key={item.label} className="border-b border-border/50 last:border-b-0">
+                                <button
+                                  onClick={() => setMobileGroupOpen((s) => ({ ...s, [item.label]: !s[item.label] }))}
+                                  className="flex w-full items-center justify-between px-2 py-2.5 text-sm track-luxury text-foreground hover:text-[color:var(--gold)]"
+                                  aria-expanded={open}
+                                >
+                                  <span>{item.label}</span>
+                                  <ChevronDown className={`h-3.5 w-3.5 transition-transform ${open ? "rotate-180 text-[color:var(--gold)]" : ""}`} />
+                                </button>
+                                <AnimatePresence initial={false}>
+                                  {open && (
+                                    <motion.div
+                                      initial={{ height: 0, opacity: 0 }}
+                                      animate={{ height: "auto", opacity: 1 }}
+                                      exit={{ height: 0, opacity: 0 }}
+                                      transition={{ duration: 0.2 }}
+                                      className="overflow-hidden"
+                                    >
+                                      <div className="pb-2 pl-3">
+                                        {item.dropdown.map((g) => (
+                                          <div key={g.heading} className="mb-1.5 last:mb-0">
+                                            {g.heading && <div className="px-2 pb-1 pt-1 text-[9px] track-luxury text-[color:var(--gold)]">{g.heading}</div>}
+                                            {g.items.map((d) => (
+                                              <Link key={d.label} to={d.to as never} search={d.search as never} className="block rounded-md px-2 py-1.5 text-xs text-muted-foreground hover:bg-secondary hover:text-[color:var(--gold)]">
+                                                {d.label}
+                                              </Link>
+                                            ))}
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </motion.div>
+                                  )}
+                                </AnimatePresence>
+                              </div>
+                            );
+                          }
+                          return (
+                            <Link key={item.label} to={item.to as never} className="border-b border-border/50 px-2 py-2.5 text-sm track-luxury text-foreground last:border-b-0 hover:text-[color:var(--gold)]">
+                              {item.label}
+                            </Link>
+                          );
+                        })}
+                      </div>
+                      {!user && (
+                        <Link to="/auth" search={{ mode: "login" } as never} className="mt-3 block rounded-md bg-[color:var(--gold)] py-2.5 text-center text-xs track-luxury text-[color:var(--gold-foreground)]">Login</Link>
+                      )}
+                    </div>
+                  </motion.div>
+                </>
+              )}
+            </AnimatePresence>
+          </div>
           <nav className="hidden items-center gap-7 lg:flex whitespace-nowrap">
             {navItems.map((item) => {
               const active = pathname === item.to && !item.dropdown;
@@ -158,35 +232,6 @@ export function Navbar() {
 
       <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
 
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
-            className="overflow-hidden border-t border-border bg-background lg:hidden"
-          >
-            <div className="container-luxury flex flex-col gap-1 py-5">
-              <button onClick={() => { setMobileOpen(false); setSearchOpen(true); }} className="mb-3 flex h-10 items-center gap-2 rounded-sm border border-border bg-card px-3 text-xs text-muted-foreground hover:border-[color:var(--gold)]/40">
-                <Search className="h-3.5 w-3.5" /> Search fragrances...
-              </button>
-              {navItems.map((item) => (
-                <div key={item.label}>
-                  <Link to={item.to as never} className="block py-2.5 text-sm track-luxury">{item.label}</Link>
-                  {item.dropdown && (
-                    <div className="ml-4 flex flex-col">
-                      {item.dropdown.flatMap((g) => g.items).map((d) => (
-                        <Link key={d.label} to={d.to as never} search={d.search as never} className="py-1.5 text-xs text-muted-foreground hover:text-[color:var(--gold)]">{d.label}</Link>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
-              {!user && (
-                <Link to="/auth" search={{ mode: "login" } as never} className="mt-3 rounded-sm bg-[color:var(--gold)] py-2.5 text-center text-xs track-luxury text-[color:var(--gold-foreground)]">Login</Link>
-              )}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </header>
   );
 }
