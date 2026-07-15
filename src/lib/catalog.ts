@@ -235,12 +235,12 @@ export async function fetchFeaturedReviews(): Promise<Review[]> {
   const { data, error } = await supabase
     .from("reviews_public")
     .select("id, author_name, rating, title, body, created_at")
-    .eq("rating", 5)
     .order("created_at", { ascending: false })
-    .limit(24);
+    .limit(30);
   if (error) throw error;
   return (data ?? []) as unknown as Review[];
 }
+
 
 // Resolve asset paths used in seed data to actual bundled URLs
 import perfume1 from "@/assets/perfume-1.jpg";
