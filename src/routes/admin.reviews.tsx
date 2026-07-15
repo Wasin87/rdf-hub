@@ -23,6 +23,13 @@ type Review = {
 
 type ProductLite = { id: string; name: string; image_url: string | null; slug: string | null };
 
+function normalizeReview(row: Review): Review {
+  return {
+    ...row,
+    images: Array.isArray(row.images) ? row.images : [],
+  };
+}
+
 export const Route = createFileRoute("/admin/reviews")({
   head: () => ({ meta: [{ title: "Reviews — Admin FRAG AVENUE" }] }),
   component: AdminReviews,
@@ -36,9 +43,9 @@ function AdminReviews() {
   const q = useQuery({
     queryKey: ["admin-reviews"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("reviews").select("*").order("created_at", { ascending: false });
+      const { data, error } = await supabase.rpc("admin_list_reviews");
       if (error) throw error;
-      return (data ?? []) as Review[];
+      return ((data ?? []) as Review[]).map(normalizeReview);
     },
   });
 
@@ -82,15 +89,19 @@ function AdminReviews() {
     };
   }, [q.data]);
 
-  const update = async (id: string, patch: Partial<Review>) => {
-    const { error } = await supabase.from("reviews").update(patch).eq("id", id);
+  const update = async (id: string, patch: Pick<Partial<Review>, "is_approved" | "is_featured">) => {
+    const { error } = await supabase.rpc("admin_set_review_state", {
+      _review_id: id,
+      _is_approved: patch.is_approved,
+      _is_featured: patch.is_featured,
+    });
     if (error) return toast.error(error.message);
     toast.success("Review updated");
     qc.invalidateQueries({ queryKey: ["admin-reviews"] });
   };
   const remove = async (id: string) => {
     if (!confirm("Delete this review permanently?")) return;
-    const { error } = await supabase.from("reviews").delete().eq("id", id);
+    const { error } = await supabase.rpc("admin_delete_review", { _review_id: id });
     if (error) return toast.error(error.message);
     toast.success("Review deleted");
     qc.invalidateQueries({ queryKey: ["admin-reviews"] });
