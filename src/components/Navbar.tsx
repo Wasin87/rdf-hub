@@ -205,7 +205,7 @@ export function Navbar() {
                   <div className="mt-1 text-[10px] track-luxury text-[color:var(--gold)]">View profile →</div>
                 </Link>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild><Link to="/dashboard"><LayoutDashboard className="mr-2 h-3.5 w-3.5" /> Dashboard</Link></DropdownMenuItem>
+                <DropdownMenuItem asChild><Link to="/dashboard"><LayoutDashboard className="mr-2 h-3.5 w-3.5" /> My Dashboard</Link></DropdownMenuItem>
                 {isAdmin && (
                   <DropdownMenuItem asChild>
                     <Link to="/admin" className="text-[color:var(--gold)]"><Shield className="mr-2 h-3.5 w-3.5" /> Admin Panel</Link>
