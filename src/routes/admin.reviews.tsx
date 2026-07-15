@@ -38,7 +38,7 @@ function AdminReviews() {
     queryFn: async () => {
       const { data, error } = await supabase.from("reviews").select("*").order("created_at", { ascending: false });
       if (error) throw error;
-      return (data ?? []) as Review[];
+      return ((data ?? []) as Review[]).map((r) => ({ ...r, images: Array.isArray(r.images) ? r.images : [] }));
     },
   });
 
