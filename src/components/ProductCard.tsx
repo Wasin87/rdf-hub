@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { Heart, ShoppingBag, ArrowRight } from "lucide-react";
+import { BiCartDownload } from "react-icons/bi";
 import { toast } from "sonner";
 import type { Product } from "@/lib/catalog";
 import { resolveImage } from "@/lib/catalog";
