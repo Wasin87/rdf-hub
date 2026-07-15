@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Heart, X } from "lucide-react";
+import { TbHeartPlus } from "react-icons/tb";
 import { motion, AnimatePresence } from "framer-motion";
 import { useWishlist } from "@/stores/wishlist";
 import { formatBDT, discountedPrice } from "@/lib/format";
