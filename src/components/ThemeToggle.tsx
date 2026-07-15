@@ -18,7 +18,7 @@ export function ThemeToggle() {
           </motion.span>
         ) : (
           <motion.span key="moon" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.3 }}>
-            <Moon className="h-4 w-4" />
+            <MdOutlineDarkMode className="h-4 w-4" />
           </motion.span>
         )}
       </AnimatePresence>

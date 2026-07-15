@@ -195,7 +195,7 @@ export function Navbar() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button aria-label="Account menu" className={iconBtn}>
-                  <UserIcon className="h-[18px] w-[18px]" />
+                  <TbUserHexagon className="h-[18px] w-[18px]" />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-60">
