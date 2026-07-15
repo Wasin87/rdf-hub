@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { Moon, Sun } from "lucide-react";
+import { Sun } from "lucide-react";
+import { MdOutlineDarkMode } from "react-icons/md";
 import { useTheme } from "@/stores/theme";
 
 export function ThemeToggle() {
