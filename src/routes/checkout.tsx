@@ -53,8 +53,19 @@ function CheckoutPage() {
   const isMobilePayment = method !== "cod";
 
   const paymentSettingsQ = useQuery({
-    queryKey: ["payment_settings"],
-    queryFn: async () => (await supabase.from("payment_settings").select("*").eq("id", "global").maybeSingle()).data,
+    queryKey: ["payment_numbers"],
+    queryFn: async () => {
+      const [b, n, r] = await Promise.all([
+        supabase.rpc("get_payment_number", { _method: "bkash" }),
+        supabase.rpc("get_payment_number", { _method: "nagad" }),
+        supabase.rpc("get_payment_number", { _method: "rocket" }),
+      ]);
+      return {
+        bkash_number: (b.data as string | null) ?? "",
+        nagad_number: (n.data as string | null) ?? "",
+        rocket_number: (r.data as string | null) ?? "",
+      };
+    },
   });
 
   const paymentNumberFor = (m: PaymentMethod): string => {
@@ -64,6 +75,8 @@ function CheckoutPage() {
     if (m === "rocket") return s?.rocket_number || DEFAULT_PAYMENT_NUMBER;
     return "";
   };
+
+
 
   const PAYMENT_METHODS: { id: PaymentMethod; label: string; icon: typeof Truck; description: string }[] = [
     { id: "cod", label: "Cash on Delivery", icon: Truck, description: "Pay when your fragrance arrives." },
