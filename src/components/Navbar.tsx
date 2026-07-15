@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ChevronDown, User as UserIcon, LogOut, Search, LayoutDashboard, Heart, ShoppingBag, Settings as SettingsIcon, Shield } from "lucide-react";
+import { FaSearchengin } from "react-icons/fa";
 import { Logo } from "./Logo";
 import { ThemeToggle } from "./ThemeToggle";
 import { SearchModal } from "./SearchModal";
