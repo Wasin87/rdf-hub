@@ -109,7 +109,7 @@ export function ReviewForm({ productId, productName, orderId, reviewId: reviewId
           images,
         });
         if (error) throw error;
-        toast.success("Review submitted", { description: "It will appear after admin approval." });
+        toast.success("Review posted", { description: "Thank you! Your review is now live." });
       }
       onSubmitted?.();
       onClose();
