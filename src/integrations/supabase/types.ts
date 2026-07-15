@@ -904,6 +904,7 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      get_payment_number: { Args: { _method: string }; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
