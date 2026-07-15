@@ -2,7 +2,9 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Heart, ShoppingBag, Sparkles, ShieldCheck, Truck, Star, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { Sparkles, ShieldCheck, Truck, Star, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { BiCartDownload } from "react-icons/bi";
+import { TbHeartPlus } from "react-icons/tb";
 import { toast } from "sonner";
 import {
   fetchProductBySlug,
