@@ -9,7 +9,7 @@ export function Footer() {
         <div className="grid grid-cols-2 gap-8 sm:gap-10 lg:grid-cols-4">
           <div className="col-span-2 lg:col-span-1 [&_.font-display]:!text-white [&_.uppercase]:!text-white/80">
 
-            <Logo />
+            <Logo compact />
 
             <p className="mt-5 max-w-xs text-sm leading-relaxed text-white/70">
               Curated luxury fragrance decants. Authentic, beautifully presented, delivered with discretion.

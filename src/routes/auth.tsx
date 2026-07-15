@@ -98,7 +98,7 @@ function AuthPage() {
         <Link to="/" className="mb-8 inline-flex items-center gap-2 text-[11px] track-luxury text-muted-foreground hover:text-[color:var(--gold)]">
           <ArrowLeft className="h-3.5 w-3.5" /> Back to home
         </Link>
-        <div className="mb-8 flex flex-col items-center"><Logo /></div>
+        <div className="mb-8 flex flex-col items-center"><Logo compact /></div>
 
         <div className="rounded-sm border border-[color:var(--gold)]/20 bg-card p-8 shadow-card">
           <h1 className="text-center font-display text-3xl"><span className="gold-text">{mode === "login" ? "Welcome Back" : "Join the Maison"}</span></h1>
