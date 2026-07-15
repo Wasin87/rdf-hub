@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { Heart, ShoppingBag, ArrowRight } from "lucide-react";
+import { ShoppingBag, ArrowRight } from "lucide-react";
 import { BiCartDownload } from "react-icons/bi";
+import { TbHeartPlus } from "react-icons/tb";
 import { toast } from "sonner";
 import type { Product } from "@/lib/catalog";
 import { resolveImage } from "@/lib/catalog";
@@ -81,7 +82,7 @@ export function ProductCard({ product }: { product: Product }) {
         aria-label={isWished ? "Remove from wishlist" : "Add to wishlist"}
         className={`absolute right-2 top-2 z-20 grid h-7 w-7 place-items-center rounded-full border border-border bg-background/90 backdrop-blur-md shadow-md transition-all duration-300 hover:border-[color:var(--gold)] hover:text-[color:var(--gold)] active:scale-95 sm:right-3 sm:top-3 sm:h-9 sm:w-9 lg:opacity-0 lg:scale-90 lg:translate-y-1 group-hover/card:lg:opacity-100 group-hover/card:lg:scale-100 group-hover/card:lg:translate-y-0 ${isWished ? "text-[color:var(--gold)] lg:!opacity-100 lg:!scale-100" : "text-foreground"}`}
       >
-        <Heart className={`h-3 w-3 sm:h-4 sm:w-4 ${isWished ? "fill-current" : ""}`} />
+        <TbHeartPlus className={`h-3 w-3 sm:h-4 sm:w-4 ${isWished ? "fill-current" : ""}`} />
       </button>
 
       <div className="flex flex-1 flex-col gap-1 p-2.5 sm:gap-1.5 sm:p-4 md:p-5">
