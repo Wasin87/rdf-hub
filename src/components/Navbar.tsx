@@ -232,35 +232,6 @@ export function Navbar() {
 
       <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
 
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
-            className="overflow-hidden border-t border-border bg-background lg:hidden"
-          >
-            <div className="container-luxury flex flex-col gap-1 py-5">
-              <button onClick={() => { setMobileOpen(false); setSearchOpen(true); }} className="mb-3 flex h-10 items-center gap-2 rounded-sm border border-border bg-card px-3 text-xs text-muted-foreground hover:border-[color:var(--gold)]/40">
-                <Search className="h-3.5 w-3.5" /> Search fragrances...
-              </button>
-              {navItems.map((item) => (
-                <div key={item.label}>
-                  <Link to={item.to as never} className="block py-2.5 text-sm track-luxury">{item.label}</Link>
-                  {item.dropdown && (
-                    <div className="ml-4 flex flex-col">
-                      {item.dropdown.flatMap((g) => g.items).map((d) => (
-                        <Link key={d.label} to={d.to as never} search={d.search as never} className="py-1.5 text-xs text-muted-foreground hover:text-[color:var(--gold)]">{d.label}</Link>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
-              {!user && (
-                <Link to="/auth" search={{ mode: "login" } as never} className="mt-3 rounded-sm bg-[color:var(--gold)] py-2.5 text-center text-xs track-luxury text-[color:var(--gold-foreground)]">Login</Link>
-              )}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </header>
   );
 }
