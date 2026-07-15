@@ -880,7 +880,6 @@ export type Database = {
       }
     }
     Functions: {
-      admin_delete_review: { Args: { _review_id: string }; Returns: undefined }
       admin_list_reviews: {
         Args: never
         Returns: {
@@ -903,34 +902,6 @@ export type Database = {
           to: "reviews"
           isOneToOne: false
           isSetofReturn: true
-        }
-      }
-      admin_set_review_state: {
-        Args: {
-          _is_approved?: boolean
-          _is_featured?: boolean
-          _review_id: string
-        }
-        Returns: {
-          author_name: string
-          body: string
-          created_at: string
-          email: string | null
-          id: string
-          images: Json
-          is_approved: boolean
-          is_featured: boolean
-          order_id: string | null
-          product_id: string | null
-          rating: number
-          title: string | null
-          user_id: string | null
-        }
-        SetofOptions: {
-          from: "*"
-          to: "reviews"
-          isOneToOne: true
-          isSetofReturn: false
         }
       }
       get_payment_number: { Args: { _method: string }; Returns: string }
