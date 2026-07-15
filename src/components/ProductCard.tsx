@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { Heart, ShoppingBag, ArrowRight } from "lucide-react";
+import { BiCartDownload } from "react-icons/bi";
 import { toast } from "sonner";
 import type { Product } from "@/lib/catalog";
 import { resolveImage } from "@/lib/catalog";
@@ -113,7 +114,7 @@ export function ProductCard({ product }: { product: Product }) {
             aria-label="Add to cart"
             className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-foreground text-background transition-all duration-300 hover:scale-110 hover:bg-[color:var(--gold)] hover:text-[color:var(--gold-foreground)] active:scale-95 sm:h-9 sm:w-9 lg:opacity-0 lg:translate-y-1 group-hover/card:lg:opacity-100 group-hover/card:lg:translate-y-0"
           >
-            <ShoppingBag className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+            <BiCartDownload className="h-4 w-4 sm:h-[18px] sm:w-[18px]" />
           </button>
         </div>
       </div>

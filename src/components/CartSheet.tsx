@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { ShoppingBag, Plus, Minus, X } from "lucide-react";
+import { BiCartDownload } from "react-icons/bi";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "@/stores/cart";
 import { formatBDT } from "@/lib/format";
@@ -28,7 +29,7 @@ export function CartSheet() {
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <button aria-label="Cart" className="relative grid h-9 w-9 place-items-center rounded-full text-foreground transition-all duration-300 hover:scale-110 hover:text-[color:var(--gold)]">
-          <ShoppingBag className="h-[18px] w-[18px]" />
+          <BiCartDownload className="h-[19px] w-[19px]" />
           <AnimatePresence>
             {count > 0 && (
               <motion.span
