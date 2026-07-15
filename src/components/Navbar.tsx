@@ -77,7 +77,7 @@ export function Navbar() {
                   >
                     <div className="max-h-[70vh] overflow-y-auto overscroll-contain p-3">
                       <button onClick={() => { setMobileOpen(false); setSearchOpen(true); }} className="mb-3 flex h-10 w-full items-center gap-2 rounded-md border border-border bg-card px-3 text-xs text-muted-foreground hover:border-[color:var(--gold)]/40">
-                        <Search className="h-3.5 w-3.5" /> Search fragrances...
+                        <FaSearchengin className="h-4 w-4 text-[color:var(--gold)]" /> Search fragrances...
                       </button>
                       <div className="flex flex-col">
                         {navItems.map((item) => {
