@@ -157,11 +157,14 @@ function AdminOrders() {
 
   const doDelete = async () => {
     if (!deleting) return;
-    const { error } = await supabase.from("orders").update({ status: "cancelled" }).eq("id", deleting.id);
+    const { error } = await supabase.from("orders").delete().eq("id", deleting.id);
     if (error) return toast.error(error.message);
-    toast.success(`Order ${deleting.order_number} cancelled`);
+    toast.success(`Order ${deleting.order_number} deleted`);
     setDeleting(null);
     qc.invalidateQueries({ queryKey: ["admin-orders-all"] });
+    qc.invalidateQueries({ queryKey: ["admin-dashboard"] });
+    qc.invalidateQueries({ queryKey: ["admin-overview"] });
+    qc.invalidateQueries({ queryKey: ["admin-stats"] });
   };
 
   const resetFilters = () => {
