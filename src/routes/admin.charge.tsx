@@ -3,8 +3,9 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import {
-  Truck, Save, Search, Plus, Trash2, X, Package, Gift, RefreshCw, ShieldCheck,
+  Truck, Save, Search, Plus, Trash2, X, Package, Gift, RefreshCw, ShieldCheck, Pencil,
 } from "lucide-react";
+
 import { supabase } from "@/integrations/supabase/client";
 import { formatBDT } from "@/lib/format";
 import { SafeImage } from "@/components/SafeImage";
