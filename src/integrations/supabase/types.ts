@@ -437,7 +437,9 @@ export type Database = {
       orders: {
         Row: {
           address_snapshot: Json
+          coupon_code: string | null
           created_at: string
+          discount: number
           id: string
           notes: string | null
           order_number: string
@@ -453,7 +455,9 @@ export type Database = {
         }
         Insert: {
           address_snapshot: Json
+          coupon_code?: string | null
           created_at?: string
+          discount?: number
           id?: string
           notes?: string | null
           order_number?: string
@@ -469,7 +473,9 @@ export type Database = {
         }
         Update: {
           address_snapshot?: Json
+          coupon_code?: string | null
           created_at?: string
+          discount?: number
           id?: string
           notes?: string | null
           order_number?: string
@@ -904,6 +910,10 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      apply_coupon_internal: {
+        Args: { _code: string; _subtotal: number }
+        Returns: number
+      }
       get_payment_number: { Args: { _method: string }; Returns: string }
       has_role: {
         Args: {
@@ -915,6 +925,7 @@ export type Database = {
       place_order: {
         Args: {
           _address: Json
+          _coupon_code?: string
           _items: Json
           _notes: string
           _payment_method: string
@@ -922,9 +933,21 @@ export type Database = {
           _txn_id: string
         }
         Returns: {
+          coupon_code: string
+          discount: number
           id: string
           order_number: string
           total: number
+        }[]
+      }
+      validate_coupon: {
+        Args: { _code: string; _subtotal: number }
+        Returns: {
+          code: string
+          discount: number
+          discount_type: string
+          discount_value: number
+          min_order: number
         }[]
       }
     }

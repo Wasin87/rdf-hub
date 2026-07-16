@@ -1,11 +1,11 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
-import { ShoppingBag, ShieldCheck, Truck, Smartphone, Copy } from "lucide-react";
+import { ShoppingBag, ShieldCheck, Truck, Smartphone, Copy, Ticket, X, Check, Loader2 } from "lucide-react";
 import { useCart } from "@/stores/cart";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -42,14 +42,23 @@ function CheckoutPage() {
   const subtotal = useCart((s) => s.subtotal());
   const clear = useCart((s) => s.clear);
   const { user, loading } = useAuth();
+  const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
   const [method, setMethod] = useState<PaymentMethod>("cod");
   const [txnId, setTxnId] = useState("");
   const [paymentPhone, setPaymentPhone] = useState("");
   const [methodErr, setMethodErr] = useState<string | null>(null);
 
-  const shipping = subtotal >= 5000 ? 0 : 120;
-  const total = subtotal + shipping;
+  // Coupon state
+  const [couponInput, setCouponInput] = useState("");
+  const [applyingCoupon, setApplyingCoupon] = useState(false);
+  const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; discount: number } | null>(null);
+  const [couponErr, setCouponErr] = useState<string | null>(null);
+
+  const discount = appliedCoupon?.discount ?? 0;
+  const discountedSubtotal = Math.max(0, subtotal - discount);
+  const shipping = discountedSubtotal >= 5000 ? 0 : 120;
+  const total = discountedSubtotal + shipping;
   const isMobilePayment = method !== "cod";
 
   const paymentSettingsQ = useQuery({
@@ -109,6 +118,34 @@ function CheckoutPage() {
     </div>
   );
 
+  const applyCoupon = async () => {
+    setCouponErr(null);
+    const code = couponInput.trim();
+    if (!code) { setCouponErr("Enter a coupon code"); return; }
+    setApplyingCoupon(true);
+    try {
+      const { data: rows, error } = await supabase.rpc("validate_coupon" as never, {
+        _code: code,
+        _subtotal: subtotal,
+      } as never);
+      if (error) throw error;
+      const row = (Array.isArray(rows) ? rows[0] : rows) as { code: string; discount: number } | null;
+      if (!row) throw new Error("Coupon could not be applied");
+      setAppliedCoupon({ code: row.code, discount: Number(row.discount) });
+      toast.success(`Coupon applied — you saved ${formatBDT(Number(row.discount))}`);
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : "Invalid coupon";
+      setCouponErr(msg);
+      setAppliedCoupon(null);
+    } finally { setApplyingCoupon(false); }
+  };
+
+  const removeCoupon = () => {
+    setAppliedCoupon(null);
+    setCouponInput("");
+    setCouponErr(null);
+  };
+
   const onSubmit = form.handleSubmit(async (data) => {
     setMethodErr(null);
     if (isMobilePayment) {
@@ -124,14 +161,18 @@ function CheckoutPage() {
         _txn_id: isMobilePayment ? txnId.trim() : "",
         _payment_phone: isMobilePayment ? paymentPhone.trim() : "",
         _notes: data.notes ?? "",
-      });
+        _coupon_code: appliedCoupon?.code ?? "",
+      } as never);
       if (error) throw error;
-      const order = Array.isArray(rows) ? rows[0] : rows;
+      const order = (Array.isArray(rows) ? rows[0] : rows) as { id: string; order_number: string; total: number } | null;
       if (!order?.id) throw new Error("Order could not be created");
 
       clear();
       toast.success("Order placed", { description: `Order ${order.order_number} confirmed.` });
-      window.location.assign("/dashboard/orders");
+      navigate({
+        to: "/order-confirmed",
+        search: { order: order.order_number, total: String(order.total), method },
+      });
     } catch (e: unknown) {
       toast.error(e instanceof Error ? e.message : "Could not place order");
     } finally { setSubmitting(false); }
@@ -237,11 +278,58 @@ function CheckoutPage() {
               </div>
             ))}
           </div>
+
+          {/* Coupon */}
+          <div className="mt-5 border-t border-border pt-5">
+            <div className="mb-2 flex items-center gap-2 text-[10px] track-luxury text-muted-foreground">
+              <Ticket className="h-3.5 w-3.5 text-[color:var(--gold)]" /> Coupon Code
+            </div>
+            {appliedCoupon ? (
+              <div className="flex items-center justify-between rounded-sm border border-[color:var(--gold)]/40 bg-[color:var(--gold)]/10 px-3 py-2">
+                <div className="flex items-center gap-2 text-sm">
+                  <Check className="h-4 w-4 text-[color:var(--gold)]" />
+                  <span className="font-mono font-semibold text-[color:var(--gold)]">{appliedCoupon.code}</span>
+                  <span className="text-xs text-muted-foreground">− {formatBDT(appliedCoupon.discount)}</span>
+                </div>
+                <button type="button" onClick={removeCoupon} className="text-muted-foreground hover:text-destructive" aria-label="Remove coupon">
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+            ) : (
+              <div className="flex gap-2">
+                <input
+                  value={couponInput}
+                  onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
+                  placeholder="Enter coupon code"
+                  className="h-11 flex-1 rounded-sm border border-border bg-background px-3 text-sm uppercase tracking-wider focus:border-[color:var(--gold)] focus:outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={applyCoupon}
+                  disabled={applyingCoupon || !couponInput.trim()}
+                  className="inline-flex h-11 items-center gap-1.5 rounded-sm border border-[color:var(--gold)] bg-[color:var(--gold)]/10 px-4 text-xs font-semibold text-[color:var(--gold)] transition-colors hover:bg-[color:var(--gold)] hover:text-[color:var(--gold-foreground)] disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {applyingCoupon ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : "Apply"}
+                </button>
+              </div>
+            )}
+            {couponErr && <p className="mt-1.5 text-[11px] text-destructive">{couponErr}</p>}
+          </div>
+
           <div className="mt-5 space-y-2 border-t border-border pt-5 text-sm">
             <Row label="Subtotal" value={formatBDT(subtotal)} />
+            {discount > 0 && (
+              <Row
+                label={`Coupon Discount${appliedCoupon ? ` (${appliedCoupon.code})` : ""}`}
+                value={`− ${formatBDT(discount)}`}
+              />
+            )}
             <Row label="Shipping" value={shipping === 0 ? "Free" : formatBDT(shipping)} />
             <div className="my-3 hairline" />
             <div className="flex justify-between text-xl font-semibold"><span>Total</span><span className="text-[color:var(--gold)]">{formatBDT(total)}</span></div>
+            {discount > 0 && (
+              <p className="text-right text-[11px] text-emerald-600">You saved {formatBDT(discount)}</p>
+            )}
           </div>
         </aside>
       </div>

@@ -44,6 +44,7 @@ type Order = {
   shipping: number | null; total: number; payment_method: string | null;
   txn_id: string | null; payment_phone: string | null;
   address_snapshot: Record<string, unknown> | null; notes: string | null;
+  coupon_code: string | null; discount: number | null;
   created_at: string; updated_at: string | null;
   order_items: OrderItem[];
   order_admin_meta: { otp: string | null; admin_notes: string | null } | { otp: string | null; admin_notes: string | null }[] | null;
@@ -84,7 +85,7 @@ function AdminOrders() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("orders")
-        .select("id, order_number, status, subtotal, shipping, total, payment_method, txn_id, payment_phone, address_snapshot, notes, created_at, updated_at, order_items(id, product_id, product_name, brand_name, size_ml, quantity, unit_price, image_url), order_admin_meta(otp, admin_notes)")
+        .select("id, order_number, status, subtotal, shipping, total, payment_method, txn_id, payment_phone, address_snapshot, notes, coupon_code, discount, created_at, updated_at, order_items(id, product_id, product_name, brand_name, size_ml, quantity, unit_price, image_url), order_admin_meta(otp, admin_notes)")
         .order("created_at", { ascending: false });
       if (error) throw error;
       return (data ?? []) as unknown as Order[];
@@ -514,6 +515,7 @@ function OrderDetailsModal({ order, onClose }: { order: Order; onClose: () => vo
   const created = new Date(order.created_at);
   const subtotal = Number(order.subtotal ?? order.order_items.reduce((s, it) => s + Number(it.unit_price) * it.quantity, 0));
   const shipping = Number(order.shipping ?? 0);
+  const discount = Number(order.discount ?? 0);
   const total = Number(order.total);
 
   const doPrint = () => {
@@ -591,6 +593,8 @@ function OrderDetailsModal({ order, onClose }: { order: Order; onClose: () => vo
               ["OTP", getMeta(order).otp ?? "—"],
               ["Payment Phone", order.payment_phone ?? "—"],
               ["Subtotal", formatBDT(subtotal)],
+              ["Coupon Code", order.coupon_code ?? "—"],
+              ["Coupon Discount", discount > 0 ? `− ${formatBDT(discount)}` : "—"],
               ["Delivery Charge", formatBDT(shipping)],
               ["Grand Total", formatBDT(total)],
             ]} />
