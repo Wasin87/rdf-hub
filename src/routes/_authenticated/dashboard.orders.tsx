@@ -71,7 +71,7 @@ function OrdersPage() {
         <div className="overflow-hidden rounded-sm border border-border bg-card">
           <div className="max-h-[calc(100vh-16rem)] overflow-x-auto overflow-y-auto thin-scroll">
             <table className="w-full min-w-[720px] text-sm">
-              <thead className="bg-secondary/50">
+              <thead className="sticky top-0 z-10 bg-secondary/95 backdrop-blur supports-[backdrop-filter]:bg-secondary/80">
                 <tr className="text-left text-[10px] track-luxury text-muted-foreground">
                   <th className="px-4 py-3 font-medium">Order</th>
                   <th className="px-4 py-3 font-medium">Date</th>
