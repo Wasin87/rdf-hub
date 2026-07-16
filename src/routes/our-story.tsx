@@ -38,7 +38,7 @@ function OurStoryPage() {
         <div className="absolute inset-0 opacity-20 gold-gradient" aria-hidden />
         <div className="container-luxury relative text-center">
           <motion.h1 initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="font-display text-5xl leading-tight md:text-7xl">
-            <span className="gold-text">Our Story</span>
+            <span className="text-foreground">Our Story</span>
           </motion.h1>
           <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-background/75 md:text-lg">
             A devotion to scent. A pursuit of authenticity. A boutique built for those who understand that fragrance is the most intimate luxury one can wear.

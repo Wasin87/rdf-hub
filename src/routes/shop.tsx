@@ -161,7 +161,7 @@ function ShopPage() {
     <div className="container-luxury py-12 lg:py-16">
       <div className="mb-10">
         <p className="text-[11px] track-luxury text-[color:var(--gold)]">The Boutique</p>
-        <h1 className="mt-2 font-display text-4xl md:text-5xl"><span className="gold-text">Shop Fragrances</span></h1>
+        <h1 className="mt-2 font-display text-4xl font-bold text-foreground md:text-5xl">Shop Fragrances</h1>
         {search.q && <p className="mt-3 text-sm text-muted-foreground">Results for "<span className="text-foreground">{search.q}</span>"</p>}
       </div>
 

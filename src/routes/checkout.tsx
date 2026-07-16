@@ -139,7 +139,7 @@ function CheckoutPage() {
 
   return (
     <div className="container-luxury py-12 lg:py-16">
-      <h1 className="mb-2 font-display text-4xl"><span className="gold-text">Checkout</span></h1>
+      <h1 className="mb-2 font-display text-4xl font-bold text-foreground">Checkout</h1>
       <p className="text-sm text-muted-foreground">Authenticity guaranteed · Secure payment</p>
 
       <div className="mt-10 grid gap-12 lg:grid-cols-[1fr_400px]">
