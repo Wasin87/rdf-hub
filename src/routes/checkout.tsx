@@ -11,6 +11,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { formatBDT } from "@/lib/format";
 import { useQuery } from "@tanstack/react-query";
+import { validateCouponFn } from "@/lib/coupons.functions";
+
 
 
 import { SafeImage } from "@/components/SafeImage";
@@ -142,15 +144,11 @@ function CheckoutPage() {
     if (!code) { setCouponErr("Enter a coupon code"); return; }
     setApplyingCoupon(true);
     try {
-      const { data: rows, error } = await supabase.rpc("validate_coupon" as never, {
-        _code: code,
-        _subtotal: subtotal,
-      } as never);
-      if (error) throw error;
-      const row = (Array.isArray(rows) ? rows[0] : rows) as { code: string; discount: number } | null;
+      const row = await validateCouponFn({ data: { code, subtotal } });
       if (!row) throw new Error("Coupon could not be applied");
       setAppliedCoupon({ code: row.code, discount: Number(row.discount) });
       toast.success(`Coupon applied — you saved ${formatBDT(Number(row.discount))}`);
+
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : "Invalid coupon";
       setCouponErr(msg);
