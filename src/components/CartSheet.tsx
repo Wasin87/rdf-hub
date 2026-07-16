@@ -91,7 +91,7 @@ export function CartSheet({ trigger }: { trigger?: React.ReactNode } = {}) {
                 <span className="text-xs track-luxury text-muted-foreground">Subtotal</span>
                 <span className="text-xl font-semibold text-[color:var(--gold)]">{formatBDT(subtotal)}</span>
               </div>
-              <p className="mb-4 text-[11px] text-muted-foreground">Shipping calculated at checkout. Free over ৳ 5,000.</p>
+              <p className="mb-4 text-[11px] text-muted-foreground">Shipping calculated at checkout.</p>
               <button onClick={goCheckout} className="btn-liquid w-full">Checkout</button>
             </div>
           </>

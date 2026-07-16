@@ -1,5 +1,5 @@
 import { createFileRoute, Link, Outlet, redirect, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, Package, ShoppingBag, Megaphone, Image as ImageIcon, Users, Tag, Star, Ticket, ChevronRight } from "lucide-react";
+import { LayoutDashboard, Package, ShoppingBag, Megaphone, Image as ImageIcon, Users, Tag, Star, Ticket, Truck, ChevronRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -32,6 +32,7 @@ const items = [
   { to: "/admin/brands", label: "Brands", icon: Tag },
   { to: "/admin/reviews", label: "Reviews", icon: Star },
   { to: "/admin/coupons", label: "Coupons", icon: Ticket },
+  { to: "/admin/charge", label: "Charge", icon: Truck },
   { to: "/admin/users", label: "Users", icon: Users },
 ];
 
