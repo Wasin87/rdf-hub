@@ -5,7 +5,7 @@ import { DashboardShell } from "@/components/DashboardShell";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { formatBDT } from "@/lib/format";
-import { Package, Check, Clock, Truck, X, Sparkles, RefreshCw, Star } from "lucide-react";
+import { Package, Check, Clock, Truck, X, Sparkles, RefreshCw, Star, ChevronDown } from "lucide-react";
 import { ReviewForm } from "@/components/ReviewForm";
 import { LuxuryLoader } from "@/components/Loader";
 import { SafeImage } from "@/components/SafeImage";
