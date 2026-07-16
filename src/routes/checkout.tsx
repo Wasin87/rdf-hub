@@ -42,14 +42,23 @@ function CheckoutPage() {
   const subtotal = useCart((s) => s.subtotal());
   const clear = useCart((s) => s.clear);
   const { user, loading } = useAuth();
+  const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
   const [method, setMethod] = useState<PaymentMethod>("cod");
   const [txnId, setTxnId] = useState("");
   const [paymentPhone, setPaymentPhone] = useState("");
   const [methodErr, setMethodErr] = useState<string | null>(null);
 
-  const shipping = subtotal >= 5000 ? 0 : 120;
-  const total = subtotal + shipping;
+  // Coupon state
+  const [couponInput, setCouponInput] = useState("");
+  const [applyingCoupon, setApplyingCoupon] = useState(false);
+  const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; discount: number } | null>(null);
+  const [couponErr, setCouponErr] = useState<string | null>(null);
+
+  const discount = appliedCoupon?.discount ?? 0;
+  const discountedSubtotal = Math.max(0, subtotal - discount);
+  const shipping = discountedSubtotal >= 5000 ? 0 : 120;
+  const total = discountedSubtotal + shipping;
   const isMobilePayment = method !== "cod";
 
   const paymentSettingsQ = useQuery({
