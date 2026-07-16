@@ -131,7 +131,7 @@ function AdminDashboard() {
             </div>
             <div className="rounded-lg border border-border bg-card shadow-xl p-5">
               <h3 className="mb-4 font-display text-lg">Recent Orders</h3>
-              <div className="space-y-2">
+              <div className="max-h-72 space-y-2 overflow-y-auto pr-1">
                 {data.recentOrders.map((o) => (
                   <div key={o.id} className="flex items-center justify-between border-b border-border pb-2 text-sm last:border-0">
                     <div>
