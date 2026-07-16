@@ -85,7 +85,7 @@ function AdminDashboard() {
           </div>
 
           <div className="mt-8 grid gap-6 lg:grid-cols-3">
-            <div className="rounded-lg border border-border bg-card shadow-xl p-5 lg:col-span-2">
+            <div className="admin-card p-5 lg:col-span-2">
               <h3 className="mb-4 font-display text-lg">Revenue — Last 12 Months</h3>
               <div className="h-72">
                 <ResponsiveContainer>
@@ -99,7 +99,7 @@ function AdminDashboard() {
                 </ResponsiveContainer>
               </div>
             </div>
-            <div className="rounded-lg border border-border bg-card shadow-xl p-5">
+            <div className="admin-card p-5">
               <h3 className="mb-4 font-display text-lg">Order Status</h3>
               <div className="h-72">
                 <ResponsiveContainer>
@@ -115,7 +115,7 @@ function AdminDashboard() {
           </div>
 
           <div className="mt-6 grid gap-6 lg:grid-cols-2">
-            <div className="rounded-lg border border-border bg-card shadow-xl p-5">
+            <div className="admin-card p-5">
               <h3 className="mb-4 font-display text-lg">Top Brands by Revenue</h3>
               <div className="h-64">
                 <ResponsiveContainer>
@@ -129,9 +129,9 @@ function AdminDashboard() {
                 </ResponsiveContainer>
               </div>
             </div>
-            <div className="rounded-lg border border-border bg-card shadow-xl p-5">
+            <div className="admin-card p-5">
               <h3 className="mb-4 font-display text-lg">Recent Orders</h3>
-              <div className="max-h-72 space-y-2 overflow-y-auto pr-1">
+              <div className="max-h-72 space-y-2 overflow-y-auto pr-1 thin-scroll">
                 {data.recentOrders.map((o) => (
                   <div key={o.id} className="flex items-center justify-between border-b border-border pb-2 text-sm last:border-0">
                     <div>
