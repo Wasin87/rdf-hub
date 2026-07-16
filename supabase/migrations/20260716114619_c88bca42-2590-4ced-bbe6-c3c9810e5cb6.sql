@@ -1,0 +1,1 @@
+CREATE POLICY "orders_delete_admin" ON public.orders FOR DELETE TO authenticated USING (public.has_role(auth.uid(), 'admin'));
