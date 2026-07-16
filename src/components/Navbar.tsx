@@ -137,7 +137,7 @@ export function Navbar() {
               )}
             </AnimatePresence>
           </div>
-          <nav className="hidden items-center gap-7 lg:flex whitespace-nowrap">
+          <nav className="hidden items-center gap-5 lg:flex whitespace-nowrap">
             {navItems.map((item) => {
               const active = pathname === item.to && !item.dropdown;
               if (item.dropdown) {
