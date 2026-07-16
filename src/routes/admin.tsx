@@ -41,8 +41,8 @@ function AdminLayout() {
       {/* Fixed horizontal top nav */}
       <div className="sticky top-0 z-30 border-b border-[color:var(--gold)]/15 bg-section/95 backdrop-blur supports-[backdrop-filter]:bg-section/80">
         <div className="px-3 py-3 sm:px-4 lg:px-6">
-          <nav className="rounded-lg border border-border bg-background/60 p-1.5 shadow-xl">
-            <div className="flex items-center gap-2 overflow-x-auto scrollbar-none [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <nav>
+            <div className="flex items-center gap-1 overflow-x-auto scrollbar-none [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {items.map((it) => {
                 const active = it.exact ? pathname === it.to : pathname.startsWith(it.to);
                 const Icon = it.icon;
@@ -50,7 +50,7 @@ function AdminLayout() {
                   <Link
                     key={it.to}
                     to={it.to as never}
-                    className={`inline-flex shrink-0 items-center gap-2 rounded-lg border px-3 py-2 text-xs whitespace-nowrap shadow-xl transition-colors ${active ? "border-[color:var(--gold)]/60 bg-[color:var(--gold)]/10 text-[color:var(--gold)]" : "border-border/60 bg-background/40 text-muted-foreground hover:border-[color:var(--gold)]/40 hover:text-foreground"}`}
+                    className={`relative inline-flex shrink-0 items-center gap-2 border-0 bg-transparent px-3 py-2.5 text-xs whitespace-nowrap transition-colors after:absolute after:bottom-0 after:left-3 after:right-3 after:h-[2px] after:origin-left after:scale-x-0 after:bg-[color:var(--gold)] after:transition-transform after:duration-300 hover:text-[color:var(--gold)] hover:after:scale-x-100 ${active ? "text-[color:var(--gold)] after:scale-x-100" : "text-muted-foreground"}`}
                   >
                     <Icon className="h-3.5 w-3.5" /> {it.label}
                   </Link>
@@ -60,6 +60,7 @@ function AdminLayout() {
           </nav>
         </div>
       </div>
+
 
       {/* Scrollable page content */}
       <main className="min-h-0 flex-1 overflow-y-auto bg-background">
