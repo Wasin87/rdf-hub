@@ -58,7 +58,7 @@ export function Navbar() {
 
   return (
     <header className={`sticky top-0 z-40 transition-all duration-500 ${scrolled ? "glass-nav" : "bg-background"}`}>
-      <div className="container-luxury grid h-16 grid-cols-[auto_1fr_auto] items-center gap-4 lg:h-20 lg:grid-cols-3">
+      <div className="container-luxury grid h-16 grid-cols-[auto_1fr_auto] items-center gap-2 lg:h-20 lg:grid-cols-3">
         {/* LEFT: nav (desktop) / menu (mobile) */}
         <div className="flex items-center">
           <div className="relative lg:hidden">
