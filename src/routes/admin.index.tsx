@@ -154,7 +154,7 @@ function AdminDashboard() {
 
 function Stat({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
-    <div className="rounded-lg border border-border bg-card shadow-xl p-5">
+    <div className="admin-card p-5">
       <div className="flex items-center gap-2 text-[10px] track-luxury text-muted-foreground">
         <span className="text-[color:var(--gold)]">{icon}</span> {label}
       </div>
