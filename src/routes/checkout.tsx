@@ -278,11 +278,58 @@ function CheckoutPage() {
               </div>
             ))}
           </div>
+
+          {/* Coupon */}
+          <div className="mt-5 border-t border-border pt-5">
+            <div className="mb-2 flex items-center gap-2 text-[10px] track-luxury text-muted-foreground">
+              <Ticket className="h-3.5 w-3.5 text-[color:var(--gold)]" /> Coupon Code
+            </div>
+            {appliedCoupon ? (
+              <div className="flex items-center justify-between rounded-sm border border-[color:var(--gold)]/40 bg-[color:var(--gold)]/10 px-3 py-2">
+                <div className="flex items-center gap-2 text-sm">
+                  <Check className="h-4 w-4 text-[color:var(--gold)]" />
+                  <span className="font-mono font-semibold text-[color:var(--gold)]">{appliedCoupon.code}</span>
+                  <span className="text-xs text-muted-foreground">− {formatBDT(appliedCoupon.discount)}</span>
+                </div>
+                <button type="button" onClick={removeCoupon} className="text-muted-foreground hover:text-destructive" aria-label="Remove coupon">
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+            ) : (
+              <div className="flex gap-2">
+                <input
+                  value={couponInput}
+                  onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
+                  placeholder="Enter coupon code"
+                  className="h-11 flex-1 rounded-sm border border-border bg-background px-3 text-sm uppercase tracking-wider focus:border-[color:var(--gold)] focus:outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={applyCoupon}
+                  disabled={applyingCoupon || !couponInput.trim()}
+                  className="inline-flex h-11 items-center gap-1.5 rounded-sm border border-[color:var(--gold)] bg-[color:var(--gold)]/10 px-4 text-xs font-semibold text-[color:var(--gold)] transition-colors hover:bg-[color:var(--gold)] hover:text-[color:var(--gold-foreground)] disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {applyingCoupon ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : "Apply"}
+                </button>
+              </div>
+            )}
+            {couponErr && <p className="mt-1.5 text-[11px] text-destructive">{couponErr}</p>}
+          </div>
+
           <div className="mt-5 space-y-2 border-t border-border pt-5 text-sm">
             <Row label="Subtotal" value={formatBDT(subtotal)} />
+            {discount > 0 && (
+              <Row
+                label={`Coupon Discount${appliedCoupon ? ` (${appliedCoupon.code})` : ""}`}
+                value={`− ${formatBDT(discount)}`}
+              />
+            )}
             <Row label="Shipping" value={shipping === 0 ? "Free" : formatBDT(shipping)} />
             <div className="my-3 hairline" />
             <div className="flex justify-between text-xl font-semibold"><span>Total</span><span className="text-[color:var(--gold)]">{formatBDT(total)}</span></div>
+            {discount > 0 && (
+              <p className="text-right text-[11px] text-emerald-600">You saved {formatBDT(discount)}</p>
+            )}
           </div>
         </aside>
       </div>
