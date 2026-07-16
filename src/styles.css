@@ -192,17 +192,14 @@
   height: 1px;
 }
 
-/* Dark mode: any bordered, rounded card gets a light-golden border on hover */
-.dark [class*="border-border"][class*="rounded-lg"]:hover,
-.dark [class*="border-border"][class*="rounded-xl"]:hover,
-.dark [class*="border-border"][class*="rounded-2xl"]:hover,
-.dark [class*="border-border"][class*="rounded-md"]:hover,
+/* Dark mode: only explicit cards get a light-golden border on hover */
 .dark .admin-card:hover,
 .dark .card-luxury:hover,
 .dark .group\/card:hover {
   border-color: var(--gold-soft);
   transition: border-color 0.3s ease;
 }
+
 
 @utility btn-liquid {
   position: relative;
