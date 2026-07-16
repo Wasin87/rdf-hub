@@ -32,6 +32,7 @@ const items = [
   { to: "/admin/brands", label: "Brands", icon: Tag },
   { to: "/admin/reviews", label: "Reviews", icon: Star },
   { to: "/admin/coupons", label: "Coupons", icon: Ticket },
+  { to: "/admin/charge", label: "Charge", icon: Truck },
   { to: "/admin/users", label: "Users", icon: Users },
 ];
 
