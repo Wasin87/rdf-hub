@@ -85,7 +85,7 @@ function AdminOrders() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("orders")
-        .select("id, order_number, status, subtotal, shipping, total, payment_method, txn_id, payment_phone, address_snapshot, notes, created_at, updated_at, order_items(id, product_id, product_name, brand_name, size_ml, quantity, unit_price, image_url), order_admin_meta(otp, admin_notes)")
+        .select("id, order_number, status, subtotal, shipping, total, payment_method, txn_id, payment_phone, address_snapshot, notes, coupon_code, discount, created_at, updated_at, order_items(id, product_id, product_name, brand_name, size_ml, quantity, unit_price, image_url), order_admin_meta(otp, admin_notes)")
         .order("created_at", { ascending: false });
       if (error) throw error;
       return (data ?? []) as unknown as Order[];
