@@ -125,11 +125,41 @@ function AdminCharge() {
   };
 
   const deleteOverride = async (id: string) => {
+    if (!confirm("Remove this override? Product will use the global charge.")) return;
     const { error } = await supabase.from("product_delivery_charges" as never).delete().eq("id", id);
     if (error) return toast.error(error.message);
-    toast.success("Override removed — product now uses the global charge");
+    toast.success("Override removed");
     qc.invalidateQueries({ queryKey: ["product_delivery_charges"] });
   };
+
+  /* ---------------- Edit override modal ---------------- */
+  const [editing, setEditing] = useState<Override | null>(null);
+  const [editCharge, setEditCharge] = useState<string>("0");
+  const [editFree, setEditFree] = useState(false);
+  const [editSaving, setEditSaving] = useState(false);
+
+  const openEdit = (o: Override) => {
+    setEditing(o);
+    setEditCharge(String(o.charge ?? 0));
+    setEditFree(!!o.is_free);
+  };
+
+  const saveEdit = async () => {
+    if (!editing) return;
+    const c = Number(editCharge);
+    if (!editFree && (!Number.isFinite(c) || c < 0)) return toast.error("Charge must be 0 or more");
+    setEditSaving(true);
+    const { error } = await supabase
+      .from("product_delivery_charges" as never)
+      .update({ charge: editFree ? 0 : c, is_free: editFree } as never)
+      .eq("id", editing.id);
+    setEditSaving(false);
+    if (error) return toast.error(error.message);
+    toast.success("Override updated");
+    setEditing(null);
+    qc.invalidateQueries({ queryKey: ["product_delivery_charges"] });
+  };
+
 
   /* ---------------- Add override modal ---------------- */
   const [addOpen, setAddOpen] = useState(false);
