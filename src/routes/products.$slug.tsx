@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, ShieldCheck, Truck, Star, X, ChevronLeft, ChevronRight } from "lucide-react";
-import { BiCartDownload } from "react-icons/bi";
+import { IoCartOutline } from "react-icons/io5";
 import { TbHeartPlus } from "react-icons/tb";
 import { toast } from "sonner";
 import {
@@ -249,7 +249,7 @@ function ProductPage() {
               <button onClick={() => setQty(qty + 1)} className="h-11 w-11 hover:text-[color:var(--gold)]">+</button>
             </div>
             <button onClick={onAdd} disabled={!v || v.stock <= 0} className="btn-liquid flex-1 disabled:cursor-not-allowed disabled:opacity-50">
-              <BiCartDownload className="h-3.5 w-3.5" /> <span className="sm:hidden">Cart</span><span className="hidden sm:inline">Add to Cart</span>
+              <IoCartOutline className="h-4 w-4" /> <span className="sm:hidden">Cart</span><span className="hidden sm:inline">Add to Cart</span>
             </button>
             <button
               onClick={() =>

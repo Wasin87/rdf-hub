@@ -78,11 +78,46 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <head><HeadContent /></head>
-      <body>{children}<Scripts /></body>
+      <head>
+        <HeadContent />
+        <style>{`
+          @keyframes fa-spin { to { transform: rotate(360deg); } }
+          @keyframes fa-pulse { 0%,100% { opacity:.6; transform:translate(-50%,-50%) scale(.85);} 50% { opacity:1; transform:translate(-50%,-50%) scale(1.25);} }
+          #fa-splash { position:fixed; inset:0; z-index:9999; display:grid; place-items:center; background:#0B0B0B; transition:opacity .4s ease; }
+          #fa-splash .ring { position:relative; width:64px; height:64px; }
+          #fa-splash .ring i { position:absolute; inset:0; border-radius:9999px; border:2px solid rgba(212,175,55,.15); }
+          #fa-splash .ring i.spin { border-color:transparent; border-top-color:#D4AF37; animation: fa-spin .9s linear infinite; }
+          #fa-splash .ring i.spin2 { inset:8px; border-color:transparent; border-bottom-color:rgba(212,175,55,.6); animation: fa-spin 1.4s linear infinite reverse; }
+          #fa-splash .dot { position:absolute; left:50%; top:50%; width:6px; height:6px; border-radius:9999px; background:#D4AF37; animation: fa-pulse 1.2s ease-in-out infinite; }
+          #fa-splash .lbl { margin-top:18px; font-size:10px; letter-spacing:.35em; color:#a1a1aa; text-align:center; text-transform:uppercase; }
+          @media (prefers-color-scheme: light) { #fa-splash { background:#fafafa; } #fa-splash .lbl { color:#525252; } }
+          .fa-splash-hide { opacity:0 !important; pointer-events:none; }
+        `}</style>
+      </head>
+      <body>
+        <div id="fa-splash" aria-hidden="true">
+          <div>
+            <div className="ring">
+              <i></i><i className="spin"></i><i className="spin2"></i>
+              <span className="dot"></span>
+            </div>
+            <div className="lbl">Loading…</div>
+          </div>
+        </div>
+        {children}
+        <script dangerouslySetInnerHTML={{ __html: `
+          (function(){
+            function hide(){ var s=document.getElementById('fa-splash'); if(!s) return; s.classList.add('fa-splash-hide'); setTimeout(function(){ s && s.remove(); }, 450); }
+            if (document.readyState === 'complete') { requestAnimationFrame(hide); }
+            else { window.addEventListener('load', function(){ requestAnimationFrame(hide); }); }
+          })();
+        `}} />
+        <Scripts />
+      </body>
     </html>
   );
 }
+
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
