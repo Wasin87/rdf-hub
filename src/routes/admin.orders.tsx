@@ -44,6 +44,7 @@ type Order = {
   shipping: number | null; total: number; payment_method: string | null;
   txn_id: string | null; payment_phone: string | null;
   address_snapshot: Record<string, unknown> | null; notes: string | null;
+  coupon_code: string | null; discount: number | null;
   created_at: string; updated_at: string | null;
   order_items: OrderItem[];
   order_admin_meta: { otp: string | null; admin_notes: string | null } | { otp: string | null; admin_notes: string | null }[] | null;
