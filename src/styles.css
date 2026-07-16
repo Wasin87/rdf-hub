@@ -2,25 +2,20 @@
 @source "../src";
 @import "tw-animate-css";
 
-@import "@fontsource/playfair-display/400.css";
-@import "@fontsource/playfair-display/500.css";
-@import "@fontsource/playfair-display/600.css";
-@import "@fontsource/playfair-display/700.css";
-@import "@fontsource/cormorant-garamond/400.css";
-@import "@fontsource/cormorant-garamond/500.css";
-@import "@fontsource/cormorant-garamond/600.css";
+@import "@fontsource/inter/300.css";
 @import "@fontsource/inter/400.css";
 @import "@fontsource/inter/500.css";
 @import "@fontsource/inter/600.css";
-@import "@fontsource/lato/400.css";
-@import "@fontsource/lato/700.css";
+@import "@fontsource/inter/700.css";
+
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {
-  --font-display: "Playfair Display", "Cormorant Garamond", Georgia, serif;
-  --font-serif: "Cormorant Garamond", Georgia, serif;
-  --font-sans: "Lato", "Inter", system-ui, -apple-system, sans-serif;
+  --font-display: "Inter", system-ui, -apple-system, sans-serif;
+  --font-serif: "Inter", system-ui, -apple-system, sans-serif;
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+
 
   --radius-sm: 2px;
   --radius-md: 4px;
