@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { ShoppingBag, Plus, Minus, X } from "lucide-react";
@@ -18,6 +18,8 @@ export function CartSheet({ trigger }: { trigger?: React.ReactNode } = {}) {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
 
   const goCheckout = () => {
     setOpen(false);
@@ -32,7 +34,7 @@ export function CartSheet({ trigger }: { trigger?: React.ReactNode } = {}) {
           <button aria-label="Cart" className="relative grid h-9 w-9 place-items-center rounded-full text-foreground transition-all duration-300 hover:scale-110 hover:text-[color:var(--gold)]">
             <IoCartOutline className="h-[21px] w-[21px]" />
             <AnimatePresence>
-              {count > 0 && (
+              {mounted && count > 0 && (
                 <motion.span
                   key={count}
                   initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}
