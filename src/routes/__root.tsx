@@ -105,14 +105,8 @@ function RootShell({ children }: { children: ReactNode }) {
           </div>
         </div>
         {children}
-        <script dangerouslySetInnerHTML={{ __html: `
-          (function(){
-            function hide(){ var s=document.getElementById('fa-splash'); if(!s) return; s.classList.add('fa-splash-hide'); setTimeout(function(){ s && s.remove(); }, 220); }
-            if (document.readyState !== 'loading') { requestAnimationFrame(hide); }
-            else { document.addEventListener('DOMContentLoaded', function(){ requestAnimationFrame(hide); }); }
-          })();
-        `}} />
         <Scripts />
+
       </body>
     </html>
   );
