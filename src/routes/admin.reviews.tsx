@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Check, Star, Trash2, Search, Image as ImageIcon } from "lucide-react";
+import { Check, Star, Trash2, Search, Image as ImageIcon, X as XIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { SafeImage } from "@/components/SafeImage";
 
@@ -152,33 +152,33 @@ function AdminReviews() {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-5">
+        <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
           {filtered.map((r) => {
             const p = r.product_id ? productsQ.data?.get(r.product_id) : undefined;
             return (
-              <article key={r.id} className="flex flex-col gap-3 rounded-lg border border-border bg-card p-4 shadow-xl">
-                <div className="flex items-center gap-3 border-b border-border pb-3">
-                  <div className="grid h-11 w-11 shrink-0 place-items-center overflow-hidden rounded-lg border border-border bg-background">
+              <article key={r.id} className="flex flex-col gap-2.5 rounded-lg border border-border bg-card p-3 shadow-xl">
+                <div className="flex items-center gap-2 border-b border-border pb-2">
+                  <div className="grid h-9 w-9 shrink-0 place-items-center overflow-hidden rounded-md border border-border bg-background">
                     {p?.image_url ? (
                       <SafeImage src={p.image_url} alt={p.name} wrapperClassName="h-full w-full" className="h-full w-full object-cover" />
                     ) : (
-                      <ImageIcon className="h-4 w-4 text-muted-foreground" />
+                      <ImageIcon className="h-3.5 w-3.5 text-muted-foreground" />
                     )}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <div className="truncate font-display text-sm">{p?.name ?? "Unknown product"}</div>
-                    <div className="truncate text-[10px] track-luxury text-muted-foreground">
-                      {r.author_name}{r.email ? ` · ${r.email}` : ""}
+                    <div className="truncate font-display text-xs">{p?.name ?? "Unknown product"}</div>
+                    <div className="truncate text-[9px] track-luxury text-muted-foreground">
+                      {r.author_name}
                     </div>
                   </div>
                   <span
-                    className={`shrink-0 rounded-full px-2 py-0.5 text-[9px] track-luxury ${
+                    className={`shrink-0 rounded-full px-1.5 py-0.5 text-[8px] track-luxury ${
                       r.is_approved
                         ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
                         : "bg-muted text-muted-foreground"
                     }`}
                   >
-                    {r.is_approved ? "Active" : "Inactive"}
+                    {r.is_approved ? "On" : "Off"}
                   </span>
                 </div>
 
@@ -187,64 +187,71 @@ function AdminReviews() {
                     {[1, 2, 3, 4, 5].map((n) => (
                       <Star
                         key={n}
-                        className={`h-3.5 w-3.5 ${
+                        className={`h-3 w-3 ${
                           n <= r.rating ? "fill-[color:var(--gold)] text-[color:var(--gold)]" : "text-muted-foreground/40"
                         }`}
                       />
                     ))}
                   </div>
-                  <span className="text-[10px] text-muted-foreground">
+                  <span className="text-[9px] text-muted-foreground">
                     {new Date(r.created_at).toLocaleDateString()}
                   </span>
                 </div>
 
-                {r.title && <div className="font-display text-base leading-tight">{r.title}</div>}
-                <p className="text-xs leading-relaxed text-muted-foreground whitespace-pre-wrap">{r.body}</p>
+                {r.title && <div className="line-clamp-1 font-display text-sm leading-tight">{r.title}</div>}
+                <p className="line-clamp-3 text-[11px] leading-relaxed text-muted-foreground">{r.body}</p>
 
                 {Array.isArray(r.images) && r.images.length > 0 && (
-                  <div className="flex flex-wrap gap-1.5">
-                    {r.images.slice(0, 6).map((url, i) => (
+                  <div className="flex flex-wrap gap-1">
+                    {r.images.slice(0, 4).map((url, i) => (
                       <SafeImage
                         key={i}
                         src={url}
                         alt=""
-                        wrapperClassName="h-12 w-12 rounded-sm border border-border overflow-hidden"
-                        className="h-12 w-12 object-cover"
+                        wrapperClassName="h-9 w-9 rounded-sm border border-border overflow-hidden"
+                        className="h-9 w-9 object-cover"
                       />
                     ))}
                   </div>
                 )}
 
-                <div className="mt-auto flex flex-wrap items-center gap-2 border-t border-border pt-3">
+                <div className="mt-auto flex items-center justify-end gap-1.5 border-t border-border pt-2">
                   {r.is_approved ? (
                     <button
                       onClick={() => update(r.id, { is_approved: false })}
-                      className="flex-1 rounded-lg border border-border px-2.5 py-1.5 text-[10px] track-luxury text-muted-foreground shadow-xl hover:border-destructive hover:text-destructive"
+                      title="Deactivate"
+                      aria-label="Deactivate"
+                      className="grid h-7 w-7 place-items-center rounded-md border border-border text-muted-foreground shadow-xl hover:border-destructive hover:text-destructive"
                     >
-                      Deactivate
+                      <XIcon className="h-3.5 w-3.5" />
                     </button>
                   ) : (
                     <button
                       onClick={() => update(r.id, { is_approved: true })}
-                      className="flex-1 rounded-lg border border-emerald-500/50 bg-emerald-500/10 px-2.5 py-1.5 text-[10px] track-luxury text-emerald-600 shadow-xl hover:bg-emerald-500/20 dark:text-emerald-400"
+                      title="Activate"
+                      aria-label="Activate"
+                      className="grid h-7 w-7 place-items-center rounded-md border border-emerald-500/50 bg-emerald-500/10 text-emerald-600 shadow-xl hover:bg-emerald-500/20 dark:text-emerald-400"
                     >
-                      <Check className="mr-1 inline h-3 w-3" /> Activate
+                      <Check className="h-3.5 w-3.5" />
                     </button>
                   )}
                   <button
                     onClick={() => update(r.id, { is_featured: !r.is_featured })}
-                    className={`flex-1 rounded-lg border px-2.5 py-1.5 text-[10px] track-luxury shadow-xl ${
+                    title={r.is_featured ? "Unfeature" : "Feature"}
+                    aria-label={r.is_featured ? "Unfeature" : "Feature"}
+                    className={`grid h-7 w-7 place-items-center rounded-md border shadow-xl ${
                       r.is_featured
                         ? "border-[color:var(--gold)] bg-[color:var(--gold)]/10 text-[color:var(--gold)]"
                         : "border-border text-muted-foreground hover:text-foreground"
                     }`}
                   >
-                    <Star className="mr-1 inline h-3 w-3" /> {r.is_featured ? "Featured" : "Feature"}
+                    <Star className={`h-3.5 w-3.5 ${r.is_featured ? "fill-[color:var(--gold)]" : ""}`} />
                   </button>
                   <button
                     onClick={() => remove(r.id)}
-                    className="grid h-8 w-8 place-items-center rounded-lg border border-border text-muted-foreground shadow-xl hover:border-destructive hover:text-destructive"
                     title="Delete review"
+                    aria-label="Delete review"
+                    className="grid h-7 w-7 place-items-center rounded-md border border-border text-muted-foreground shadow-xl hover:border-destructive hover:text-destructive"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
                   </button>
