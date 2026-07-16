@@ -69,7 +69,7 @@ function OrdersPage() {
         </div>
       ) : (
         <div className="overflow-hidden rounded-sm border border-border bg-card">
-          <div className="overflow-x-auto">
+          <div className="max-h-[calc(100vh-16rem)] overflow-x-auto overflow-y-auto thin-scroll">
             <table className="w-full min-w-[720px] text-sm">
               <thead className="bg-secondary/50">
                 <tr className="text-left text-[10px] track-luxury text-muted-foreground">
