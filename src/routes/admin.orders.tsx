@@ -515,6 +515,7 @@ function OrderDetailsModal({ order, onClose }: { order: Order; onClose: () => vo
   const created = new Date(order.created_at);
   const subtotal = Number(order.subtotal ?? order.order_items.reduce((s, it) => s + Number(it.unit_price) * it.quantity, 0));
   const shipping = Number(order.shipping ?? 0);
+  const discount = Number(order.discount ?? 0);
   const total = Number(order.total);
 
   const doPrint = () => {
