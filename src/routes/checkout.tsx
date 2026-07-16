@@ -241,7 +241,7 @@ function CheckoutPage() {
             <Row label="Subtotal" value={formatBDT(subtotal)} />
             <Row label="Shipping" value={shipping === 0 ? "Free" : formatBDT(shipping)} />
             <div className="my-3 hairline" />
-            <div className="flex justify-between font-display text-xl"><span>Total</span><span className="text-[color:var(--gold)]">{formatBDT(total)}</span></div>
+            <div className="flex justify-between text-xl font-semibold"><span>Total</span><span className="text-[color:var(--gold)]">{formatBDT(total)}</span></div>
           </div>
         </aside>
       </div>
