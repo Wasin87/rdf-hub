@@ -22,7 +22,7 @@ export function Logo({ compact = false }: { compact?: boolean }) {
           "group-hover:scale-[1.035]",
           "group-hover:[filter:drop-shadow(0_0_14px_color-mix(in_oklab,var(--gold)_45%,transparent))_brightness(1.05)]",
           "motion-reduce:transition-none motion-reduce:group-hover:scale-100 motion-reduce:group-hover:[filter:none]",
-          compact ? "h-8 sm:h-9 lg:h-9" : "h-8 sm:h-9 lg:h-9",
+          compact ? "h-7 sm:h-9 lg:h-9" : "h-7 sm:h-9 lg:h-9",
         ].join(" ")}
       />
     </Link>

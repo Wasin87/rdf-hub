@@ -62,7 +62,7 @@ function Overview() {
           {(!ordersQ.data || ordersQ.data.length === 0) ? (
             <p className="text-sm text-muted-foreground">No orders yet.</p>
           ) : (
-            <ul className="divide-y divide-border">
+            <ul className="max-h-72 divide-y divide-border overflow-y-auto pr-1">
               {ordersQ.data.map((o) => (
                 <li key={o.id} className="flex items-center justify-between py-3">
                   <div>

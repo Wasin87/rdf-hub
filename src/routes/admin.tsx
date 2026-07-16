@@ -1,5 +1,6 @@
 import { createFileRoute, Link, Outlet, redirect, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, Package, ShoppingBag, Megaphone, Image as ImageIcon, Users, Tag, Star, Ticket } from "lucide-react";
+import { LayoutDashboard, Package, ShoppingBag, Megaphone, Image as ImageIcon, Users, Tag, Star, Ticket, ChevronRight } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/admin")({
@@ -36,13 +37,36 @@ const items = [
 
 function AdminLayout() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const scrollerRef = useRef<HTMLDivElement | null>(null);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+
+  useEffect(() => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    const check = () => setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 2);
+    check();
+    el.addEventListener("scroll", check, { passive: true });
+    window.addEventListener("resize", check);
+    return () => {
+      el.removeEventListener("scroll", check);
+      window.removeEventListener("resize", check);
+    };
+  }, []);
+
+  const scrollNext = () => {
+    scrollerRef.current?.scrollBy({ left: 160, behavior: "smooth" });
+  };
+
   return (
     <div className="flex h-[calc(100dvh-100px)] flex-col">
       {/* Fixed horizontal top nav */}
       <div className="sticky top-0 z-30 border-b border-[color:var(--gold)]/15 bg-section/95 backdrop-blur supports-[backdrop-filter]:bg-section/80">
         <div className="px-3 py-3 sm:px-4 lg:px-6">
-          <nav>
-            <div className="flex items-center gap-1 overflow-x-auto scrollbar-none [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <nav className="relative">
+            <div
+              ref={scrollerRef}
+              className={`flex items-center gap-1 overflow-x-auto scrollbar-none [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${canScrollRight ? "pr-10" : ""}`}
+            >
               {items.map((it) => {
                 const active = it.exact ? pathname === it.to : pathname.startsWith(it.to);
                 const Icon = it.icon;
@@ -57,9 +81,23 @@ function AdminLayout() {
                 );
               })}
             </div>
+            {canScrollRight && (
+              <button
+                type="button"
+                onClick={scrollNext}
+                aria-label="Scroll tabs right"
+                className="pointer-events-auto absolute right-0 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-full border border-[color:var(--gold)]/40 bg-background/95 text-[color:var(--gold)] shadow-md backdrop-blur transition-colors hover:bg-[color:var(--gold)]/10 lg:hidden"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            )}
+            {canScrollRight && (
+              <div className="pointer-events-none absolute right-8 top-0 h-full w-8 bg-gradient-to-l from-section to-transparent lg:hidden" />
+            )}
           </nav>
         </div>
       </div>
+
 
 
       {/* Scrollable page content */}
