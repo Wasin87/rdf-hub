@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ChevronDown, LogOut, Search, LayoutDashboard, Heart, ShoppingBag, Settings as SettingsIcon, Shield } from "lucide-react";
-import { TbUserHexagon } from "react-icons/tb";
-import { FaSearchengin } from "react-icons/fa";
+import { Menu, X, ChevronDown, LogOut, LayoutDashboard, Heart, ShoppingBag, Settings as SettingsIcon, Shield } from "lucide-react";
+import { FaRegUser } from "react-icons/fa";
+import { IoSearch } from "react-icons/io5";
 import { Logo } from "./Logo";
 import { ThemeToggle } from "./ThemeToggle";
 import { SearchModal } from "./SearchModal";
@@ -78,7 +78,7 @@ export function Navbar() {
                   >
                     <div className="max-h-[70vh] overflow-y-auto overscroll-contain p-3">
                       <button onClick={() => { setMobileOpen(false); setSearchOpen(true); }} className="mb-3 flex h-10 w-full items-center gap-2 rounded-md border border-border bg-card px-3 text-xs text-muted-foreground hover:border-[color:var(--gold)]/40">
-                        <FaSearchengin className="h-4 w-4 text-[color:var(--gold)]" /> Search fragrances...
+                        <IoSearch className="h-4 w-4 text-[color:var(--gold)]" /> Search fragrances...
                       </button>
                       <div className="flex flex-col">
                         {navItems.map((item) => {
@@ -187,15 +187,15 @@ export function Navbar() {
         {/* RIGHT: icons */}
         <div className="flex items-center justify-end gap-1.5 sm:gap-2">
           <button onClick={() => setSearchOpen(true)} aria-label="Open search" className={iconBtn}>
-            <FaSearchengin className="h-5 w-5" />
+            <IoSearch className="h-5 w-5" />
           </button>
           <div className="hidden sm:block"><WishlistSheet /></div>
-          <CartSheet />
+          <div className="hidden lg:block"><CartSheet /></div>
           {user && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button aria-label="Account menu" className={iconBtn}>
-                  <TbUserHexagon className="h-[18px] w-[18px]" />
+                  <FaRegUser className="h-[17px] w-[17px]" />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-60">

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Search, X } from "lucide-react";
+import { X } from "lucide-react";
+import { IoSearch } from "react-icons/io5";
 import { motion, AnimatePresence } from "framer-motion";
 import { fetchProducts, type Product, resolveImage } from "@/lib/catalog";
 import { formatBDT, discountedPrice } from "@/lib/format";
@@ -55,7 +56,7 @@ export function SearchModal({ open, onClose }: { open: boolean; onClose: () => v
             onClick={(e) => e.stopPropagation()}
           >
             <form onSubmit={submit} className="relative border-b border-border">
-              <Search className="pointer-events-none absolute left-5 top-1/2 h-4 w-4 -translate-y-1/2 text-[color:var(--gold)]" />
+              <IoSearch className="pointer-events-none absolute left-5 top-1/2 h-4 w-4 -translate-y-1/2 text-[color:var(--gold)]" />
               <input
                 autoFocus
                 value={q}

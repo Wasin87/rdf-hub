@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Search, X } from "lucide-react";
+import { X } from "lucide-react";
+import { IoSearch } from "react-icons/io5";
 import { motion, AnimatePresence } from "framer-motion";
 import { fetchProducts, type Product, resolveImage } from "@/lib/catalog";
 import { formatBDT, discountedPrice } from "@/lib/format";
@@ -43,7 +44,7 @@ export function SearchBar({ inDrawer = false }: { inDrawer?: boolean }) {
   return (
     <div ref={ref} className={`relative ${inDrawer ? "w-full" : "w-full max-w-xs"}`}>
       <form onSubmit={submit} className="relative">
-        <Search className="pointer-events-none absolute left-4 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+        <IoSearch className="pointer-events-none absolute left-4 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
         <input
           value={q}
           onChange={(e) => { setQ(e.target.value); setOpen(true); }}
