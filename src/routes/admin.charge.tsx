@@ -110,8 +110,13 @@ function AdminCharge() {
     const list = overridesQ.data ?? [];
     const s = overrideSearch.trim().toLowerCase();
     if (!s) return list;
-    return list.filter((o) => (o.products?.name ?? "").toLowerCase().includes(s));
+    return list.filter((o) => {
+      const name = (o.products?.name ?? "").toLowerCase();
+      const slug = (o.products?.slug ?? "").toLowerCase();
+      return name.includes(s) || slug.includes(s);
+    });
   }, [overridesQ.data, overrideSearch]);
+
 
   const updateOverride = async (id: string, patch: Partial<Pick<Override, "charge" | "is_free">>) => {
     const { error } = await supabase.from("product_delivery_charges" as never).update(patch as never).eq("id", id);
