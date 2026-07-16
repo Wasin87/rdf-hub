@@ -1,5 +1,7 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, Store, Heart, ShoppingBag, User } from "lucide-react";
+import { Home, Store, Heart } from "lucide-react";
+import { IoCartOutline, IoSearch } from "react-icons/io5";
+import { FaRegUser } from "react-icons/fa";
 import { useCart } from "@/stores/cart";
 import { useWishlist } from "@/stores/wishlist";
 import { useAuth } from "@/hooks/useAuth";
@@ -8,8 +10,8 @@ const items = [
   { to: "/", label: "Home", icon: Home, exact: true },
   { to: "/shop", label: "Shop", icon: Store },
   { to: "/dashboard/wishlist", label: "Wishlist", icon: Heart, badge: "wishlist" as const },
-  { to: "/dashboard/cart", label: "Cart", icon: ShoppingBag, badge: "cart" as const },
-  { to: "/dashboard", label: "Profile", icon: User, requiresAuth: true },
+  { to: "/dashboard/cart", label: "Cart", icon: IoCartOutline, badge: "cart" as const },
+  { to: "/dashboard", label: "Profile", icon: FaRegUser, requiresAuth: true },
 ];
 
 export function MobileBottomNav() {

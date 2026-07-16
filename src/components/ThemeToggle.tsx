@@ -9,7 +9,7 @@ export function ThemeToggle() {
     <button
       onClick={toggle}
       aria-label={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
-      className="relative grid h-9 w-9 place-items-center overflow-hidden rounded-sm border border-[color:var(--gold)]/30 text-foreground transition-colors hover:border-[color:var(--gold)] hover:text-[color:var(--gold)]"
+      className="relative grid h-9 w-9 place-items-center overflow-hidden rounded-full text-foreground transition-all duration-300 hover:scale-110 hover:text-[color:var(--gold)]"
     >
       <AnimatePresence mode="wait" initial={false}>
         {theme === "dark" ? (

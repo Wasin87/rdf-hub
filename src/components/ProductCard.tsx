@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { ShoppingBag, ArrowRight } from "lucide-react";
-import { BiCartDownload } from "react-icons/bi";
+import { IoCartOutline } from "react-icons/io5";
 import { TbHeartPlus } from "react-icons/tb";
 import { toast } from "sonner";
 import type { Product } from "@/lib/catalog";
@@ -104,7 +104,7 @@ export function ProductCard({ product }: { product: Product }) {
         </select>
         <div className="mt-0.5 flex items-center justify-between gap-2 sm:mt-1">
           <div className="flex items-baseline gap-1.5 min-w-0 sm:gap-2">
-            <span className="font-display text-sm font-bold text-[color:var(--gold)] truncate sm:text-base md:text-lg">{formatBDT(finalPrice)}</span>
+            <span className="text-sm font-bold text-[color:var(--gold)] truncate sm:text-base md:text-lg">{formatBDT(finalPrice)}</span>
             {product.discount_percent > 0 && v && (
               <span className="text-[10px] text-muted-foreground line-through sm:text-xs">{formatBDT(v.price)}</span>
             )}
@@ -115,7 +115,7 @@ export function ProductCard({ product }: { product: Product }) {
             aria-label="Add to cart"
             className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-foreground text-background transition-all duration-300 hover:scale-110 hover:bg-[color:var(--gold)] hover:text-[color:var(--gold-foreground)] active:scale-95 sm:h-9 sm:w-9 lg:opacity-0 lg:translate-y-1 group-hover/card:lg:opacity-100 group-hover/card:lg:translate-y-0"
           >
-            <BiCartDownload className="h-4 w-4 sm:h-[18px] sm:w-[18px]" />
+            <IoCartOutline className="h-4 w-4 sm:h-[19px] sm:w-[19px]" />
           </button>
         </div>
       </div>

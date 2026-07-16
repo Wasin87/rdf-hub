@@ -12,7 +12,7 @@ function AboutPage() {
     <div className="container-luxury py-16 lg:py-24">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mx-auto max-w-3xl text-center">
         <p className="text-[11px] track-luxury text-[color:var(--gold)]">Our Story</p>
-        <h1 className="mt-3 font-display text-5xl md:text-6xl"><span className="gold-text">The Art of Decant</span></h1>
+        <h1 className="mt-3 font-display text-5xl font-bold text-foreground md:text-6xl">The Art of Decant</h1>
         <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
           FRAG AVENUE was founded with a singular conviction: that the great fragrances of our time should not be locked behind a single, intimidating bottle. Through painstakingly hand-decanted vials of 3ml to 30ml, we make the world's most prestigious houses accessible to discerning Bangladeshi connoisseurs.
         </p>

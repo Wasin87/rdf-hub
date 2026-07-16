@@ -48,7 +48,7 @@ function Overview() {
           <Link key={s.label} to={s.href as never} className="card-luxury p-5">
             <s.Icon className="h-5 w-5 text-[color:var(--gold)]" />
             <div className="mt-3 text-[10px] track-luxury text-muted-foreground">{s.label}</div>
-            <div className="mt-1 font-display text-3xl">{s.value}</div>
+            <div className="mt-1 text-3xl font-semibold">{s.value}</div>
           </Link>
         ))}
       </div>
@@ -85,7 +85,7 @@ function Overview() {
           ) : (
             <>
               <p className="text-sm text-muted-foreground">{cartCount} item{cartCount === 1 ? "" : "s"}, totaling</p>
-              <p className="mt-1 font-display text-3xl text-[color:var(--gold)]">{formatBDT(cartSubtotal)}</p>
+              <p className="mt-1 text-3xl font-semibold text-[color:var(--gold)]">{formatBDT(cartSubtotal)}</p>
               <Link to="/checkout" className="btn-liquid mt-5 inline-flex">Checkout</Link>
             </>
           )}

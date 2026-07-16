@@ -70,7 +70,7 @@ function OrdersPage() {
                 <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-4">
                   <div>
                     <div className="text-[10px] track-luxury text-muted-foreground">Order</div>
-                    <div className="font-display text-lg">{o.order_number}</div>
+                    <div className="text-lg font-semibold">{o.order_number}</div>
                   </div>
                   <div>
                     <div className="text-[10px] track-luxury text-muted-foreground">Payment</div>
@@ -87,7 +87,7 @@ function OrdersPage() {
                   </div>
                   <div className="text-right">
                     <div className="text-[10px] track-luxury text-muted-foreground">Total</div>
-                    <div className="font-display text-lg">{formatBDT(Number(o.total))}</div>
+                    <div className="text-lg font-semibold">{formatBDT(Number(o.total))}</div>
                   </div>
                 </div>
 

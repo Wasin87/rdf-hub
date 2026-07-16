@@ -48,7 +48,7 @@ function ResetPasswordPage() {
       <div className="w-full max-w-md">
         <div className="mb-8 flex flex-col items-center"><Logo compact /></div>
         <div className="rounded-sm border border-[color:var(--gold)]/20 bg-card p-8 shadow-card">
-          <h1 className="text-center font-display text-3xl"><span className="gold-text">Set a New Password</span></h1>
+          <h1 className="text-center font-display text-3xl font-bold text-foreground">Set a New Password</h1>
           <p className="mt-2 text-center text-sm text-muted-foreground">For your security, please choose a fresh password before continuing.</p>
           <form onSubmit={onSubmit} className="mt-7 space-y-4">
             <Field label="New Password" icon={<Lock className="h-3.5 w-3.5" />} type="password" {...form.register("password")} error={form.formState.errors.password?.message} />

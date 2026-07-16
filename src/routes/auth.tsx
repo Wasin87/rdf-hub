@@ -101,7 +101,7 @@ function AuthPage() {
         <div className="mb-8 flex flex-col items-center"><Logo compact /></div>
 
         <div className="rounded-sm border border-[color:var(--gold)]/20 bg-card p-8 shadow-card">
-          <h1 className="text-center font-display text-3xl"><span className="gold-text">{mode === "login" ? "Welcome Back" : "Join the Maison"}</span></h1>
+          <h1 className="text-center font-display text-3xl font-bold text-foreground">{mode === "login" ? "Welcome Back" : "Join the Maison"}</h1>
           <p className="mt-2 text-center text-sm text-muted-foreground">{mode === "login" ? "Sign in to continue your journey." : "Create an account to begin."}</p>
 
           <button onClick={google} disabled={submitting} className="mt-7 flex h-11 w-full items-center justify-center gap-3 rounded-sm border border-border bg-background text-sm font-medium transition-colors hover:border-[color:var(--gold)] hover:text-[color:var(--gold)] disabled:opacity-50">

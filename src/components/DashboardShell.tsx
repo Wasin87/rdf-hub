@@ -17,7 +17,7 @@ export function DashboardShell({ title, description, children }: { title: string
     <div className="container-luxury py-10 lg:py-14">
       <div className="mb-8">
         <p className="text-[11px] track-luxury text-[color:var(--gold)]">My Account</p>
-        <h1 className="mt-2 font-display text-4xl"><span className="gold-text">{title}</span></h1>
+        <h1 className="mt-2 font-display text-4xl font-bold text-foreground">{title}</h1>
         {description && <p className="mt-2 text-sm text-muted-foreground">{description}</p>}
       </div>
       <div className="grid gap-10 lg:grid-cols-[240px_1fr]">

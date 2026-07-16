@@ -71,7 +71,7 @@ function AdminDashboard() {
     <div className="p-4 sm:p-6 lg:p-10">
       <header className="mb-8">
         <p className="text-[11px] track-luxury text-[color:var(--gold)]">Overview</p>
-        <h1 className="mt-1 font-display text-3xl sm:text-4xl"><span className="gold-text">Dashboard</span></h1>
+        <h1 className="mt-1 font-display text-3xl font-bold text-foreground sm:text-4xl">Dashboard</h1>
       </header>
 
       {isLoading ? <p className="text-sm text-muted-foreground">Loading analytics…</p> : data && (
@@ -158,7 +158,7 @@ function Stat({ icon, label, value }: { icon: React.ReactNode; label: string; va
       <div className="flex items-center gap-2 text-[10px] track-luxury text-muted-foreground">
         <span className="text-[color:var(--gold)]">{icon}</span> {label}
       </div>
-      <div className="mt-2 font-display text-2xl">{value}</div>
+      <div className="mt-2 text-2xl font-semibold">{value}</div>
     </div>
   );
 }

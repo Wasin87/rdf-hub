@@ -48,7 +48,7 @@ function CartPage() {
           </div>
           <aside className="h-fit rounded-sm border border-[color:var(--gold)]/20 bg-section p-6">
             <div className="text-[10px] track-luxury text-muted-foreground">Subtotal</div>
-            <div className="font-display text-3xl text-[color:var(--gold)]">{formatBDT(subtotal)}</div>
+            <div className="text-3xl font-semibold text-[color:var(--gold)]">{formatBDT(subtotal)}</div>
             <Link to="/checkout" className="btn-liquid mt-5 w-full">Proceed to Checkout</Link>
           </aside>
         </div>

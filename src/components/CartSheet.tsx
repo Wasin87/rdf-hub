@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { ShoppingBag, Plus, Minus, X } from "lucide-react";
-import { BiCartDownload } from "react-icons/bi";
+import { IoCartOutline } from "react-icons/io5";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "@/stores/cart";
 import { formatBDT } from "@/lib/format";
@@ -29,7 +29,7 @@ export function CartSheet() {
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <button aria-label="Cart" className="relative grid h-9 w-9 place-items-center rounded-full text-foreground transition-all duration-300 hover:scale-110 hover:text-[color:var(--gold)]">
-          <BiCartDownload className="h-[19px] w-[19px]" />
+          <IoCartOutline className="h-[21px] w-[21px]" />
           <AnimatePresence>
             {count > 0 && (
               <motion.span
@@ -84,7 +84,7 @@ export function CartSheet() {
             <div className="border-t border-[color:var(--gold)]/30 bg-section/50 p-5">
               <div className="mb-3 flex items-center justify-between">
                 <span className="text-xs track-luxury text-muted-foreground">Subtotal</span>
-                <span className="font-display text-xl text-[color:var(--gold)]">{formatBDT(subtotal)}</span>
+                <span className="text-xl font-semibold text-[color:var(--gold)]">{formatBDT(subtotal)}</span>
               </div>
               <p className="mb-4 text-[11px] text-muted-foreground">Shipping calculated at checkout. Free over ৳ 5,000.</p>
               <button onClick={goCheckout} className="btn-liquid w-full">Checkout</button>

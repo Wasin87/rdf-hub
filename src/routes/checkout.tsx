@@ -139,7 +139,7 @@ function CheckoutPage() {
 
   return (
     <div className="container-luxury py-12 lg:py-16">
-      <h1 className="mb-2 font-display text-4xl"><span className="gold-text">Checkout</span></h1>
+      <h1 className="mb-2 font-display text-4xl font-bold text-foreground">Checkout</h1>
       <p className="text-sm text-muted-foreground">Authenticity guaranteed · Secure payment</p>
 
       <div className="mt-10 grid gap-12 lg:grid-cols-[1fr_400px]">
@@ -241,7 +241,7 @@ function CheckoutPage() {
             <Row label="Subtotal" value={formatBDT(subtotal)} />
             <Row label="Shipping" value={shipping === 0 ? "Free" : formatBDT(shipping)} />
             <div className="my-3 hairline" />
-            <div className="flex justify-between font-display text-xl"><span>Total</span><span className="text-[color:var(--gold)]">{formatBDT(total)}</span></div>
+            <div className="flex justify-between text-xl font-semibold"><span>Total</span><span className="text-[color:var(--gold)]">{formatBDT(total)}</span></div>
           </div>
         </aside>
       </div>
