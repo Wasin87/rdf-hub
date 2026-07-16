@@ -57,9 +57,27 @@ function CheckoutPage() {
 
   const discount = appliedCoupon?.discount ?? 0;
   const discountedSubtotal = Math.max(0, subtotal - discount);
-  const shipping = discountedSubtotal >= 5000 ? 0 : 120;
-  const total = discountedSubtotal + shipping;
   const isMobilePayment = method !== "cod";
+
+  // Live shipping preview from server (respects global settings + per-product overrides).
+  const shippingPreviewQ = useQuery({
+    queryKey: [
+      "compute_shipping",
+      discountedSubtotal,
+      items.map((i) => `${i.variantId}:${i.quantity}`).join("|"),
+    ],
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc("compute_shipping" as never, {
+        _items: items.map((i) => ({ variant_id: i.variantId, quantity: i.quantity })),
+        _subtotal: discountedSubtotal,
+      } as never);
+      if (error) throw error;
+      return Number(data ?? 0);
+    },
+    enabled: items.length > 0,
+  });
+  const shipping = shippingPreviewQ.data ?? 0;
+  const total = discountedSubtotal + shipping;
 
   const paymentSettingsQ = useQuery({
     queryKey: ["payment_numbers"],
