@@ -120,13 +120,15 @@ function ProductPage() {
       <div className="grid gap-12 lg:grid-cols-2">
         {/* Gallery */}
         <div className="mx-auto flex w-full max-w-[320px] flex-col gap-3 sm:max-w-sm lg:mx-0 lg:max-w-none">
-          <motion.button
-            type="button"
-            onClick={() => setLightbox(true)}
+          <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
-            className="relative block overflow-hidden rounded-sm bg-secondary"
+            onClick={() => setLightbox(true)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setLightbox(true); } }}
+            className="relative block cursor-zoom-in overflow-hidden rounded-sm bg-secondary"
             aria-label="Open image"
           >
             <motion.div
@@ -164,7 +166,8 @@ function ProductPage() {
                 </button>
               </>
             )}
-          </motion.button>
+          </motion.div>
+
 
           {gallery.length > 1 && (
             <div className="grid grid-cols-5 gap-2">
