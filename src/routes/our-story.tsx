@@ -34,13 +34,12 @@ function OurStoryPage() {
   return (
     <div className="bg-background">
       {/* Hero */}
-      <section className="relative overflow-hidden border-b border-border bg-foreground py-24 text-background md:py-32">
-        <div className="absolute inset-0 opacity-20 gold-gradient" aria-hidden />
+      <section className="relative overflow-hidden border-b border-border py-24 md:py-32">
         <div className="container-luxury relative text-center">
           <motion.h1 initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="font-display text-5xl leading-tight md:text-7xl">
             <span className="text-foreground">Our Story</span>
           </motion.h1>
-          <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-background/75 md:text-lg">
+          <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg">
             A devotion to scent. A pursuit of authenticity. A boutique built for those who understand that fragrance is the most intimate luxury one can wear.
           </motion.p>
         </div>
@@ -159,17 +158,17 @@ function OurStoryPage() {
       </section>
 
       {/* CTA */}
-      <section className="border-t border-border bg-foreground py-20 text-background md:py-28">
+      <section className="border-t border-border bg-section py-20 md:py-28">
         <div className="container-luxury text-center">
           <h2 className="font-display text-3xl md:text-5xl">
             <span className="gold-text">The Avenue Awaits</span>
           </h2>
-          <p className="mx-auto mt-4 max-w-xl text-background/70">
+          <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
             Whether you are building a wardrobe of scents or searching for the one that will become your signature — your next chapter begins with a single vial.
           </p>
           <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link to="/shop" className="btn-liquid inline-flex">Explore the Boutique</Link>
-            <Link to="/about" className="inline-flex items-center border border-[color:var(--gold)]/40 px-8 py-3 text-[11px] track-luxury text-[color:var(--gold-soft)] transition-colors hover:bg-[color:var(--gold)]/10">
+            <Link to="/about" className="inline-flex items-center border border-[color:var(--gold)]/40 px-8 py-3 text-[11px] track-luxury text-[color:var(--gold)] transition-colors hover:bg-[color:var(--gold)]/10">
               About the Maison
             </Link>
           </div>
