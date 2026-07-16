@@ -118,6 +118,34 @@ function CheckoutPage() {
     </div>
   );
 
+  const applyCoupon = async () => {
+    setCouponErr(null);
+    const code = couponInput.trim();
+    if (!code) { setCouponErr("Enter a coupon code"); return; }
+    setApplyingCoupon(true);
+    try {
+      const { data: rows, error } = await supabase.rpc("validate_coupon" as never, {
+        _code: code,
+        _subtotal: subtotal,
+      } as never);
+      if (error) throw error;
+      const row = (Array.isArray(rows) ? rows[0] : rows) as { code: string; discount: number } | null;
+      if (!row) throw new Error("Coupon could not be applied");
+      setAppliedCoupon({ code: row.code, discount: Number(row.discount) });
+      toast.success(`Coupon applied — you saved ${formatBDT(Number(row.discount))}`);
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : "Invalid coupon";
+      setCouponErr(msg);
+      setAppliedCoupon(null);
+    } finally { setApplyingCoupon(false); }
+  };
+
+  const removeCoupon = () => {
+    setAppliedCoupon(null);
+    setCouponInput("");
+    setCouponErr(null);
+  };
+
   const onSubmit = form.handleSubmit(async (data) => {
     setMethodErr(null);
     if (isMobilePayment) {
@@ -133,14 +161,18 @@ function CheckoutPage() {
         _txn_id: isMobilePayment ? txnId.trim() : "",
         _payment_phone: isMobilePayment ? paymentPhone.trim() : "",
         _notes: data.notes ?? "",
-      });
+        _coupon_code: appliedCoupon?.code ?? "",
+      } as never);
       if (error) throw error;
-      const order = Array.isArray(rows) ? rows[0] : rows;
+      const order = (Array.isArray(rows) ? rows[0] : rows) as { id: string; order_number: string; total: number } | null;
       if (!order?.id) throw new Error("Order could not be created");
 
       clear();
       toast.success("Order placed", { description: `Order ${order.order_number} confirmed.` });
-      window.location.assign("/dashboard/orders");
+      navigate({
+        to: "/order-confirmed",
+        search: { order: order.order_number, total: String(order.total), method },
+      });
     } catch (e: unknown) {
       toast.error(e instanceof Error ? e.message : "Could not place order");
     } finally { setSubmitting(false); }
