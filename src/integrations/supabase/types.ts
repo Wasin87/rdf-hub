@@ -272,6 +272,33 @@ export type Database = {
         }
         Relationships: []
       }
+      delivery_settings: {
+        Row: {
+          created_at: string
+          default_charge: number
+          free_over_threshold: number
+          id: string
+          is_free_globally: boolean
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          default_charge?: number
+          free_over_threshold?: number
+          id?: string
+          is_free_globally?: boolean
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          default_charge?: number
+          free_over_threshold?: number
+          id?: string
+          is_free_globally?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
       notice_banners: {
         Row: {
           created_at: string
@@ -517,6 +544,41 @@ export type Database = {
           updated_by?: string | null
         }
         Relationships: []
+      }
+      product_delivery_charges: {
+        Row: {
+          charge: number
+          created_at: string
+          id: string
+          is_free: boolean
+          product_id: string
+          updated_at: string
+        }
+        Insert: {
+          charge?: number
+          created_at?: string
+          id?: string
+          is_free?: boolean
+          product_id: string
+          updated_at?: string
+        }
+        Update: {
+          charge?: number
+          created_at?: string
+          id?: string
+          is_free?: boolean
+          product_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_delivery_charges_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: true
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       product_images: {
         Row: {
@@ -912,6 +974,10 @@ export type Database = {
       }
       apply_coupon_internal: {
         Args: { _code: string; _subtotal: number }
+        Returns: number
+      }
+      compute_shipping: {
+        Args: { _items: Json; _subtotal: number }
         Returns: number
       }
       get_payment_number: { Args: { _method: string }; Returns: string }
