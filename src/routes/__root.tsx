@@ -116,6 +116,13 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  useEffect(() => {
+    const s = document.getElementById("fa-splash");
+    if (!s) return;
+    s.classList.add("fa-splash-hide");
+    const t = window.setTimeout(() => s.remove(), 260);
+    return () => window.clearTimeout(t);
+  }, []);
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
