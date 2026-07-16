@@ -198,7 +198,7 @@ function ProductPage() {
           </div>
 
           <div className="mt-6 flex items-baseline gap-3">
-            <span className="font-display text-4xl text-[color:var(--gold)]">{formatBDT(finalPrice)}</span>
+            <span className="font-sans text-4xl font-bold text-[color:var(--gold)]">{formatBDT(finalPrice)}</span>
             {product.discount_percent > 0 && v && (
               <span className="text-base text-muted-foreground line-through">{formatBDT(v.price)}</span>
             )}
