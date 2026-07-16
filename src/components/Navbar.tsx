@@ -185,7 +185,7 @@ export function Navbar() {
         </div>
 
         {/* RIGHT: icons */}
-        <div className="flex items-center justify-end gap-1.5 sm:gap-2">
+        <div className="flex items-center justify-end gap-0.5 sm:gap-1">
           <button onClick={() => setSearchOpen(true)} aria-label="Open search" className={iconBtn}>
             <IoSearch className="h-5 w-5" />
           </button>
