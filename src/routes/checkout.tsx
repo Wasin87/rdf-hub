@@ -1,11 +1,11 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
-import { ShoppingBag, ShieldCheck, Truck, Smartphone, Copy } from "lucide-react";
+import { ShoppingBag, ShieldCheck, Truck, Smartphone, Copy, Ticket, X, Check, Loader2 } from "lucide-react";
 import { useCart } from "@/stores/cart";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
