@@ -593,6 +593,8 @@ function OrderDetailsModal({ order, onClose }: { order: Order; onClose: () => vo
               ["OTP", getMeta(order).otp ?? "—"],
               ["Payment Phone", order.payment_phone ?? "—"],
               ["Subtotal", formatBDT(subtotal)],
+              ["Coupon Code", order.coupon_code ?? "—"],
+              ["Coupon Discount", discount > 0 ? `− ${formatBDT(discount)}` : "—"],
               ["Delivery Charge", formatBDT(shipping)],
               ["Grand Total", formatBDT(total)],
             ]} />
