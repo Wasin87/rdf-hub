@@ -9,7 +9,7 @@ import { formatBDT } from "@/lib/format";
 import { useAuth } from "@/hooks/useAuth";
 import { SafeImage } from "@/components/SafeImage";
 
-export function CartSheet() {
+export function CartSheet({ trigger }: { trigger?: React.ReactNode } = {}) {
   const items = useCart((s) => s.items);
   const setQty = useCart((s) => s.setQty);
   const remove = useCart((s) => s.remove);
@@ -28,19 +28,22 @@ export function CartSheet() {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <button aria-label="Cart" className="relative grid h-9 w-9 place-items-center rounded-full text-foreground transition-all duration-300 hover:scale-110 hover:text-[color:var(--gold)]">
-          <IoCartOutline className="h-[21px] w-[21px]" />
-          <AnimatePresence>
-            {count > 0 && (
-              <motion.span
-                key={count}
-                initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}
-                className="absolute -right-1.5 -top-1.5 grid h-4 min-w-4 place-items-center rounded-full bg-[color:var(--gold)] px-1 text-[9px] font-semibold text-[color:var(--gold-foreground)] shadow"
-              >{count}</motion.span>
-            )}
-          </AnimatePresence>
-        </button>
+        {trigger ?? (
+          <button aria-label="Cart" className="relative grid h-9 w-9 place-items-center rounded-full text-foreground transition-all duration-300 hover:scale-110 hover:text-[color:var(--gold)]">
+            <IoCartOutline className="h-[21px] w-[21px]" />
+            <AnimatePresence>
+              {count > 0 && (
+                <motion.span
+                  key={count}
+                  initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}
+                  className="absolute -right-1.5 -top-1.5 grid h-4 min-w-4 place-items-center rounded-full bg-[color:var(--gold)] px-1 text-[9px] font-semibold text-[color:var(--gold-foreground)] shadow"
+                >{count}</motion.span>
+              )}
+            </AnimatePresence>
+          </button>
+        )}
       </SheetTrigger>
+
       <SheetContent className="flex w-full flex-col gap-0 sm:max-w-md">
         <SheetHeader className="border-b border-border pb-4">
           <SheetTitle className="font-display text-xl">Your Cart {count > 0 && <span className="text-muted-foreground text-sm font-normal">({count})</span>}</SheetTitle>
