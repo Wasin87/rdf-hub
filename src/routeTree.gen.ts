@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as ShopRouteImport } from './routes/shop'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as OurStoryRouteImport } from './routes/our-story'
+import { Route as OrderConfirmedRouteImport } from './routes/order-confirmed'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -59,6 +60,11 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
 const OurStoryRoute = OurStoryRouteImport.update({
   id: '/our-story',
   path: '/our-story',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OrderConfirmedRoute = OrderConfirmedRouteImport.update({
+  id: '/order-confirmed',
+  path: '/order-confirmed',
   getParentRoute: () => rootRouteImport,
 } as any)
 const McpRoute = McpRouteImport.update({
@@ -243,6 +249,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/checkout': typeof CheckoutRoute
   '/mcp': typeof McpRoute
+  '/order-confirmed': typeof OrderConfirmedRoute
   '/our-story': typeof OurStoryRoute
   '/reset-password': typeof ResetPasswordRoute
   '/shop': typeof ShopRoute
@@ -279,6 +286,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/checkout': typeof CheckoutRoute
   '/mcp': typeof McpRoute
+  '/order-confirmed': typeof OrderConfirmedRoute
   '/our-story': typeof OurStoryRoute
   '/reset-password': typeof ResetPasswordRoute
   '/shop': typeof ShopRoute
@@ -317,6 +325,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/checkout': typeof CheckoutRoute
   '/mcp': typeof McpRoute
+  '/order-confirmed': typeof OrderConfirmedRoute
   '/our-story': typeof OurStoryRoute
   '/reset-password': typeof ResetPasswordRoute
   '/shop': typeof ShopRoute
@@ -356,6 +365,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/checkout'
     | '/mcp'
+    | '/order-confirmed'
     | '/our-story'
     | '/reset-password'
     | '/shop'
@@ -392,6 +402,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/checkout'
     | '/mcp'
+    | '/order-confirmed'
     | '/our-story'
     | '/reset-password'
     | '/shop'
@@ -429,6 +440,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/checkout'
     | '/mcp'
+    | '/order-confirmed'
     | '/our-story'
     | '/reset-password'
     | '/shop'
@@ -468,6 +480,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   CheckoutRoute: typeof CheckoutRoute
   McpRoute: typeof McpRoute
+  OrderConfirmedRoute: typeof OrderConfirmedRoute
   OurStoryRoute: typeof OurStoryRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   ShopRoute: typeof ShopRoute
@@ -500,6 +513,13 @@ declare module '@tanstack/react-router' {
       path: '/our-story'
       fullPath: '/our-story'
       preLoaderRoute: typeof OurStoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/order-confirmed': {
+      id: '/order-confirmed'
+      path: '/order-confirmed'
+      fullPath: '/order-confirmed'
+      preLoaderRoute: typeof OrderConfirmedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/mcp': {
@@ -814,6 +834,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   CheckoutRoute: CheckoutRoute,
   McpRoute: McpRoute,
+  OrderConfirmedRoute: OrderConfirmedRoute,
   OurStoryRoute: OurStoryRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   ShopRoute: ShopRoute,
