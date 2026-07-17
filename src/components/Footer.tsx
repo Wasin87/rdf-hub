@@ -15,8 +15,19 @@ export function Footer() {
               Curated luxury fragrance decants. Authentic, beautifully presented, delivered with discretion.
             </p>
             <div className="mt-6 flex gap-2">
-              {[Instagram, Facebook, Mail].map((Icon, i) => (
-                <a key={i} href="#" aria-label="Social" className="grid h-9 w-9 place-items-center rounded-sm border border-[color:var(--gold)]/40 text-white/80 transition-all hover:border-[color:var(--gold)] hover:text-[color:var(--gold)]">
+              {[
+                { Icon: Instagram, href: "https://www.instagram.com/fragavenuebd?igsh=aXEwdjRhOWhqMW8w&utm_source=qr", label: "Instagram" },
+                { Icon: Facebook, href: "https://facebook.com/fragavenuebd", label: "Facebook" },
+                { Icon: Mail, href: "mailto:fragavenuebd@gmail.com", label: "Email" },
+              ].map(({ Icon, href, label }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target={href.startsWith("mailto:") ? undefined : "_blank"}
+                  rel={href.startsWith("mailto:") ? undefined : "noopener noreferrer"}
+                  aria-label={label}
+                  className="grid h-9 w-9 place-items-center rounded-sm border border-[color:var(--gold)]/40 text-white/80 transition-all hover:border-[color:var(--gold)] hover:text-[color:var(--gold)]"
+                >
                   <Icon className="h-3.5 w-3.5" />
                 </a>
               ))}
