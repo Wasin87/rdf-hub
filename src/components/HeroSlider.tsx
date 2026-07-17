@@ -66,7 +66,7 @@ export function HeroSlider({ banners }: { banners: Banner[] }) {
             <span className="mb-5 inline-block rounded-sm border border-[color:var(--gold-soft)]/60 px-3 py-1 text-[10px] track-luxury text-[color:var(--gold-soft)]">
               FRAG AVENUE
             </span>
-            <h1 className="font-display text-5xl leading-[1.05] text-balance md:text-6xl lg:text-7xl">
+            <h1 style={{ fontFamily: '"Playfair Display", Georgia, serif' }} className="text-5xl leading-[1.05] text-balance md:text-6xl lg:text-7xl">
               <span className="gold-text">{current.title}</span>
             </h1>
             {current.subtitle && (
