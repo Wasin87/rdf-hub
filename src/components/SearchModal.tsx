@@ -61,8 +61,8 @@ export function SearchModal({ open, onClose }: { open: boolean; onClose: () => v
                 autoFocus
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
-                placeholder="Search fragrances, brands, collections..."
-                className="h-14 w-full bg-transparent pl-14 pr-14 font-display text-lg placeholder:text-muted-foreground focus:outline-none"
+                placeholder="Search fragrances"
+                className="h-14 w-full bg-transparent pl-14 pr-14 font-sans text-lg placeholder:text-gray-500 focus:outline-none"
               />
               <button type="button" onClick={onClose} aria-label="Close search" className="absolute right-4 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-sm border border-border text-muted-foreground hover:border-[color:var(--gold)] hover:text-[color:var(--gold)]">
                 <X className="h-3.5 w-3.5" />
@@ -70,7 +70,7 @@ export function SearchModal({ open, onClose }: { open: boolean; onClose: () => v
             </form>
             <div className="max-h-[60vh] overflow-y-auto">
               {!q.trim() && (
-                <div className="p-10 text-center text-xs track-luxury text-muted-foreground">
+                <div className="p-10 text-center font-sans text-xs text-gray-500">
                   Begin typing to discover fragrances
                 </div>
               )}
