@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-const ALLOWED_BUCKETS = new Set(["product-images", "review-images"]);
+const ALLOWED_BUCKETS = new Set(["product-images", "review-images", "avatars"]);
 
 function contentTypeForPath(path: string) {
   const ext = path.split(".").pop()?.toLowerCase();
