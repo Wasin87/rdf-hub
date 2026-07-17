@@ -275,7 +275,7 @@ function ProfilePage() {
               <input {...form.register("phone")} placeholder="+1 555 123 4567" className="h-11 w-full rounded-lg border border-border bg-background px-3 text-sm shadow-xl focus:border-[color:var(--gold)] focus:outline-none" />
             </div>
             <div>
-              <label className="mb-1.5 block text-[10px] track-luxury text-muted-foreground">Avatar URL</label>
+              <label className="mb-1.5 block text-[10px] track-luxury text-muted-foreground">Avatar URL (Optional)</label>
               <input {...form.register("avatar_url")} placeholder="https://…" className="h-11 w-full rounded-lg border border-border bg-background px-3 text-sm shadow-xl focus:border-[color:var(--gold)] focus:outline-none" />
               {form.formState.errors.avatar_url && <p className="mt-1 text-[11px] text-destructive">{form.formState.errors.avatar_url.message}</p>}
             </div>
