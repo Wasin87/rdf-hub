@@ -41,6 +41,7 @@ export type Review = { id: string; author_name: string; email?: string | null; r
 export const IMAGE_BUCKETS = {
   products: "product-images",
   reviews: "review-images",
+  avatars: "avatars",
 } as const;
 
 export const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
