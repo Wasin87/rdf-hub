@@ -46,6 +46,9 @@ function ProfilePage() {
   const [savingPwd, setSavingPwd] = useState(false);
   const [payment, setPayment] = useState({ bkash: "", nagad: "", rocket: "" });
   const [savingPayment, setSavingPayment] = useState(false);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const [deletingAvatar, setDeletingAvatar] = useState(false);
+  const avatarFileRef = useRef<HTMLInputElement>(null);
 
   const paymentQ = useQuery({
     queryKey: ["payment_settings"],
