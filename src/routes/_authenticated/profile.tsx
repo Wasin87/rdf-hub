@@ -120,6 +120,60 @@ function ProfilePage() {
     qc.invalidateQueries({ queryKey: ["profile"] });
   });
 
+  const uploadAvatarFile = async (file: File | null | undefined) => {
+    if (!file || !user) return;
+    if (!isAcceptedImage(file)) return toast.error("Choose a JPG, PNG or WEBP image");
+    if (file.size > 5 * 1024 * 1024) return toast.error("Image too large (max 5MB)");
+    setUploadingAvatar(true);
+    try {
+      // remove old file if it lives in our avatars bucket
+      const currentUrl = form.getValues("avatar_url");
+      const currentStored = currentUrl ? getStoragePathFromAppUrl(currentUrl) : null;
+      if (currentStored && currentStored.bucket === IMAGE_BUCKETS.avatars) {
+        await supabase.storage.from(IMAGE_BUCKETS.avatars).remove([currentStored.path]).catch(() => {});
+      }
+      const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+      const path = `${user.id}/${crypto.randomUUID()}.${ext}`;
+      const { error: upErr } = await supabase.storage
+        .from(IMAGE_BUCKETS.avatars)
+        .upload(path, file, { cacheControl: "31536000", upsert: false, contentType: file.type });
+      if (upErr) throw upErr;
+      const publicUrl = appStorageImageUrl(IMAGE_BUCKETS.avatars, path);
+      const { error: dbErr } = await supabase.from("profiles").update({ avatar_url: publicUrl }).eq("id", user.id);
+      if (dbErr) throw dbErr;
+      form.setValue("avatar_url", publicUrl, { shouldDirty: false });
+      toast.success("Profile picture updated");
+      qc.invalidateQueries({ queryKey: ["profile"] });
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Upload failed");
+    } finally {
+      setUploadingAvatar(false);
+      if (avatarFileRef.current) avatarFileRef.current.value = "";
+    }
+  };
+
+  const deleteAvatar = async () => {
+    if (!user) return;
+    if (!confirm("Remove your profile picture?")) return;
+    setDeletingAvatar(true);
+    try {
+      const currentUrl = form.getValues("avatar_url");
+      const currentStored = currentUrl ? getStoragePathFromAppUrl(currentUrl) : null;
+      if (currentStored && currentStored.bucket === IMAGE_BUCKETS.avatars) {
+        await supabase.storage.from(IMAGE_BUCKETS.avatars).remove([currentStored.path]).catch(() => {});
+      }
+      const { error } = await supabase.from("profiles").update({ avatar_url: null }).eq("id", user.id);
+      if (error) throw error;
+      form.setValue("avatar_url", "", { shouldDirty: false });
+      toast.success("Profile picture removed");
+      qc.invalidateQueries({ queryKey: ["profile"] });
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Could not remove");
+    } finally {
+      setDeletingAvatar(false);
+    }
+  };
+
   const pwdForm = useForm<PasswordForm>({ resolver: zodResolver(passwordSchema), defaultValues: { password: "", confirm: "" } });
   const changePassword = pwdForm.handleSubmit(async (data) => {
     setSavingPwd(true);
