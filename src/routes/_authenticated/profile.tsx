@@ -1,15 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { Camera, Mail, Phone, User as UserIcon, Lock, Save, ShieldCheck, Shield, Smartphone, Trash2 } from "lucide-react";
+import { Camera, Mail, Phone, User as UserIcon, Lock, Save, ShieldCheck, Shield, Smartphone, Trash2, Loader2 } from "lucide-react";
 import { DashboardShell } from "@/components/DashboardShell";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useRole } from "@/hooks/useRole";
+import { appStorageImageUrl, IMAGE_BUCKETS, isAcceptedImage, getStoragePathFromAppUrl } from "@/lib/catalog";
+
 
 
 export const Route = createFileRoute("/_authenticated/profile")({
