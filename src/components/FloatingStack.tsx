@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUp } from "lucide-react";
 
-const WHATSAPP_URL = "https://wa.me/8801000000000";
-const MESSENGER_URL = "https://m.me/fragavenue";
+const WHATSAPP_URL = "https://wa.me/8801861490608";
+const MESSENGER_URL = "https://m.me/fragavenuebd";
 
 export function FloatingStack() {
   const [showTop, setShowTop] = useState(false);
@@ -24,7 +24,7 @@ export function FloatingStack() {
       <a
         href={WHATSAPP_URL}
         target="_blank"
-        rel="noreferrer"
+        rel="noopener noreferrer"
         aria-label="Chat on WhatsApp"
         className="pointer-events-auto grid h-12 w-12 place-items-center rounded-full shadow-luxury transition-all hover:scale-110"
         style={{ background: "#25D366" }}
@@ -38,7 +38,7 @@ export function FloatingStack() {
       <a
         href={MESSENGER_URL}
         target="_blank"
-        rel="noreferrer"
+        rel="noopener noreferrer"
         aria-label="Chat on Messenger"
         className="pointer-events-auto grid h-12 w-12 place-items-center rounded-full shadow-luxury transition-all hover:scale-110"
         style={{ background: "linear-gradient(135deg, #00B2FF, #006AFF)" }}

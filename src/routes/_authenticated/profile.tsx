@@ -1,15 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { Camera, Mail, Phone, User as UserIcon, Lock, Save, ShieldCheck, Shield, Smartphone, Trash2 } from "lucide-react";
+import { Camera, Mail, Phone, User as UserIcon, Lock, Save, ShieldCheck, Shield, Smartphone, Trash2, Loader2 } from "lucide-react";
 import { DashboardShell } from "@/components/DashboardShell";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useRole } from "@/hooks/useRole";
+import { appStorageImageUrl, IMAGE_BUCKETS, isAcceptedImage, getStoragePathFromAppUrl } from "@/lib/catalog";
+
 
 
 export const Route = createFileRoute("/_authenticated/profile")({
@@ -20,7 +22,14 @@ export const Route = createFileRoute("/_authenticated/profile")({
 const profileSchema = z.object({
   full_name: z.string().trim().min(2, "Name is too short").max(80),
   phone: z.string().trim().max(20).optional().or(z.literal("")),
-  avatar_url: z.string().trim().url("Must be a valid URL").optional().or(z.literal("")),
+  avatar_url: z
+    .string()
+    .trim()
+    .optional()
+    .or(z.literal(""))
+    .refine((v) => !v || v.startsWith("/") || /^https?:\/\//i.test(v), {
+      message: "Must be a valid URL",
+    }),
 });
 type ProfileForm = z.infer<typeof profileSchema>;
 
@@ -37,6 +46,9 @@ function ProfilePage() {
   const [savingPwd, setSavingPwd] = useState(false);
   const [payment, setPayment] = useState({ bkash: "", nagad: "", rocket: "" });
   const [savingPayment, setSavingPayment] = useState(false);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const [deletingAvatar, setDeletingAvatar] = useState(false);
+  const avatarFileRef = useRef<HTMLInputElement>(null);
 
   const paymentQ = useQuery({
     queryKey: ["payment_settings"],
@@ -108,6 +120,60 @@ function ProfilePage() {
     qc.invalidateQueries({ queryKey: ["profile"] });
   });
 
+  const uploadAvatarFile = async (file: File | null | undefined) => {
+    if (!file || !user) return;
+    if (!isAcceptedImage(file)) return toast.error("Choose a JPG, PNG or WEBP image");
+    if (file.size > 5 * 1024 * 1024) return toast.error("Image too large (max 5MB)");
+    setUploadingAvatar(true);
+    try {
+      // remove old file if it lives in our avatars bucket
+      const currentUrl = form.getValues("avatar_url");
+      const currentStored = currentUrl ? getStoragePathFromAppUrl(currentUrl) : null;
+      if (currentStored && currentStored.bucket === IMAGE_BUCKETS.avatars) {
+        await supabase.storage.from(IMAGE_BUCKETS.avatars).remove([currentStored.path]).catch(() => {});
+      }
+      const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+      const path = `${user.id}/${crypto.randomUUID()}.${ext}`;
+      const { error: upErr } = await supabase.storage
+        .from(IMAGE_BUCKETS.avatars)
+        .upload(path, file, { cacheControl: "31536000", upsert: false, contentType: file.type });
+      if (upErr) throw upErr;
+      const publicUrl = appStorageImageUrl(IMAGE_BUCKETS.avatars, path);
+      const { error: dbErr } = await supabase.from("profiles").update({ avatar_url: publicUrl }).eq("id", user.id);
+      if (dbErr) throw dbErr;
+      form.setValue("avatar_url", publicUrl, { shouldDirty: false });
+      toast.success("Profile picture updated");
+      qc.invalidateQueries({ queryKey: ["profile"] });
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Upload failed");
+    } finally {
+      setUploadingAvatar(false);
+      if (avatarFileRef.current) avatarFileRef.current.value = "";
+    }
+  };
+
+  const deleteAvatar = async () => {
+    if (!user) return;
+    if (!confirm("Remove your profile picture?")) return;
+    setDeletingAvatar(true);
+    try {
+      const currentUrl = form.getValues("avatar_url");
+      const currentStored = currentUrl ? getStoragePathFromAppUrl(currentUrl) : null;
+      if (currentStored && currentStored.bucket === IMAGE_BUCKETS.avatars) {
+        await supabase.storage.from(IMAGE_BUCKETS.avatars).remove([currentStored.path]).catch(() => {});
+      }
+      const { error } = await supabase.from("profiles").update({ avatar_url: null }).eq("id", user.id);
+      if (error) throw error;
+      form.setValue("avatar_url", "", { shouldDirty: false });
+      toast.success("Profile picture removed");
+      qc.invalidateQueries({ queryKey: ["profile"] });
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Could not remove");
+    } finally {
+      setDeletingAvatar(false);
+    }
+  };
+
   const pwdForm = useForm<PasswordForm>({ resolver: zodResolver(passwordSchema), defaultValues: { password: "", confirm: "" } });
   const changePassword = pwdForm.handleSubmit(async (data) => {
     setSavingPwd(true);
@@ -131,10 +197,39 @@ function ProfilePage() {
                 ) : (
                   <span>{initials}</span>
                 )}
+                {uploadingAvatar && (
+                  <div className="absolute inset-0 grid place-items-center rounded-full bg-black/50">
+                    <Loader2 className="h-5 w-5 animate-spin text-white" />
+                  </div>
+                )}
               </div>
-              <span className="absolute -bottom-1 -right-1 grid h-8 w-8 place-items-center rounded-full border border-border bg-background shadow-xl">
+              <input
+                ref={avatarFileRef}
+                type="file"
+                accept="image/jpeg,image/jpg,image/png,image/webp"
+                className="hidden"
+                onChange={(e) => uploadAvatarFile(e.target.files?.[0])}
+              />
+              <button
+                type="button"
+                onClick={() => avatarFileRef.current?.click()}
+                disabled={uploadingAvatar}
+                aria-label={avatarUrl ? "Replace profile picture" : "Upload profile picture"}
+                className="absolute -bottom-1 -right-1 grid h-8 w-8 place-items-center rounded-full border border-border bg-background shadow-xl transition hover:border-[color:var(--gold)] disabled:opacity-60"
+              >
                 <Camera className="h-3.5 w-3.5 text-[color:var(--gold)]" />
-              </span>
+              </button>
+              {avatarUrl && (
+                <button
+                  type="button"
+                  onClick={deleteAvatar}
+                  disabled={deletingAvatar || uploadingAvatar}
+                  aria-label="Remove profile picture"
+                  className="absolute -top-1 -right-1 grid h-7 w-7 place-items-center rounded-full border border-border bg-background text-muted-foreground shadow-xl transition hover:border-destructive hover:text-destructive disabled:opacity-60"
+                >
+                  {deletingAvatar ? <Loader2 className="h-3 w-3 animate-spin" /> : <Trash2 className="h-3 w-3" />}
+                </button>
+              )}
             </div>
             <div className="text-center sm:text-left">
               <div className="flex flex-wrap items-center justify-center gap-2 sm:justify-start">
@@ -180,7 +275,7 @@ function ProfilePage() {
               <input {...form.register("phone")} placeholder="+1 555 123 4567" className="h-11 w-full rounded-lg border border-border bg-background px-3 text-sm shadow-xl focus:border-[color:var(--gold)] focus:outline-none" />
             </div>
             <div>
-              <label className="mb-1.5 block text-[10px] track-luxury text-muted-foreground">Avatar URL</label>
+              <label className="mb-1.5 block text-[10px] track-luxury text-muted-foreground">Avatar URL (Optional)</label>
               <input {...form.register("avatar_url")} placeholder="https://…" className="h-11 w-full rounded-lg border border-border bg-background px-3 text-sm shadow-xl focus:border-[color:var(--gold)] focus:outline-none" />
               {form.formState.errors.avatar_url && <p className="mt-1 text-[11px] text-destructive">{form.formState.errors.avatar_url.message}</p>}
             </div>

@@ -15,8 +15,19 @@ export function Footer() {
               Curated luxury fragrance decants. Authentic, beautifully presented, delivered with discretion.
             </p>
             <div className="mt-6 flex gap-2">
-              {[Instagram, Facebook, Mail].map((Icon, i) => (
-                <a key={i} href="#" aria-label="Social" className="grid h-9 w-9 place-items-center rounded-sm border border-[color:var(--gold)]/40 text-white/80 transition-all hover:border-[color:var(--gold)] hover:text-[color:var(--gold)]">
+              {[
+                { Icon: Instagram, href: "https://www.instagram.com/fragavenuebd?igsh=aXEwdjRhOWhqMW8w&utm_source=qr", label: "Instagram" },
+                { Icon: Facebook, href: "https://facebook.com/fragavenuebd", label: "Facebook" },
+                { Icon: Mail, href: "mailto:fragavenuebd@gmail.com", label: "Email" },
+              ].map(({ Icon, href, label }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target={href.startsWith("mailto:") ? undefined : "_blank"}
+                  rel={href.startsWith("mailto:") ? undefined : "noopener noreferrer"}
+                  aria-label={label}
+                  className="grid h-9 w-9 place-items-center rounded-sm border border-[color:var(--gold)]/40 text-white/80 transition-all hover:border-[color:var(--gold)] hover:text-[color:var(--gold)]"
+                >
                   <Icon className="h-3.5 w-3.5" />
                 </a>
               ))}
@@ -46,13 +57,22 @@ export function Footer() {
 
             <h4 className="mb-4 text-[11px] track-luxury text-[color:var(--gold)]">Stay Connected</h4>
             <p className="mb-3 text-sm text-white/75">Receive private invitations and new releases.</p>
-            <form className="flex gap-2" onSubmit={(e) => e.preventDefault()}>
-              <input type="email" required placeholder="your@email.com" className="h-10 flex-1 rounded-sm border border-white/20 bg-white/10 px-3 text-xs text-white placeholder:text-white/50 focus:border-[color:var(--gold)] focus:outline-none" />
+            <form
+              className="flex gap-2"
+              onSubmit={(e) => {
+                e.preventDefault();
+                const input = (e.currentTarget.elements.namedItem("email") as HTMLInputElement | null);
+                const email = input?.value?.trim();
+                if (!email) return;
+                window.location.href = `mailto:fragavenuebd@gmail.com?subject=${encodeURIComponent("Newsletter signup")}&body=${encodeURIComponent(`Please add me to the FRAG AVENUE newsletter: ${email}`)}`;
+              }}
+            >
+              <input name="email" type="email" required placeholder="your@email.com" className="h-10 flex-1 rounded-sm border border-white/20 bg-white/10 px-3 text-xs text-white placeholder:text-white/50 focus:border-[color:var(--gold)] focus:outline-none" />
               <button className="rounded-sm bg-[color:var(--gold)] px-4 text-[10px] track-luxury text-[color:var(--gold-foreground)] transition-transform hover:scale-105">Join</button>
             </form>
             <div className="mt-5 space-y-1.5 text-xs text-white/70">
-              <div className="flex items-center gap-2"><Phone className="h-3 w-3 text-[color:var(--gold)]" /> +880 1700 000 000</div>
-              <div className="flex items-center gap-2"><Mail className="h-3 w-3 text-[color:var(--gold)]" /> hello@rdf.com</div>
+              <a href="tel:+8801861490608" className="flex items-center gap-2 hover:text-[color:var(--gold)]"><Phone className="h-3 w-3 text-[color:var(--gold)]" /> 01861-490608</a>
+              <a href="mailto:fragavenuebd@gmail.com" className="flex items-center gap-2 hover:text-[color:var(--gold)]"><Mail className="h-3 w-3 text-[color:var(--gold)]" /> fragavenuebd@gmail.com</a>
             </div>
           </div>
         </div>
