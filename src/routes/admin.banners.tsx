@@ -161,6 +161,27 @@ function AdminBanners() {
               <Field label="CTA Text" value={draft.cta_text} onChange={(v) => setDraft({ ...draft, cta_text: v })} />
               <Field label="CTA Link" value={draft.cta_link} onChange={(v) => setDraft({ ...draft, cta_link: v })} />
             </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="mb-1 block text-[10px] track-luxury text-muted-foreground">Display Order</label>
+                <input
+                  type="number"
+                  value={draft.order_index}
+                  onChange={(e) => setDraft({ ...draft, order_index: Number(e.target.value) || 0 })}
+                  className="h-10 w-full rounded-lg border border-border bg-background px-3 text-sm shadow-xl focus:border-[color:var(--gold)] focus:outline-none"
+                />
+              </div>
+              <div>
+                <label className="mb-1 block text-[10px] track-luxury text-muted-foreground">Status</label>
+                <button
+                  type="button"
+                  onClick={() => setDraft({ ...draft, is_active: !draft.is_active })}
+                  className={`h-10 w-full rounded-lg border px-3 text-xs font-semibold shadow-xl transition ${draft.is_active ? "border-[color:var(--gold)] bg-[color:var(--gold)]/10 text-[color:var(--gold)]" : "border-border bg-background text-muted-foreground"}`}
+                >
+                  {draft.is_active ? "Active" : "Inactive"}
+                </button>
+              </div>
+            </div>
 
             <div>
               <div className="mb-2 flex items-center gap-2">
