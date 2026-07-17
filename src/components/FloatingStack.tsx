@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUp } from "lucide-react";
 
-const WHATSAPP_URL = "https://wa.me/8801000000000";
-const MESSENGER_URL = "https://m.me/fragavenue";
+const WHATSAPP_URL = "https://wa.me/8801861490608";
+const MESSENGER_URL = "https://m.me/fragavenuebd";
 
 export function FloatingStack() {
   const [showTop, setShowTop] = useState(false);
