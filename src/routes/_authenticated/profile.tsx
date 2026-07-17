@@ -22,7 +22,14 @@ export const Route = createFileRoute("/_authenticated/profile")({
 const profileSchema = z.object({
   full_name: z.string().trim().min(2, "Name is too short").max(80),
   phone: z.string().trim().max(20).optional().or(z.literal("")),
-  avatar_url: z.string().trim().url("Must be a valid URL").optional().or(z.literal("")),
+  avatar_url: z
+    .string()
+    .trim()
+    .optional()
+    .or(z.literal(""))
+    .refine((v) => !v || v.startsWith("/") || /^https?:\/\//i.test(v), {
+      message: "Must be a valid URL",
+    }),
 });
 type ProfileForm = z.infer<typeof profileSchema>;
 
