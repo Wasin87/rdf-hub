@@ -197,10 +197,39 @@ function ProfilePage() {
                 ) : (
                   <span>{initials}</span>
                 )}
+                {uploadingAvatar && (
+                  <div className="absolute inset-0 grid place-items-center rounded-full bg-black/50">
+                    <Loader2 className="h-5 w-5 animate-spin text-white" />
+                  </div>
+                )}
               </div>
-              <span className="absolute -bottom-1 -right-1 grid h-8 w-8 place-items-center rounded-full border border-border bg-background shadow-xl">
+              <input
+                ref={avatarFileRef}
+                type="file"
+                accept="image/jpeg,image/jpg,image/png,image/webp"
+                className="hidden"
+                onChange={(e) => uploadAvatarFile(e.target.files?.[0])}
+              />
+              <button
+                type="button"
+                onClick={() => avatarFileRef.current?.click()}
+                disabled={uploadingAvatar}
+                aria-label={avatarUrl ? "Replace profile picture" : "Upload profile picture"}
+                className="absolute -bottom-1 -right-1 grid h-8 w-8 place-items-center rounded-full border border-border bg-background shadow-xl transition hover:border-[color:var(--gold)] disabled:opacity-60"
+              >
                 <Camera className="h-3.5 w-3.5 text-[color:var(--gold)]" />
-              </span>
+              </button>
+              {avatarUrl && (
+                <button
+                  type="button"
+                  onClick={deleteAvatar}
+                  disabled={deletingAvatar || uploadingAvatar}
+                  aria-label="Remove profile picture"
+                  className="absolute -top-1 -right-1 grid h-7 w-7 place-items-center rounded-full border border-border bg-background text-muted-foreground shadow-xl transition hover:border-destructive hover:text-destructive disabled:opacity-60"
+                >
+                  {deletingAvatar ? <Loader2 className="h-3 w-3 animate-spin" /> : <Trash2 className="h-3 w-3" />}
+                </button>
+              )}
             </div>
             <div className="text-center sm:text-left">
               <div className="flex flex-wrap items-center justify-center gap-2 sm:justify-start">
