@@ -108,6 +108,22 @@ function ProfilePage() {
   const fullName = form.watch("full_name");
   const initials = (fullName || user?.email || "U").split(/\s+/).map((s) => s[0]).slice(0, 2).join("").toUpperCase();
 
+  // Avatars bucket is private — resolve a short-lived signed URL for display.
+  const [displayAvatarUrl, setDisplayAvatarUrl] = useState<string>("");
+  useEffect(() => {
+    let cancelled = false;
+    if (!avatarUrl) { setDisplayAvatarUrl(""); return; }
+    const parts = getStoragePathFromAppUrl(avatarUrl);
+    if (parts && parts.bucket === IMAGE_BUCKETS.avatars) {
+      supabase.storage.from(IMAGE_BUCKETS.avatars).createSignedUrl(parts.path, 3600)
+        .then(({ data }) => { if (!cancelled) setDisplayAvatarUrl(data?.signedUrl ?? ""); })
+        .catch(() => { if (!cancelled) setDisplayAvatarUrl(""); });
+    } else {
+      setDisplayAvatarUrl(avatarUrl);
+    }
+    return () => { cancelled = true; };
+  }, [avatarUrl]);
+
   const save = form.handleSubmit(async (data) => {
     if (!user) return;
     const { error } = await supabase.from("profiles").update({
