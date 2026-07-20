@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import logoAsset from "@/assets/frag-avenue-logo.png.asset.json";
+import logoPng from "@/assets/frag-avenue-logo.png";
 
 export function Logo({ compact = false }: { compact?: boolean }) {
   return (
@@ -9,7 +10,7 @@ export function Logo({ compact = false }: { compact?: boolean }) {
       className="group inline-flex items-center justify-center"
     >
       <img
-        src={logoAsset.url}
+        src={logoPng}
         alt="Frag Avenue — Wear Your Signature"
         draggable={false}
         decoding="async"
