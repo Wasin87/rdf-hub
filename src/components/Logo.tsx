@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import logoAsset from "@/assets/frag-avenue-logo.png.asset.json";
-import logoPng from "@/assets/frag-avenue-logo.png";
+const logoPng = logoAsset.url;
 
 export function Logo({ compact = false }: { compact?: boolean }) {
   return (
