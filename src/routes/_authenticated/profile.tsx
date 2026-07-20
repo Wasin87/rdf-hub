@@ -209,7 +209,7 @@ function ProfilePage() {
             <div className="relative">
               <div className="grid h-24 w-24 place-items-center overflow-hidden rounded-full border border-[color:var(--gold)]/40 bg-section text-lg font-display text-[color:var(--gold)] shadow-xl">
                 {avatarUrl ? (
-                  <img src={avatarUrl} alt={fullName || "avatar"} className="h-full w-full object-cover" onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }} />
+                  <img src={displayAvatarUrl || avatarUrl} alt={fullName || "avatar"} className="h-full w-full object-cover" onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }} />
                 ) : (
                   <span>{initials}</span>
                 )}
