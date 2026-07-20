@@ -51,16 +51,29 @@ export function isAcceptedImage(file: File) {
 }
 
 export function appStorageImageUrl(bucket: string, path: string) {
-  return `/api/public/image?bucket=${encodeURIComponent(bucket)}&path=${encodeURIComponent(path)}`;
+  return supabase.storage.from(bucket).getPublicUrl(path).data.publicUrl;
 }
 
 export function getStoragePathFromAppUrl(url: string) {
   try {
     const parsed = new URL(url, typeof window !== "undefined" ? window.location.origin : "http://localhost");
-    if (parsed.pathname !== "/api/public/image") return null;
-    const bucket = parsed.searchParams.get("bucket");
-    const path = parsed.searchParams.get("path");
-    return bucket && path ? { bucket, path } : null;
+    // Legacy proxy URLs: /api/public/image?bucket=...&path=...
+    if (parsed.pathname === "/api/public/image") {
+      const bucket = parsed.searchParams.get("bucket");
+      const path = parsed.searchParams.get("path");
+      return bucket && path ? { bucket, path } : null;
+    }
+    // Native Supabase public URLs: .../storage/v1/object/public/<bucket>/<path>
+    const marker = "/storage/v1/object/public/";
+    const idx = parsed.pathname.indexOf(marker);
+    if (idx !== -1) {
+      const rest = parsed.pathname.slice(idx + marker.length);
+      const slash = rest.indexOf("/");
+      if (slash > 0) {
+        return { bucket: decodeURIComponent(rest.slice(0, slash)), path: decodeURIComponent(rest.slice(slash + 1)) };
+      }
+    }
+    return null;
   } catch {
     return null;
   }
@@ -68,26 +81,8 @@ export function getStoragePathFromAppUrl(url: string) {
 
 export function normalizeStorageImageUrl(url: string) {
   const trimmed = url.trim();
-  const appImage = getStoragePathFromAppUrl(trimmed);
-  if (appImage) return appStorageImageUrl(appImage.bucket, appImage.path);
-
-  try {
-    const parsed = new URL(trimmed, typeof window !== "undefined" ? window.location.origin : "http://localhost");
-    const marker = "/storage/v1/object/public/";
-    const idx = parsed.pathname.indexOf(marker);
-    if (idx === -1) return trimmed;
-    const rest = parsed.pathname.slice(idx + marker.length);
-    const slash = rest.indexOf("/");
-    if (slash <= 0) return trimmed;
-    const bucket = decodeURIComponent(rest.slice(0, slash));
-    const path = decodeURIComponent(rest.slice(slash + 1));
-    if (bucket === IMAGE_BUCKETS.products || bucket === IMAGE_BUCKETS.reviews) {
-      return appStorageImageUrl(bucket, path);
-    }
-  } catch {
-    return trimmed;
-  }
-
+  const parts = getStoragePathFromAppUrl(trimmed);
+  if (parts) return appStorageImageUrl(parts.bucket, parts.path);
   return trimmed;
 }
 
