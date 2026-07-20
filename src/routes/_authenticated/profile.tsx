@@ -108,6 +108,22 @@ function ProfilePage() {
   const fullName = form.watch("full_name");
   const initials = (fullName || user?.email || "U").split(/\s+/).map((s) => s[0]).slice(0, 2).join("").toUpperCase();
 
+  // Avatars bucket is private — resolve a short-lived signed URL for display.
+  const [displayAvatarUrl, setDisplayAvatarUrl] = useState<string>("");
+  useEffect(() => {
+    let cancelled = false;
+    if (!avatarUrl) { setDisplayAvatarUrl(""); return; }
+    const parts = getStoragePathFromAppUrl(avatarUrl);
+    if (parts && parts.bucket === IMAGE_BUCKETS.avatars) {
+      supabase.storage.from(IMAGE_BUCKETS.avatars).createSignedUrl(parts.path, 3600)
+        .then(({ data }) => { if (!cancelled) setDisplayAvatarUrl(data?.signedUrl ?? ""); })
+        .catch(() => { if (!cancelled) setDisplayAvatarUrl(""); });
+    } else {
+      setDisplayAvatarUrl(avatarUrl);
+    }
+    return () => { cancelled = true; };
+  }, [avatarUrl]);
+
   const save = form.handleSubmit(async (data) => {
     if (!user) return;
     const { error } = await supabase.from("profiles").update({
@@ -193,7 +209,7 @@ function ProfilePage() {
             <div className="relative">
               <div className="grid h-24 w-24 place-items-center overflow-hidden rounded-full border border-[color:var(--gold)]/40 bg-section text-lg font-display text-[color:var(--gold)] shadow-xl">
                 {avatarUrl ? (
-                  <img src={avatarUrl} alt={fullName || "avatar"} className="h-full w-full object-cover" onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }} />
+                  <img src={displayAvatarUrl || avatarUrl} alt={fullName || "avatar"} className="h-full w-full object-cover" onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }} />
                 ) : (
                   <span>{initials}</span>
                 )}
