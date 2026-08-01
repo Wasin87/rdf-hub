@@ -12,9 +12,9 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "FRAG AVENUE — Luxury Perfume Decants" },
-      { name: "description", content: "Authentic luxury fragrance decants from the world's most prestigious houses. Dior, Chanel, Tom Ford, Creed and more — 3ml to 30ml." },
+      { name: "description", content: "FRAG AVENUE Authentic luxury fragrance decants from the world's most prestigious houses. Dior, Chanel, Tom Ford, Creed and more — 3ml to 30ml." },
       { property: "og:title", content: "FRAG AVENUE — Luxury Perfume Decants" },
-      { property: "og:description", content: "Authentic luxury fragrance decants from the world's most prestigious houses." },
+      { property: "og:description", content: "FRAG AVENUE Authentic luxury fragrance decants from the world's most prestigious houses." },
     ],
   }),
   component: HomePage,
