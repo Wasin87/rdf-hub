@@ -1,0 +1,14 @@
+{
+  "name": "FRAG AVENUE",
+  "short_name": "FRAG AVENUE",
+  "theme_color": "#000000",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64",
+      "type": "image/x-icon"
+    }
+  ]
+}
