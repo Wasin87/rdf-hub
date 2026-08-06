@@ -20,9 +20,9 @@ function EditProduct() {
         .select(`
           id, name, slug, brand_id, category_id, collection_id, description,
           notes_top, notes_heart, notes_base, image_url, base_price, discount_percent,
-          is_new, is_featured, is_limited, is_active,
+          is_new, is_featured, is_limited, is_hot, hot_until, is_active,
           images:product_images(id, image_url, sort_order),
-          variants:product_variants(id, size_ml, price, stock)
+          variants:product_variants(id, size_ml, size_label, price, stock)
         `)
         .eq("id", id)
         .maybeSingle();
@@ -32,7 +32,7 @@ function EditProduct() {
       return {
         ...data,
         images: imgs.map((i: any) => ({ id: i.id, url: i.image_url, sort_order: i.sort_order })),
-        variants: (data.variants ?? []).map((v: any) => ({ id: v.id, size_ml: v.size_ml, price: Number(v.price), stock: v.stock })),
+        variants: (data.variants ?? []).map((v: any) => ({ id: v.id, size_ml: v.size_ml, size_label: v.size_label ?? "", price: Number(v.price), stock: v.stock })),
       } as ProductFormInitial;
     },
   });

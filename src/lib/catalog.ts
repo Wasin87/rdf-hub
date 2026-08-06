@@ -4,6 +4,7 @@ export type Variant = {
   id: string;
   product_id: string;
   size_ml: number;
+  size_label: string | null;
   price: number;
   stock: number;
 };
@@ -22,6 +23,8 @@ export type Product = {
   is_new: boolean;
   is_featured: boolean;
   is_limited: boolean;
+  is_hot: boolean;
+  hot_until: string | null;
   view_count: number;
   created_at: string;
   brand: { id: string; name: string; slug: string } | null;
@@ -112,11 +115,11 @@ export function validateImageUrl(url: string) {
 
 const PRODUCT_SELECT = `
   id, name, slug, description, notes_top, notes_heart, notes_base, image_url,
-  base_price, discount_percent, is_new, is_featured, is_limited, view_count, created_at,
+  base_price, discount_percent, is_new, is_featured, is_limited, is_hot, hot_until, view_count, created_at,
   brand:brands(id, name, slug),
   category:categories(id, name, slug),
   collection:collections(id, name, slug),
-  variants:product_variants(id, product_id, size_ml, price, stock),
+  variants:product_variants(id, product_id, size_ml, size_label, price, stock),
   images:product_images(id, image_url, alt_text, sort_order)
 `;
 
@@ -128,6 +131,7 @@ export async function fetchProducts(opts?: {
   isFeatured?: boolean;
   isDiscounted?: boolean;
   isLimited?: boolean;
+  isHot?: boolean;
   search?: string;
   sort?: "latest" | "popular" | "price_asc" | "price_desc";
   minPrice?: number;
@@ -140,6 +144,7 @@ export async function fetchProducts(opts?: {
   if (opts?.isNew) q = q.eq("is_new", true);
   if (opts?.isFeatured) q = q.eq("is_featured", true);
   if (opts?.isLimited) q = q.eq("is_limited", true);
+  if (opts?.isHot) q = q.eq("is_hot", true);
   if (opts?.isDiscounted) q = q.gt("discount_percent", 0);
   if (opts?.minPrice != null) q = q.gte("base_price", opts.minPrice);
   if (opts?.maxPrice != null) q = q.lte("base_price", opts.maxPrice);

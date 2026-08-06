@@ -1,11 +1,11 @@
 import { Plus, Trash2 } from "lucide-react";
 
-export type VariantDraft = { id?: string; size_ml: number | string; price: number | string; stock: number | string };
+export type VariantDraft = { id?: string; size_ml: number | string; size_label?: string | null; price: number | string; stock: number | string };
 
 const PRESETS = [3, 6, 10, 15, 30];
 
 export function VariantBuilder({ value, onChange }: { value: VariantDraft[]; onChange: (next: VariantDraft[]) => void }) {
-  const add = (size: number | "") => onChange([...value, { size_ml: size === "" ? "" : size, price: "", stock: "" }]);
+  const add = (size: number | "") => onChange([...value, { size_ml: size === "" ? "" : size, size_label: "", price: "", stock: "" }]);
   const update = (i: number, patch: Partial<VariantDraft>) =>
     onChange(value.map((v, idx) => (idx === i ? { ...v, ...patch } : v)));
   const remove = (i: number) => onChange(value.filter((_, idx) => idx !== i));
@@ -30,6 +30,13 @@ export function VariantBuilder({ value, onChange }: { value: VariantDraft[]; onC
         >
           + Custom size
         </button>
+        <button
+          type="button"
+          onClick={() => add("")}
+          className="rounded-sm border border-dashed border-[color:var(--gold)]/50 px-3 py-1.5 text-[11px] track-luxury text-muted-foreground hover:text-[color:var(--gold)]"
+        >
+          + Custom text size
+        </button>
       </div>
 
       {value.length === 0 ? (
@@ -42,6 +49,7 @@ export function VariantBuilder({ value, onChange }: { value: VariantDraft[]; onC
             <thead className="bg-section text-left text-[10px] track-luxury text-muted-foreground">
               <tr>
                 <th className="p-2">Size (ml)</th>
+                <th className="p-2">Custom text size (optional)</th>
                 <th className="p-2">Price (BDT)</th>
                 <th className="p-2">Stock</th>
                 <th className="p-2"></th>
@@ -57,6 +65,16 @@ export function VariantBuilder({ value, onChange }: { value: VariantDraft[]; onC
                       value={v.size_ml}
                       onChange={(e) => update(i, { size_ml: e.target.value === "" ? "" : Number(e.target.value) })}
                       className="h-9 w-24 rounded-sm border border-border bg-background px-2"
+                    />
+                  </td>
+                  <td className="p-2">
+                    <input
+                      type="text"
+                      maxLength={40}
+                      placeholder={v.size_ml ? `${v.size_ml} ML` : "e.g. 3 ML Tester"}
+                      value={v.size_label ?? ""}
+                      onChange={(e) => update(i, { size_label: e.target.value })}
+                      className="h-9 w-48 rounded-sm border border-border bg-background px-2"
                     />
                   </td>
                   <td className="p-2">

@@ -409,6 +409,7 @@ export type Database = {
           product_id: string | null
           product_name: string
           quantity: number
+          size_label: string | null
           size_ml: number
           unit_price: number
           variant_id: string | null
@@ -421,6 +422,7 @@ export type Database = {
           product_id?: string | null
           product_name: string
           quantity: number
+          size_label?: string | null
           size_ml: number
           unit_price: number
           variant_id?: string | null
@@ -433,6 +435,7 @@ export type Database = {
           product_id?: string | null
           product_name?: string
           quantity?: number
+          size_label?: string | null
           size_ml?: number
           unit_price?: number
           variant_id?: string | null
@@ -621,6 +624,7 @@ export type Database = {
           id: string
           price: number
           product_id: string
+          size_label: string | null
           size_ml: number
           stock: number
         }
@@ -629,6 +633,7 @@ export type Database = {
           id?: string
           price: number
           product_id: string
+          size_label?: string | null
           size_ml: number
           stock?: number
         }
@@ -637,6 +642,7 @@ export type Database = {
           id?: string
           price?: number
           product_id?: string
+          size_label?: string | null
           size_ml?: number
           stock?: number
         }
@@ -660,10 +666,12 @@ export type Database = {
           description: string | null
           discount_percent: number
           gallery: Json
+          hot_until: string | null
           id: string
           image_url: string | null
           is_active: boolean
           is_featured: boolean
+          is_hot: boolean
           is_limited: boolean
           is_new: boolean
           name: string
@@ -683,10 +691,12 @@ export type Database = {
           description?: string | null
           discount_percent?: number
           gallery?: Json
+          hot_until?: string | null
           id?: string
           image_url?: string | null
           is_active?: boolean
           is_featured?: boolean
+          is_hot?: boolean
           is_limited?: boolean
           is_new?: boolean
           name: string
@@ -706,10 +716,12 @@ export type Database = {
           description?: string | null
           discount_percent?: number
           gallery?: Json
+          hot_until?: string | null
           id?: string
           image_url?: string | null
           is_active?: boolean
           is_featured?: boolean
+          is_hot?: boolean
           is_limited?: boolean
           is_new?: boolean
           name?: string

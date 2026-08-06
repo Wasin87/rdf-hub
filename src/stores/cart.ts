@@ -8,6 +8,7 @@ export type CartLine = {
   productName: string;
   brandName: string;
   sizeMl: number;
+  sizeLabel?: string | null;
   price: number;
   quantity: number;
   imageUrl: string;

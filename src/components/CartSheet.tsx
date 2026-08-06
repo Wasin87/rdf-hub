@@ -72,7 +72,7 @@ export function CartSheet({ trigger }: { trigger?: React.ReactNode } = {}) {
                   <div className="flex min-w-0 flex-1 flex-col">
                     <div className="text-[10px] track-luxury text-muted-foreground">{it.brandName}</div>
                     <Link to="/products/$slug" params={{ slug: it.productSlug }} className="truncate text-sm font-medium hover:text-[color:var(--gold)]">{it.productName}</Link>
-                    <div className="text-xs text-muted-foreground">{it.sizeMl}ml</div>
+                    <div className="text-xs text-muted-foreground">{it.sizeLabel?.trim() ? it.sizeLabel : `${it.sizeMl}ml`}</div>
                     <div className="mt-2 flex items-center justify-between">
                       <div className="flex items-center gap-1.5 rounded-sm border border-border">
                         <button onClick={() => setQty(it.variantId, it.quantity - 1)} className="grid h-7 w-7 place-items-center hover:text-[color:var(--gold)]" aria-label="Decrease"><Minus className="h-3 w-3" /></button>

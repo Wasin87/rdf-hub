@@ -13,7 +13,7 @@ import {
   resolveImage,
   type Product,
 } from "@/lib/catalog";
-import { formatBDT, discountedPrice } from "@/lib/format";
+import { formatBDT, discountedPrice, variantLabel } from "@/lib/format";
 import { useCart } from "@/stores/cart";
 import { useWishlist } from "@/stores/wishlist";
 import { ProductCard } from "@/components/ProductCard";
@@ -100,11 +100,12 @@ function ProductPage() {
       productName: product.name,
       brandName: product.brand?.name ?? "",
       sizeMl: v.size_ml,
+      sizeLabel: v.size_label ?? null,
       price: finalPrice,
       quantity: qty,
       imageUrl: resolveImage(gallery[0]),
     });
-    toast.success("Added to cart", { description: `${product.name} • ${v.size_ml}ml × ${qty}` });
+    toast.success("Added to cart", { description: `${product.name} • ${variantLabel(v)} × ${qty}` });
   };
 
   return (
@@ -202,7 +203,7 @@ function ProductPage() {
             {product.discount_percent > 0 && v && (
               <span className="text-base text-muted-foreground line-through">{formatBDT(v.price)}</span>
             )}
-            {v && <span className="text-xs text-muted-foreground">/ {v.size_ml}ml</span>}
+            {v && <span className="text-xs text-muted-foreground">/ {variantLabel(v)}</span>}
           </div>
 
           <p className="mt-6 max-w-prose text-sm leading-relaxed text-muted-foreground line-clamp-3">{product.description}</p>
@@ -232,7 +233,7 @@ function ProductPage() {
                         : "border-border text-muted-foreground hover:border-foreground hover:text-foreground"
                     } ${out ? "cursor-not-allowed opacity-40 line-through" : ""}`}
                   >
-                    <div className="text-sm font-medium">{vr.size_ml} ML</div>
+                    <div className="text-sm font-medium">{variantLabel(vr)}</div>
                     <div className="mt-0.5 text-[10px]">{formatBDT(discountedPrice(vr.price, product.discount_percent))}</div>
                   </button>
                 );

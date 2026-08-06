@@ -81,7 +81,7 @@ function AdminProducts() {
     try {
       const { data: src, error } = await supabase
         .from("products")
-        .select("name, slug, brand_id, category_id, collection_id, description, notes_top, notes_heart, notes_base, image_url, base_price, discount_percent, is_new, is_featured, is_limited, is_active, variants:product_variants(size_ml, price, stock), images:product_images(image_url, alt_text, sort_order)")
+        .select("name, slug, brand_id, category_id, collection_id, description, notes_top, notes_heart, notes_base, image_url, base_price, discount_percent, is_new, is_featured, is_limited, is_hot, hot_until, is_active, variants:product_variants(size_ml, size_label, price, stock), images:product_images(image_url, alt_text, sort_order)")
         .eq("id", id).maybeSingle();
       if (error || !src) throw error || new Error("Not found");
       const newSlug = `${src.slug}-copy-${Math.random().toString(36).slice(2, 6)}`;
