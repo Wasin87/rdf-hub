@@ -20,7 +20,7 @@ export function getSmtpConfig(): SmtpConfig | null {
   const secure = (process.env["SMTP_SECURE"] ?? "true") !== "false";
   const user = process.env["SMTP_USER"] ?? "";
   const pass = process.env["SMTP_PASS"] ?? "";
-  const to = process.env["ORDER_NOTIFY_TO"] ?? user || "fragavenuebd@gmail.com";
+  const to = process.env["ORDER_NOTIFY_TO"] || user || "fragavenuebd@gmail.com";
 
   if (!user || !pass) return null;
 
