@@ -12,6 +12,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { formatBDT } from "@/lib/format";
 import { useQuery } from "@tanstack/react-query";
 import { validateCouponFn } from "@/lib/coupons.functions";
+import { notifyNewOrderFn } from "@/lib/email/order-email.functions";
 
 
 
