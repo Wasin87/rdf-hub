@@ -66,7 +66,7 @@ export function HotSellSection() {
 
         {t && !t.done && (
           <div className="relative overflow-hidden rounded-md bg-[color:var(--gold)] p-[2px] shadow-lg">
-            <span className="pointer-events-none absolute inset-0 -translate-x-full animate-[shimmer_2.4s_infinite] bg-gradient-to-r from-transparent via-white/50 to-transparent" />
+            <span className="pointer-events-none absolute inset-0 -translate-x-full animate-[sweep_2.4s_linear_infinite] bg-gradient-to-r from-transparent via-white/50 to-transparent" />
             <div className="relative flex items-center gap-1.5 rounded-[4px] bg-[color:var(--gold)] px-2 py-1.5 sm:gap-2 sm:px-3">
               <Unit value={t.hours} label="Hrs" />
               <Unit value={t.minutes} label="Min" />
