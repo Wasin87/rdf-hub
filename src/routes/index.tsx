@@ -13,6 +13,8 @@ import { CollectionGrid } from "@/components/CollectionGrid";
 import { ProductSection } from "@/components/ProductSection";
 import { ReviewsSlider } from "@/components/ReviewsSlider";
 import { TrustSection } from "@/components/TrustSection";
+import { AtorBanner } from "@/components/AtorBanner";
+import { HotSellSection } from "@/components/HotSellSection";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -125,6 +127,11 @@ function HomePage() {
     queryFn: () => fetchProducts({ isDiscounted: true, limit: 10 }),
   });
 
+  const atorProducts = useQuery({
+    queryKey: ["products", "ator"],
+    queryFn: () => fetchProducts({ categorySlug: "ator" }),
+  });
+
   const reviews = useQuery({
     queryKey: ["reviews", "featured"],
     queryFn: fetchFeaturedReviews,
@@ -135,6 +142,10 @@ function HomePage() {
       {banners.data && <HeroSlider banners={banners.data} />}
 
       <CollectionGrid />
+
+      <AtorBanner />
+
+      <HotSellSection />
 
       {newArrivals.data && (
         <>
@@ -170,6 +181,24 @@ function HomePage() {
             </Link>
           </div>
         </div>
+      )}
+
+      {atorProducts.data && atorProducts.data.data.length > 0 && (
+        <>
+          <ProductSection
+            eyebrow="Attar Atelier"
+            title="Premium Ator Products"
+            description="Alcohol-free attars crafted from oud, amber and rose."
+            products={atorProducts.data.data.slice(0, 10)}
+            viewAllSearch={{ category: "ator" }}
+          />
+
+          <div className="container-luxury -mt-4 flex justify-center pb-10 md:pb-14">
+            <Link to="/shop" className="btn-liquid">
+              All Products
+            </Link>
+          </div>
+        </>
       )}
 
       {brands.data && brands.data.length > 0 && (
