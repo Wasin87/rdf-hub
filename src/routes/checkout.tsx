@@ -183,6 +183,11 @@ function CheckoutPage() {
       const order = (Array.isArray(rows) ? rows[0] : rows) as { id: string; order_number: string; total: number } | null;
       if (!order?.id) throw new Error("Order could not be created");
 
+      // Fire-and-forget admin notification — never blocks or fails the order.
+      void notifyNewOrderFn({
+        data: { orderId: order.id, origin: typeof window !== "undefined" ? window.location.origin : undefined },
+      }).catch(() => {});
+
       clear();
       toast.success("Order placed", { description: `Order ${order.order_number} confirmed.` });
       navigate({
