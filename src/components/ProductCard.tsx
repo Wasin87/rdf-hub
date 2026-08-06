@@ -7,7 +7,7 @@ import { TbHeartPlus } from "react-icons/tb";
 import { toast } from "sonner";
 import type { Product } from "@/lib/catalog";
 import { resolveImage } from "@/lib/catalog";
-import { formatBDT, discountedPrice } from "@/lib/format";
+import { formatBDT, discountedPrice, variantLabel } from "@/lib/format";
 import { useCart } from "@/stores/cart";
 import { useWishlist } from "@/stores/wishlist";
 import { SafeImage } from "@/components/SafeImage";
@@ -18,8 +18,10 @@ export function ProductCard({ product }: { product: Product }) {
     const list = (product.images ?? []).slice().sort((a, b) => a.sort_order - b.sort_order).map((img) => img.image_url);
     return product.image_url ?? list[0] ?? null;
   }, [product.image_url, product.images]);
-  const [selected, setSelected] = useState(variants[2]?.id ?? variants[0]?.id);
+  const defaultVariantId = useMemo(() => (variants.find((x) => x.size_ml === 3) ?? variants[0])?.id, [variants]);
+  const [selected, setSelected] = useState(defaultVariantId);
   const v = variants.find((x) => x.id === selected) ?? variants[0];
+  useEffect(() => { setSelected(defaultVariantId); }, [defaultVariantId]);
 
   const finalPrice = v ? discountedPrice(v.price, product.discount_percent) : 0;
   const addToCart = useCart((s) => s.add);
@@ -36,11 +38,12 @@ export function ProductCard({ product }: { product: Product }) {
       productName: product.name,
       brandName: product.brand?.name ?? "",
       sizeMl: v.size_ml,
+      sizeLabel: v.size_label ?? null,
       price: discountedPrice(v.price, product.discount_percent),
       quantity: 1,
       imageUrl: resolveImage(firstImage),
     });
-    toast.success("Added to cart", { description: `${product.name} • ${v.size_ml}ml` });
+    toast.success("Added to cart", { description: `${product.name} • ${variantLabel(v)}` });
   };
 
   const onWish = (e: React.MouseEvent) => {
@@ -58,10 +61,11 @@ export function ProductCard({ product }: { product: Product }) {
 
   return (
     <motion.article className="group/card relative flex flex-col overflow-hidden rounded-lg border border-border bg-card p-0 shadow-xl transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl">
-      {(product.is_new || product.discount_percent > 0 || product.is_limited) && (
+      {(product.is_new || product.discount_percent > 0 || product.is_limited || product.is_hot) && (
         <div className="absolute left-2 top-2 z-10 flex flex-col gap-1 sm:left-3 sm:top-3 sm:gap-1.5">
           {product.is_new && <span className="rounded-full bg-foreground px-2 py-0.5 text-[8px] font-semibold uppercase tracking-wider text-background shadow-md sm:px-2.5 sm:py-1 sm:text-[9px]">New</span>}
           {product.discount_percent > 0 && <span className="rounded-full bg-destructive px-2 py-0.5 text-[8px] font-semibold uppercase tracking-wider text-destructive-foreground shadow-md sm:px-2.5 sm:py-1 sm:text-[9px]">−{product.discount_percent}%</span>}
+          {product.is_hot && <span className="rounded-full bg-destructive px-2 py-0.5 text-[8px] font-semibold uppercase tracking-wider text-destructive-foreground shadow-md sm:px-2.5 sm:py-1 sm:text-[9px]">🔥 Hot</span>}
           {product.is_limited && <span className="rounded-full bg-[color:var(--gold)] px-2 py-0.5 text-[8px] font-semibold uppercase tracking-wider text-[color:var(--gold-foreground)] shadow-md sm:px-2.5 sm:py-1 sm:text-[9px]">Limited</span>}
         </div>
       )}
@@ -100,7 +104,7 @@ export function ProductCard({ product }: { product: Product }) {
           aria-label="Select size"
           className="mt-0.5 h-6 w-fit rounded-sm border border-border bg-transparent px-1.5 text-[9px] track-luxury text-muted-foreground focus:border-[color:var(--gold)] focus:outline-none sm:h-7 sm:px-2 sm:text-[10px]"
         >
-          {variants.map((vr) => <option key={vr.id} value={vr.id}>{vr.size_ml} ML</option>)}
+          {variants.map((vr) => <option key={vr.id} value={vr.id}>{variantLabel(vr)}</option>)}
         </select>
         <div className="mt-0.5 flex items-center justify-between gap-2 sm:mt-1">
           <div className="flex items-baseline gap-1.5 min-w-0 sm:gap-2">

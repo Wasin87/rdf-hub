@@ -288,7 +288,7 @@ function CheckoutPage() {
                 <div className="min-w-0 flex-1">
                   <div className="text-[10px] track-luxury text-muted-foreground">{i.brandName}</div>
                   <div className="truncate text-sm">{i.productName}</div>
-                  <div className="text-xs text-muted-foreground">{i.sizeMl}ml × {i.quantity}</div>
+                  <div className="text-xs text-muted-foreground">{i.sizeLabel?.trim() ? i.sizeLabel : `${i.sizeMl}ml`} × {i.quantity}</div>
                 </div>
                 <div className="shrink-0 text-sm">{formatBDT(i.price * i.quantity)}</div>
               </div>

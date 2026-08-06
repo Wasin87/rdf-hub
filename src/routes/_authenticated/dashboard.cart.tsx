@@ -32,7 +32,7 @@ function CartPage() {
                 <div className="flex flex-1 flex-col">
                   <div className="text-[10px] track-luxury text-muted-foreground">{i.brandName}</div>
                   <div className="font-medium">{i.productName}</div>
-                  <div className="text-xs text-muted-foreground">{i.sizeMl}ml</div>
+                  <div className="text-xs text-muted-foreground">{i.sizeLabel?.trim() ? i.sizeLabel : `${i.sizeMl}ml`}</div>
                   <div className="mt-auto flex items-center justify-between">
                     <div className="flex items-center rounded-sm border border-border">
                       <button onClick={() => setQty(i.variantId, i.quantity - 1)} className="grid h-8 w-8 place-items-center hover:text-[color:var(--gold)]"><Minus className="h-3 w-3" /></button>

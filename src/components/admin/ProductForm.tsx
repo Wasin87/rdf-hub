@@ -26,6 +26,8 @@ export type ProductFormInitial = {
   is_new?: boolean;
   is_featured?: boolean;
   is_limited?: boolean;
+  is_hot?: boolean;
+  hot_until?: string | null;
   is_active?: boolean;
   images?: UploadedImage[];
   variants?: VariantDraft[];
@@ -52,6 +54,10 @@ export function ProductForm({ mode, initial }: { mode: Mode; initial?: ProductFo
   const [isNew, setIsNew] = useState(initial?.is_new ?? false);
   const [isFeatured, setIsFeatured] = useState(initial?.is_featured ?? false);
   const [isLimited, setIsLimited] = useState(initial?.is_limited ?? false);
+  const [badge, setBadge] = useState<"" | "hot">(initial?.is_hot ? "hot" : "");
+  const [hotUntil, setHotUntil] = useState<string>(
+    initial?.hot_until ? new Date(initial.hot_until).toISOString().slice(0, 16) : "",
+  );
   const [isActive, setIsActive] = useState(initial?.is_active ?? true);
   const [images, setImages] = useState<UploadedImage[]>(initial?.images ?? []);
   const [primary, setPrimary] = useState<string | null>(initial?.image_url ?? null);
@@ -106,6 +112,8 @@ export function ProductForm({ mode, initial }: { mode: Mode; initial?: ProductFo
         is_new: isNew,
         is_featured: isFeatured,
         is_limited: isLimited,
+        is_hot: badge === "hot",
+        hot_until: badge === "hot" && hotUntil ? new Date(hotUntil).toISOString() : null,
         is_active: isActive,
       };
 
@@ -139,6 +147,7 @@ export function ProductForm({ mode, initial }: { mode: Mode; initial?: ProductFo
         .map((v) => ({
           product_id: productId,
           size_ml: Number(v.size_ml),
+          size_label: (v.size_label ?? "").trim() || null,
           price: Number(v.price),
           stock: Number(v.stock) || 0,
         }));
@@ -184,6 +193,17 @@ export function ProductForm({ mode, initial }: { mode: Mode; initial?: ProductFo
               {(colsQ.data ?? []).map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
           </Field>
+          <Field label="Badge (optional)">
+            <select value={badge} onChange={(e) => setBadge(e.target.value as "" | "hot")} className={inputCls}>
+              <option value="">— None —</option>
+              <option value="hot">Hot</option>
+            </select>
+          </Field>
+          {badge === "hot" && (
+            <Field label="Hot deal timer — ends at (optional)">
+              <input type="datetime-local" value={hotUntil} onChange={(e) => setHotUntil(e.target.value)} className={inputCls} />
+            </Field>
+          )}
           <div className="grid grid-cols-2 gap-3">
             <Field label="Base price (BDT)">
               <input type="number" value={basePrice} onChange={(e) => setBasePrice(e.target.value)} className={inputCls} placeholder={lowestPrice ? String(lowestPrice) : "0"} />

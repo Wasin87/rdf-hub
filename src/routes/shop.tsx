@@ -8,10 +8,10 @@ import { ProductCard } from "@/components/ProductCard";
 import { formatBDT } from "@/lib/format";
 
 const searchSchema = z.object({
-  category: z.enum(["men", "women", "unisex"]).optional(),
+  category: z.enum(["men", "women", "unisex", "ator"]).optional(),
   brand: z.string().optional(),
   collection: z.string().optional(),
-  filter: z.enum(["new", "discount", "limited"]).optional(),
+  filter: z.enum(["new", "discount", "limited", "hot"]).optional(),
   q: z.string().optional(),
   sort: z.enum(["latest", "popular", "price_asc", "price_desc"]).optional(),
   min: z.coerce.number().optional(),
@@ -41,6 +41,7 @@ function ShopPage() {
       isNew: search.filter === "new" ? true : undefined,
       isDiscounted: search.filter === "discount" ? true : undefined,
       isLimited: search.filter === "limited" ? true : undefined,
+      isHot: search.filter === "hot" ? true : undefined,
       search: search.q,
       sort: search.sort,
       minPrice: search.min,
@@ -85,6 +86,7 @@ function ShopPage() {
             { label: "Men", val: "men" as const },
             { label: "Women", val: "women" as const },
             { label: "Unisex", val: "unisex" as const },
+            { label: "Ator", val: "ator" as const },
           ].map((c) => (
             <button key={c.label} onClick={() => setSearch({ category: c.val })}
               className={`text-left text-sm transition-colors ${search.category === c.val ? "text-[color:var(--gold)]" : "text-muted-foreground hover:text-foreground"}`}>
