@@ -16,6 +16,10 @@ function AboutPage() {
         <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
           FRAG AVENUE was founded with a singular conviction: that the great fragrances of our time should not be locked behind a single, intimidating bottle. Through painstakingly hand-decanted vials of 3ml to 30ml, we make the world's most prestigious houses accessible to discerning Bangladeshi connoisseurs.
         </p>
+        <p className="mt-8 text-xs font-medium tracking-wide text-muted-foreground/70">
+          <span className="text-[color:var(--gold)]">Developer:</span> Md Wasin Ahmed
+        </p>
+
       </motion.div>
 
       <div className="mx-auto mt-20 grid max-w-5xl gap-6 md:grid-cols-2 lg:grid-cols-4">
