@@ -187,7 +187,7 @@ function HomePage() {
         <>
           <ProductSection
             eyebrow="Attar Atelier"
-            title="Premium Ator Products"
+            title="Premium Attar Products"
             description="Alcohol-free attars crafted from oud, amber and rose."
             products={atorProducts.data.data.slice(0, 10)}
             viewAllSearch={{ category: "ator" }}

@@ -20,7 +20,7 @@ export function AtorBanner() {
         >
           <img
             src={atorImage}
-            alt="Premium Ator Collection"
+            alt="Premium Attar Collection"
             loading="lazy"
             width={1600}
             height={544}
@@ -30,13 +30,13 @@ export function AtorBanner() {
           <div className="absolute inset-y-0 left-0 flex max-w-[75%] flex-col justify-center gap-1.5 p-4 text-white sm:gap-2 sm:p-6 md:max-w-[60%] md:p-10">
             <p className="text-[9px] track-luxury text-[color:var(--gold-soft)] sm:text-[10px]">Attar Atelier</p>
             <h3 className="font-display text-base font-bold leading-tight sm:text-2xl md:text-3xl lg:text-4xl">
-              <span className="gold-text">Premium Ator Collection</span>
+              <span className="gold-text">Premium Attar Collection</span>
             </h3>
             <p className="hidden text-xs text-white/75 sm:block md:text-sm">
               Alcohol-free oils, oud and amber — the timeless art of attar.
             </p>
             <span className="mt-1 inline-flex w-fit items-center gap-2 rounded-sm bg-[color:var(--gold)] px-3 py-1.5 text-[9px] font-semibold track-luxury text-[color:var(--gold-foreground)] transition-transform duration-300 group-hover:translate-x-1 sm:mt-2 sm:px-5 sm:py-2.5 sm:text-[10px]">
-              Shop Ator <ArrowRight className="h-3 w-3" />
+              Shop Attar <ArrowRight className="h-3 w-3" />
             </span>
           </div>
         </Link>
