@@ -86,7 +86,7 @@ function ShopPage() {
             { label: "Men", val: "men" as const },
             { label: "Women", val: "women" as const },
             { label: "Unisex", val: "unisex" as const },
-            { label: "Ator", val: "ator" as const },
+            { label: "Attar", val: "ator" as const },
           ].map((c) => (
             <button key={c.label} onClick={() => setSearch({ category: c.val })}
               className={`text-left text-sm transition-colors ${search.category === c.val ? "text-[color:var(--gold)]" : "text-muted-foreground hover:text-foreground"}`}>

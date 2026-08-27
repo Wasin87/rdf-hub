@@ -13,7 +13,7 @@ import { CollectionGrid } from "@/components/CollectionGrid";
 import { ProductSection } from "@/components/ProductSection";
 import { ReviewsSlider } from "@/components/ReviewsSlider";
 import { TrustSection } from "@/components/TrustSection";
-import { AtorBanner } from "@/components/AtorBanner";
+import { AttarBanner } from "@/components/AttarBanner";
 import { HotSellSection } from "@/components/HotSellSection";
 
 export const Route = createFileRoute("/")({
@@ -143,7 +143,7 @@ function HomePage() {
 
       <CollectionGrid />
 
-      <AtorBanner />
+      <AttarBanner />
 
       <HotSellSection />
 
@@ -187,7 +187,7 @@ function HomePage() {
         <>
           <ProductSection
             eyebrow="Attar Atelier"
-            title="Premium Ator Products"
+            title="Premium Attar Products"
             description="Alcohol-free attars crafted from oud, amber and rose."
             products={atorProducts.data.data.slice(0, 10)}
             viewAllSearch={{ category: "ator" }}
