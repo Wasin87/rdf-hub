@@ -13,7 +13,7 @@ import { CollectionGrid } from "@/components/CollectionGrid";
 import { ProductSection } from "@/components/ProductSection";
 import { ReviewsSlider } from "@/components/ReviewsSlider";
 import { TrustSection } from "@/components/TrustSection";
-import { AtorBanner } from "@/components/AtorBanner";
+import { AttarBanner } from "@/components/AttarBanner";
 import { HotSellSection } from "@/components/HotSellSection";
 
 export const Route = createFileRoute("/")({
@@ -143,7 +143,7 @@ function HomePage() {
 
       <CollectionGrid />
 
-      <AtorBanner />
+      <AttarBanner />
 
       <HotSellSection />
 

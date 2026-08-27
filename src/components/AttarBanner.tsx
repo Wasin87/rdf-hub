@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import atorImage from "@/assets/collection-ator.jpg";
 
-export function AtorBanner() {
+export function AttarBanner() {
   return (
     <section className="container-luxury pb-12 md:pb-16">
       <motion.div
