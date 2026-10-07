@@ -17,7 +17,7 @@ const schema = z.object({
 export const Route = createFileRoute("/reset-password")({
   staticData: { sitemap: false },
   ssr: false,
-  head: () => ({ meta: [{ title: "Reset Password — FRAG AVENUE" }, { name: "robots", content: "noindex,nofollow" } ] }) },
+  head: () => ({ meta: [{ title: "Reset Password — FRAG AVENUE" }, { name: "robots", content: "noindex,nofollow" }] }),
   component: ResetPasswordPage,
 });
 
