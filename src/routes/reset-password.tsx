@@ -15,6 +15,7 @@ const schema = z.object({
 }).refine((v) => v.password === v.confirm, { path: ["confirm"], message: "Passwords don't match" });
 
 export const Route = createFileRoute("/reset-password")({
+  staticData: { sitemap: false },
   ssr: false,
   head: () => ({ meta: [{ title: "Reset Password — FRAG AVENUE" }] }),
   component: ResetPasswordPage,

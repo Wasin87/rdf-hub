@@ -12,6 +12,7 @@ type Banner = { id: string; title: string; subtitle: string | null; image_url: s
 const BUCKET = IMAGE_BUCKETS.products;
 
 export const Route = createFileRoute("/admin/banners")({
+  staticData: { sitemap: false },
   head: () => ({ meta: [{ title: "Hero Banners — Admin FRAG AVENUE" }] }),
   component: AdminBanners,
 });

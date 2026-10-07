@@ -3,6 +3,7 @@ import { ChevronLeft } from "lucide-react";
 import { ProductForm } from "@/components/admin/ProductForm";
 
 export const Route = createFileRoute("/admin/add-product")({
+  staticData: { sitemap: false },
   ssr: false,
   head: () => ({ meta: [{ title: "Add Product — Admin FRAG AVENUE" }] }),
   component: AddProduct,

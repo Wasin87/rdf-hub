@@ -21,6 +21,7 @@ import { LuxuryLoader } from "@/components/Loader";
 import { SafeImage } from "@/components/SafeImage";
 
 export const Route = createFileRoute("/products/$slug")({
+  staticData: { sitemap: true },
   ssr: false,
   loader: async ({ params }) => {
     const product = await fetchProductBySlug(params.slug);

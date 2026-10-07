@@ -19,6 +19,7 @@ import { notifyNewOrderFn } from "@/lib/email/order-email.functions";
 import { SafeImage } from "@/components/SafeImage";
 
 export const Route = createFileRoute("/checkout")({
+  staticData: { sitemap: false },
   head: () => ({ meta: [{ title: "Checkout — FRAG AVENUE" }] }),
   component: CheckoutPage,
 });

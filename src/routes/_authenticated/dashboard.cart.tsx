@@ -6,6 +6,7 @@ import { formatBDT } from "@/lib/format";
 import { SafeImage } from "@/components/SafeImage";
 
 export const Route = createFileRoute("/_authenticated/dashboard/cart")({
+  staticData: { sitemap: false },
   head: () => ({ meta: [{ title: "Cart — FRAG AVENUE" }] }),
   component: CartPage,
 });

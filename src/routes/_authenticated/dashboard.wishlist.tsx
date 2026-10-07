@@ -6,6 +6,7 @@ import { formatBDT, discountedPrice } from "@/lib/format";
 import { SafeImage } from "@/components/SafeImage";
 
 export const Route = createFileRoute("/_authenticated/dashboard/wishlist")({
+  staticData: { sitemap: false },
   head: () => ({ meta: [{ title: "Wishlist — FRAG AVENUE" }] }),
   component: WishPage,
 });

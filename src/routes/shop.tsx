@@ -20,6 +20,7 @@ const searchSchema = z.object({
 });
 
 export const Route = createFileRoute("/shop")({
+  staticData: { sitemap: true },
   validateSearch: searchSchema,
   head: () => ({ meta: [{ title: "Shop — FRAG AVENUE Luxury Fragrances" }, { name: "description", content: "Browse luxury fragrance decants from the world's finest houses." }] }),
   component: ShopPage,
