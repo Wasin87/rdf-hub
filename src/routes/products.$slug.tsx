@@ -21,6 +21,7 @@ import { LuxuryLoader } from "@/components/Loader";
 import { SafeImage } from "@/components/SafeImage";
 
 export const Route = createFileRoute("/products/$slug")({
+  staticData: { sitemap: true },
   ssr: false,
   loader: async ({ params }) => {
     const product = await fetchProductBySlug(params.slug);
@@ -40,7 +41,7 @@ export const Route = createFileRoute("/products/$slug")({
   errorComponent: ({ error }) => (
     <div className="container-luxury py-24 text-center">
       <h1 className="font-display text-3xl">Could not load this fragrance.</h1>
-      <p className="mt-2 text-sm text-muted-foreground">{error?.message}</p>
+      <p className="mt-2 text-sm text-muted-foreground">{error instanceof Error ? error.message : "Please try again."}</p>
       <Link to="/shop" className="btn-liquid mt-6 inline-flex">Back to shop</Link>
     </div>
   ),

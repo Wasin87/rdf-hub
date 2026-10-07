@@ -11,6 +11,7 @@ import { formatBDT } from "@/lib/format";
 import { SafeImage } from "@/components/SafeImage";
 
 export const Route = createFileRoute("/admin/charge")({
+  staticData: { sitemap: false },
   head: () => ({ meta: [{ title: "Delivery Charges — Admin FRAG AVENUE" }] }),
   component: AdminCharge,
 });

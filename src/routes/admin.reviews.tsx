@@ -24,6 +24,7 @@ type Review = {
 type ProductLite = { id: string; name: string; image_url: string | null; slug: string | null };
 
 export const Route = createFileRoute("/admin/reviews")({
+  staticData: { sitemap: false },
   head: () => ({ meta: [{ title: "Reviews — Admin FRAG AVENUE" }] }),
   component: AdminReviews,
 });

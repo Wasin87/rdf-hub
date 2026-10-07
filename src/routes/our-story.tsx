@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Sparkles, Globe2, HandHeart, Heart, Target, Compass } from "lucide-react";
 
 export const Route = createFileRoute("/our-story")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title: "Our Story — FRAG AVENUE" },

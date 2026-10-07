@@ -6,6 +6,7 @@ import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianG
 import { TrendingUp, ShoppingBag, Users, Package, DollarSign } from "lucide-react";
 
 export const Route = createFileRoute("/admin/")({
+  staticData: { sitemap: false },
   head: () => ({ meta: [{ title: "Admin Dashboard — FRAG AVENUE" }] }),
   component: AdminDashboard,
 });

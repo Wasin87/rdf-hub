@@ -8,6 +8,7 @@ type Profile = { id: string; full_name: string | null; phone: string | null; cre
 type RoleRow = { user_id: string; role: "admin" | "customer" };
 
 export const Route = createFileRoute("/admin/users")({
+  staticData: { sitemap: false },
   head: () => ({ meta: [{ title: "Users — Admin FRAG AVENUE" }] }),
   component: AdminUsers,
 });

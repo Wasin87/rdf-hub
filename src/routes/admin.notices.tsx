@@ -11,6 +11,7 @@ type Notice = {
 };
 
 export const Route = createFileRoute("/admin/notices")({
+  staticData: { sitemap: false },
   head: () => ({ meta: [{ title: "Notice Banners — Admin FRAG AVENUE" }] }),
   component: AdminNotices,
 });

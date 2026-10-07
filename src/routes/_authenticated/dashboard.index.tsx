@@ -9,6 +9,7 @@ import { useCart } from "@/stores/cart";
 import { formatBDT } from "@/lib/format";
 
 export const Route = createFileRoute("/_authenticated/dashboard/")({
+  staticData: { sitemap: false },
   head: () => ({ meta: [{ title: "Dashboard — FRAG AVENUE" }] }),
   component: Overview,
 });

@@ -58,6 +58,7 @@ function getMeta(o: Order): { otp: string | null; admin_notes: string | null } {
 }
 
 export const Route = createFileRoute("/admin/orders")({
+  staticData: { sitemap: false },
   head: () => ({ meta: [{ title: "Orders — Admin FRAG AVENUE" }] }),
   component: AdminOrders,
 });

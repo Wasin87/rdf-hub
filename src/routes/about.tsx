@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Award, Globe, Sparkles, ShieldCheck } from "lucide-react";
 
 export const Route = createFileRoute("/about")({
+  staticData: { sitemap: true },
   head: () => ({ meta: [{ title: "About — FRAG AVENUE" }, { name: "description", content: "FRAG AVENUE is Bangladesh's premier luxury fragrance decant atelier." }] }),
   component: AboutPage,
 });

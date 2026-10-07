@@ -15,6 +15,7 @@ import { appStorageImageUrl, IMAGE_BUCKETS, isAcceptedImage, getStoragePathFromA
 
 
 export const Route = createFileRoute("/_authenticated/profile")({
+  staticData: { sitemap: false },
   head: () => ({ meta: [{ title: "My Profile — FRAG AVENUE" }, { name: "description", content: "Manage your personal information, avatar and password." }] }),
   component: ProfilePage,
 });

@@ -9,6 +9,7 @@ import { resolveImage } from "@/lib/catalog";
 import { SafeImage } from "@/components/SafeImage";
 
 export const Route = createFileRoute("/admin/products")({
+  staticData: { sitemap: false },
   head: () => ({ meta: [{ title: "Products — Admin FRAG AVENUE" }] }),
   component: AdminProducts,
 });

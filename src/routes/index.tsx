@@ -17,6 +17,7 @@ import { AttarBanner } from "@/components/AttarBanner";
 import { HotSellSection } from "@/components/HotSellSection";
 
 export const Route = createFileRoute("/")({
+  staticData: { sitemap: true },
   head: () => ({
     title: "FRAG AVENUE | Authentic Luxury Perfume Decants in Bangladesh",
 

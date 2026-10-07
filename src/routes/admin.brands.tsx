@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 type Brand = { id: string; name: string; slug: string; description: string | null };
 
 export const Route = createFileRoute("/admin/brands")({
+  staticData: { sitemap: false },
   head: () => ({ meta: [{ title: "Brands — Admin FRAG AVENUE" }] }),
   component: AdminBrands,
 });

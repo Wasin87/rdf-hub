@@ -11,6 +11,7 @@ import { LuxuryLoader } from "@/components/Loader";
 import { SafeImage } from "@/components/SafeImage";
 
 export const Route = createFileRoute("/_authenticated/dashboard/orders")({
+  staticData: { sitemap: false },
   head: () => ({ meta: [{ title: "Orders — FRAG AVENUE" }] }),
   component: OrdersPage,
   pendingComponent: () => <LuxuryLoader label="Loading orders" />,

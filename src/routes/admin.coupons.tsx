@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { formatBDT } from "@/lib/format";
 
 export const Route = createFileRoute("/admin/coupons")({
+  staticData: { sitemap: false },
   head: () => ({ meta: [{ title: "Coupons — Admin FRAG AVENUE" }] }),
   component: AdminCoupons,
 });

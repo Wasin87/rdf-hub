@@ -5,6 +5,7 @@ import { ProductForm, type ProductFormInitial } from "@/components/admin/Product
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/admin/edit-product/$id")({
+  staticData: { sitemap: false },
   ssr: false,
   head: () => ({ meta: [{ title: "Edit Product — Admin FRAG AVENUE" }] }),
   component: EditProduct,

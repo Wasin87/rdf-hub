@@ -21,6 +21,7 @@ const registerSchema = loginSchema.extend({
 });
 
 export const Route = createFileRoute("/auth")({
+  staticData: { sitemap: false },
   validateSearch: searchSchema,
   head: () => ({ meta: [{ title: "Sign In — FRAG AVENUE" }, { name: "description", content: "Sign in or create an account at FRAG AVENUE." }] }),
   component: AuthPage,

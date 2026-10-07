@@ -10,7 +10,8 @@ const searchSchema = z.object({
 });
 
 export const Route = createFileRoute("/order-confirmed")({
-  head: () => ({ meta: [{ title: "Order Confirmed — FRAG AVENUE" }] }),
+  staticData: { sitemap: false },
+  head: () => ({ meta: [{ title: "Order Confirmed — FRAG AVENUE" }, { name: "robots", content: "noindex,nofollow" }] }),
   validateSearch: (s) => searchSchema.parse(s),
   component: OrderConfirmedPage,
 });

@@ -11,6 +11,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/_authenticated/dashboard/settings")({
+  staticData: { sitemap: false },
   head: () => ({ meta: [{ title: "Settings — FRAG AVENUE" }] }),
   component: SettingsPage,
 });
