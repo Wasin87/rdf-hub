@@ -44,7 +44,7 @@ export function Footer() {
             </ul>
           </div>
           <div>
-            <h4 className="mb-4 text-[11px] track-luxury text-[color:var(--gold)]">Maison</h4>
+            <h4 className="mb-4 text-[11px] track-luxury text-[color:var(--gold)]">Mission</h4>
             <ul className="space-y-2.5 text-sm text-white/75">
               <li><Link to="/about" className="hover:text-[color:var(--gold)]">Our Story</Link></li>
               <li><a href="#" className="hover:text-[color:var(--gold)]">Authenticity</a></li>
