@@ -20,7 +20,7 @@ import { SafeImage } from "@/components/SafeImage";
 
 export const Route = createFileRoute("/checkout")({
   staticData: { sitemap: false },
-  head: () => ({ meta: [{ title: "Checkout — FRAG AVENUE" }] }),
+  head: () => ({ meta: [{ title: "Checkout — FRAG AVENUE" }, { name: "robots", content: "noindex,nofollow" } ] }) },
   component: CheckoutPage,
 });
 
